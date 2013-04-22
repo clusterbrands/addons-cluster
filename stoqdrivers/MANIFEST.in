@@ -1,0 +1,10 @@
+include README
+include NEWS
+include AUTHORS
+include ChangeLog
+include COPYING
+include stoqdrivers.spec
+include debian/changelog debian/compat debian/copyright debian/control debian/rules
+include debian/pyversions debian/pycompat
+recursive-include stoqdrivers/conf *.ini
+recursive-include po POTFILES.list stoqdrivers.pot *.po

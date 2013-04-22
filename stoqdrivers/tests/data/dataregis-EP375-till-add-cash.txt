@@ -1,0 +1,6 @@
+W \xfe\x00j*01Valor = 10.00                           \xc5
+R \x04\r
+W \x04
+W \xfe\x01k\x00k
+R \x04\r
+W \x04
