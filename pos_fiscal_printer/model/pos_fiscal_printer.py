@@ -72,3 +72,6 @@ class printer(osv.Model):
         'serial' : fields.char(string='Serial', size=50, required=True),
         'active' : fields.boolean("Active"),            
     }
+class tax_rates(osv.Model):
+    _name = 
+    
