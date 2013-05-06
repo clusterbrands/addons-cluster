@@ -8,6 +8,7 @@ import pdb
 
 
 class printer_brand(osv.Model):    
+   
     _name = 'pos_fiscal_printer.printer_brand'
     _rec_name = 'brand_name'
     _columns = {
@@ -23,8 +24,8 @@ class printer_model(osv.Model):
         'brand_id': fields.many2one('pos_fiscal_printer.printer_brand')        
     }
     
-_rec_name = 'partner_id'
 class printer(osv.Model):
+    
     _name = 'pos_fiscal_printer.printer'  
    
     def view_init(self,cr, uid, fields_list, context=None):
@@ -71,9 +72,12 @@ class printer(osv.Model):
             'printer_id',string="Payment Methods"), 
         'tax_rate_ids' : fields.one2many('pos_fiscal_printer.tax_rate',
             'printer_id',string="Tax Rates"),
+        'measure_unit_ids' : fields.one2many('pos_fiscal_printer.measure_unit',
+            'printer_id',string="Unit of Measure"),
     }
     
 class payment_method(osv.Model):
+    
     _name = 'pos_fiscal_printer.payment_method'
     _columns = {
         'printer_id': fields.many2one('pos_fiscal_printer.printer'),   
@@ -89,6 +93,7 @@ class payment_method(osv.Model):
     }
     
 class tax_rate(osv.Model):
+
     _name = 'pos_fiscal_printer.tax_rate'
     _columns = {
         'printer_id': fields.many2one('pos_fiscal_printer.printer'),
@@ -98,5 +103,17 @@ class tax_rate(osv.Model):
         'included':fields.boolean(string='Included'),
         'value':fields.float(digits=(12,4),string='Value'),
         'current_value':fields.float(digits=(12,4),string='Current Value'),
+    }
+    
+class measure_unit (osv.Model):
+    
+    _name = 'pos_fiscal_printer.measure_unit'
+    _columns = {
+        'printer_id': fields.many2one('pos_fiscal_printer.printer'),
+        'product_uom_id': fields.many2one('product.uom',
+            string='Tax',domain=[('active','=','True')]),
+        'Name':fields.char(size=255,string='Name'),
+        'current_code':fields.char(size=255,string='Current Code'),
+        'code':fields.char(size=255,string='Code')
     }
         

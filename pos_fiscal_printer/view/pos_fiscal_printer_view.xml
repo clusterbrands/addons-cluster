@@ -84,7 +84,26 @@
                                     </tree>
                                  </field>                            
                             </page>  
-                            <page string="Measure Units"></page> 
+                            <page string="Measure Units">
+                                 <div class="oe_right oe_button_box" name="buttons">
+                                        <button name="read_measure_unit"                                  
+                                            string="Read for Printer" 
+                                            colspan="1"
+                                            type="object"/> 
+                                        <button name="write_measure_unit"                                 
+                                            string="Write to Printer" 
+                                            colspan="1"
+                                            type="object"/>
+                                 </div>
+                                 <field name="measure_unit_ids">
+                                    <tree string="" editable="bottom"> 
+                                        <field name="product_uom_id"/>                                      
+                                        <field name="Name"/>
+                                        <field name="current_code" readonly="1"/>
+                                        <field name="code"/>                                        
+                                    </tree>
+                                 </field>    
+                            </page> 
                             <page string="Header and Footer"></page>                                                   
                         </notebook>                       
                     </sheet>
