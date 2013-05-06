@@ -4,7 +4,7 @@ from urllib2 import URLError,HTTPError
 import urllib
 import urllib2
 import json
-import  pdb
+
 
 class http_helper(osv.Model):
     
@@ -32,7 +32,7 @@ class http_helper(osv.Model):
         return request
     
     def send_request(self, cr, uid,name,*args,**kwargs):
-        pdb.set_trace()
+       
         request = self._get_request(cr, uid,name,kwargs)
         try:
             response = urllib2.urlopen(request) 

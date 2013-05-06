@@ -58,12 +58,32 @@
                                     <tree string="" editable="bottom"> 
                                         <field name="account_journal_id"/>                                      
                                         <field name="payment_method_id"/>
-                                        <field name="description"/>
                                         <field name="current_description" readonly="1"/>
+                                        <field name="description"/>                                        
                                     </tree>
                                  </field>
                             </page> 
-                            <page string="Tax Rates"></page>  
+                            <page string="Tax Rates">
+                                <div class="oe_right oe_button_box" name="buttons">
+                                        <button name="read_tax_rates"                                  
+                                            string="Read for Printer" 
+                                            colspan="1"
+                                            type="object"/> 
+                                        <button name="write_tax_rates"                                 
+                                            string="Write to Printer" 
+                                            colspan="1"
+                                            type="object"/>
+                                 </div>
+                                 <field name="tax_rate_ids">
+                                    <tree string="" editable="bottom"> 
+                                        <field name="account_tax_id"/>                                      
+                                        <field name="tax_rate_id"/>
+                                        <field name="included"/>
+                                        <field name="current_value" readonly="1"/>
+                                        <field name="value"/>                                        
+                                    </tree>
+                                 </field>                            
+                            </page>  
                             <page string="Measure Units"></page> 
                             <page string="Header and Footer"></page>                                                   
                         </notebook>                       

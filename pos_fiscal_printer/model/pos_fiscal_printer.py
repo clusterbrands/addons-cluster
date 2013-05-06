@@ -68,7 +68,9 @@ class printer(osv.Model):
         'serial' : fields.char(string='Serial', size=50),
         'active' : fields.boolean("Active"),
         'payment_method_ids' : fields.one2many('pos_fiscal_printer.payment_method',
-            'printer_id',string="Payment Methods"),            
+            'printer_id',string="Payment Methods"), 
+        'tax_rate_ids' : fields.one2many('pos_fiscal_printer.tax_rate',
+            'printer_id',string="Tax Rates"),
     }
     
 class payment_method(osv.Model):
@@ -84,5 +86,17 @@ class payment_method(osv.Model):
     
     _defaults = {
         'current_description': lambda *a: "Not available"
+    }
+    
+class tax_rate(osv.Model):
+    _name = 'pos_fiscal_printer.tax_rate'
+    _columns = {
+        'printer_id': fields.many2one('pos_fiscal_printer.printer'),
+        'account_tax_id': fields.many2one('account.tax',
+            string='Tax',domain=[('type_tax_use','=','sale')]),
+        'tax_rate_id': fields.integer(string='Id'),
+        'included':fields.boolean(string='Included'),
+        'value':fields.float(digits=(12,4),string='Value'),
+        'current_value':fields.float(digits=(12,4),string='Current Value'),
     }
         
