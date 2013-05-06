@@ -24,7 +24,8 @@ class CustomProxy(PointOfSaleController):
         return json.dumps(brands)
         
     @openerp.addons.web.http.httprequest
-    def get_supported_printers(self, req, s_action=None, db=None, **kw):        
+    def get_supported_printers(self, req, s_action=None, db=None, **kw): 
+        print "REQ, %s " % req.httprequest.args.keys()       
         printers = base.get_supported_printers()
         for brand in printers:
             for i in range(0,len(printers[brand])):

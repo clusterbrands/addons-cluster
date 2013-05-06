@@ -1,3 +1,4 @@
+from openerp.osv.orm import except_orm
 from openerp.osv import osv, fields
 import urllib
 import urllib2
@@ -24,18 +25,16 @@ class printer_model(osv.Model):
     
 _rec_name = 'partner_id'
 class printer(osv.Model):
-    _name = 'pos_fiscal_printer.printer'    
-    
+    _name = 'pos_fiscal_printer.printer'  
+   
     def view_init(self,cr, uid, fields_list, context=None):
-        context = context or {}
-        url = "http://localhost:8069/pos/get_supported_printers"            
-        req = urllib2.Request(url)
+        context = context or {}  
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
         try:
-            res = urllib2.urlopen(req)                      
+            printers = http_helper.send_request(cr, uid,'get_supported_printers2')
         except:
-            print "Not found 404"
-            
-        printers = json.loads(res.read())
+            return ""
+        
         pb_obj = self.pool.get('pos_fiscal_printer.printer_brand')
         pm_obj = self.pool.get('pos_fiscal_printer.printer_model')
         for brand in printers:
@@ -55,6 +54,7 @@ class printer(osv.Model):
         context = context or {}
         print "making something cool"
         pdb.set_trace()
+        raise except_orm("Connection Error","Couldn't connect to printer")
         return None
          
     _columns = {

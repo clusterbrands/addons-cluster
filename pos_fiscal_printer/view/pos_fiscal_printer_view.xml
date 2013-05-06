@@ -38,7 +38,7 @@
                                 <button name="read_serial"
                                     icon="STOCK_CONNECT"
                                     string="Read" colspan="1"
-                                    type="action"/>
+                                    type="object"/>
                             </div> 
                             <!-- <field name="active"/> -->                           
                         </group> 

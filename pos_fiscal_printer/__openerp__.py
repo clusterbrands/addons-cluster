@@ -6,6 +6,9 @@
     'depends' : ['point_of_sale'],
     'author' : "Me",
     'description' : """Fiscal Printer""",
+    'init_xml': [
+        'data/http_helper_data.xml'
+     ],
     'data' : [
         'view/pos_fiscal_printer_view.xml',
         'view/pos_fiscal_printer_action_menu.xml',
