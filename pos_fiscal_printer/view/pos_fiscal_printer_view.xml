@@ -31,11 +31,38 @@
                              placeholder="Model"/>
                             <field name="port" placeholder="Port"/>
                             <field name="type"/>
-                            <field name="serial" placeholder="Serial"/>
-                            <field name="active"/>                           
+                            <label for="serial" />
+                            <div>
+                                <field name="serial"  class="oe_inline"
+                                    placeholder="Serial"/>
+                                <button name="read_serial"
+                                    icon="STOCK_CONNECT"
+                                    string="Read" colspan="1"
+                                    type="action"/>
+                            </div> 
+                            <!-- <field name="active"/> -->                           
                         </group> 
                         <notebook>
-                            <page string="Payment Methods"></page> 
+                            <page string="Payment Methods">
+                                <div class="oe_right oe_button_box" name="buttons">
+                                        <button name="read_payment_methods"                                  
+                                            string="Read for Printer" 
+                                            colspan="1"
+                                            type="object"/> 
+                                        <button name="write_payment_methods"                                 
+                                            string="Write to Printer" 
+                                            colspan="1"
+                                            type="object"/>
+                                 </div>
+                                 <field name="payment_method_ids">
+                                    <tree string="" editable="bottom"> 
+                                        <field name="account_journal_id"/>                                      
+                                        <field name="payment_method_id"/>
+                                        <field name="description"/>
+                                        <field name="current_description" readonly="1"/>
+                                    </tree>
+                                 </field>
+                            </page> 
                             <page string="Tax Rates"></page>  
                             <page string="Measure Units"></page> 
                             <page string="Header and Footer"></page>                                                   
