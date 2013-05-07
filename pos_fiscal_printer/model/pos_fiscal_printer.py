@@ -53,9 +53,8 @@ class printer(osv.Model):
         
     def read_serial(self, cr, uid, ids, context=None):
         context = context or {}
-        print "making something cool"
-        pdb.set_trace()
-        raise except_orm("Connection Error","Couldn't connect to printer")
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        request = http_helper.send_request(cr, uid,'get_supported_printers2')     
         return None
          
     _columns = {
@@ -74,6 +73,10 @@ class printer(osv.Model):
             'printer_id',string="Tax Rates"),
         'measure_unit_ids' : fields.one2many('pos_fiscal_printer.measure_unit',
             'printer_id',string="Unit of Measure"),
+        'header_ids' : fields.one2many('pos_fiscal_printer.invoice_line',
+            'printer_id',string="Header",domain=[('type','=','h')]),
+        'footer_ids' : fields.one2many('pos_fiscal_printer.invoice_line',
+            'printer_id',string="Footers",domain=[('type','=','f')]),
     }
     
 class payment_method(osv.Model):
@@ -116,4 +119,13 @@ class measure_unit (osv.Model):
         'current_code':fields.char(size=255,string='Current Code'),
         'code':fields.char(size=255,string='Code')
     }
-        
+    
+class invoice_line(osv.Model):
+    
+    _name = 'pos_fiscal_printer.invoice_line'
+    _columns = {
+        'printer_id': fields.many2one('pos_fiscal_printer.printer'),
+        'type':fields.char(size=1),
+        'current_value':fields.char(size=255,string='Current Value'),
+        'value':fields.char(size=255,string='Value')
+    }

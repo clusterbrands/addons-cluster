@@ -104,7 +104,22 @@
                                     </tree>
                                  </field>    
                             </page> 
-                            <page string="Header and Footer"></page>                                                   
+                            <page string="Header and Footer">
+                                <separator string="Headers" />
+                                <field name="header_ids">
+                                    <tree string="" editable="bottom"> 
+                                        <field name="current_value" readonly="1"/>
+                                        <field name="value"/>                                        
+                                    </tree>
+                                </field> 
+                                <separator string="Footers" />
+                                <field name="footer_ids">                                    
+                                    <tree string="" editable="bottom"> 
+                                        <field name="current_value" readonly="1"/>
+                                        <field name="value"/>                                        
+                                    </tree>
+                                </field> 
+                            </page>                                                   
                         </notebook>                       
                     </sheet>
                 </form>
