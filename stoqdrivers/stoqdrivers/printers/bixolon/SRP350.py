@@ -651,5 +651,6 @@ class SRP350(SerialBase):
         return len(reply) == 23
 
     def get_serial(self):
-        return 'ABC12345678'
+        s1 = self.read_status1()
+        return s1['printer_serial_number']
 
