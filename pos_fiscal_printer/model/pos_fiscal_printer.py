@@ -1,4 +1,4 @@
-from openerp.osv.orm import except_orm
+from openerp.osv.orm import except_orm,BaseModel
 from openerp.osv import osv, fields
 import urllib
 import urllib2
@@ -28,11 +28,32 @@ class printer(osv.Model):
     
     _name = 'pos_fiscal_printer.printer'  
    
+    def read_serial(self, cr, uid, id, context=None):
+        context = context or {}    
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        request = http_helper.send_command(cr, uid,id,'read_printer_serial')     
+        return "1234"
+   
+    #~ def create(self,cr, uid, vals, context=None):
+        #~ context = context or {}
+        #~ pdb.set_trace()
+        #~ if not vals.get('serial'):                  
+            #~ id = super(printer,self).create(cr, uid, vals, context)
+            #~ serial = self.read_serial(cr, uid, id, context) #vals.get('serial') =
+            #~ vals.update({'serial':serial})
+            #~ self.write(cr,uid,id,vals)
+        #~ else:
+            #~ raise osv.except_osv("Validate Error !",
+                #~ "The field 'serial' is required")
+        #~ return id
+        
     def view_init(self,cr, uid, fields_list, context=None):
         context = context or {}  
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
         try:
-            printers = http_helper.send_request(cr, uid,'get_supported_printers2')
+            response = http_helper.send_command(cr, uid,[],'get_supported_printers')
+            pdb.set_trace()
+            printers = response['values']
         except:
             return ""
         
@@ -51,11 +72,7 @@ class printer(osv.Model):
                     pm_obj.create(cr,uid,{'brand_id':brand_id[0],
                         'model_name':model},context)
         
-    def read_serial(self, cr, uid, ids, context=None):
-        context = context or {}
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
-        request = http_helper.send_request(cr, uid,'get_supported_printers2')     
-        return None
+    
          
     _columns = {
         'name' : fields.char(string='Name', size=50, required=True),
@@ -66,7 +83,6 @@ class printer(osv.Model):
         'port' : fields.char(string='Port', size=100, required=True),
         'type': fields.boolean('Ticket Printer'),
         'serial' : fields.char(string='Serial', size=50),
-        'active' : fields.boolean("Active"),
         'payment_method_ids' : fields.one2many('pos_fiscal_printer.payment_method',
             'printer_id',string="Payment Methods"), 
         'tax_rate_ids' : fields.one2many('pos_fiscal_printer.tax_rate',
