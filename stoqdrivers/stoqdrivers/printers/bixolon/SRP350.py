@@ -615,8 +615,6 @@ class SRP350(SerialBase):
 
     def get_payment_constants(self):
         methods = []
-        methods.append(('01', 'DINHEIRO'))
-        methods.append(('02', 'CHEQUE'))
         return methods
 
     def get_sintegra(self):
