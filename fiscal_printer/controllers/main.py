@@ -17,12 +17,13 @@ class CustomProxy(PointOfSaleController):
     
 
     def _get_driver(self,printer):        
-        fiscal = FiscalPrinter(brand=printer['brand'],model=printer['model'],
-                    device=printer['port'])
+        fiscal = FiscalPrinter(brand=printer.get('brand'),
+                    model=printer.get('model'),
+                    device=printer.get('port'))
         return fiscal    
     
     def read_printer_serial(self,request):
-        printer = eval(request['printer'])
+        printer = eval(request.get('printer'))
         serial =""
         try:
             driver = self._get_driver(printer)
@@ -30,6 +31,16 @@ class CustomProxy(PointOfSaleController):
             raise
         serial = driver.get_serial()
         return {"serial":serial}
+        
+    def read_payment_methods(self,request):
+        printer = eval(request.get('printer'))
+        payment_methods =[]
+        try:
+            driver = self._get_driver(printer)
+        except SerialException as e:
+            raise
+        payment_methods = driver.get_payment_constants()
+        return {"payment_methods":payment_methods}
         
     def get_supported_printers(self, request): 
         printers = base.get_supported_printers()

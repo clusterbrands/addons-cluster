@@ -28,25 +28,19 @@ class printer(osv.Model):
     
     _name = 'pos_fiscal_printer.printer'  
    
+    def read_payment_methods(self, cr, uid, ids, context=None):
+        context = context or {}    
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        response = http_helper.send_command(cr, uid,ids,'read_payment_methods')
+        
+    
     def read_serial(self, cr, uid, ids, context=None):
         context = context or {}    
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_printer_serial')   
-        serial = response['serial']  
+        serial = response.get('serial')  
         self.write(cr,uid,ids,{'serial':serial},context=context)
         return True
-    #~ def create(self,cr, uid, vals, context=None):
-        #~ context = context or {}
-        #~ pdb.set_trace()
-        #~ if not vals.get('serial'):                  
-            #~ id = super(printer,self).create(cr, uid, vals, context)
-            #~ serial = self.read_serial(cr, uid, id, context) #vals.get('serial') =
-            #~ vals.update({'serial':serial})
-            #~ self.write(cr,uid,id,vals)
-        #~ else:
-            #~ raise osv.except_osv("Validate Error !",
-                #~ "The field 'serial' is required")
-        #~ return id
         
     def view_init(self,cr, uid, fields_list, context=None):
         context = context or {}  
