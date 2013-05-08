@@ -28,12 +28,13 @@ class printer(osv.Model):
     
     _name = 'pos_fiscal_printer.printer'  
    
-    def read_serial(self, cr, uid, id, context=None):
+    def read_serial(self, cr, uid, ids, context=None):
         context = context or {}    
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
-        request = http_helper.send_command(cr, uid,id,'read_printer_serial')     
-        return "1234"
-   
+        response = http_helper.send_command(cr, uid,ids,'read_printer_serial')   
+        serial = response['serial']  
+        self.write(cr,uid,ids,{'serial':serial},context=context)
+        return True
     #~ def create(self,cr, uid, vals, context=None):
         #~ context = context or {}
         #~ pdb.set_trace()
@@ -52,8 +53,7 @@ class printer(osv.Model):
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
         try:
             response = http_helper.send_command(cr, uid,[],'get_supported_printers')
-            pdb.set_trace()
-            printers = response['values']
+            printers = response
         except:
             return ""
         
@@ -71,8 +71,7 @@ class printer(osv.Model):
                 if (m ==0):
                     pm_obj.create(cr,uid,{'brand_id':brand_id[0],
                         'model_name':model},context)
-        
-    
+        return True
          
     _columns = {
         'name' : fields.char(string='Name', size=50, required=True),

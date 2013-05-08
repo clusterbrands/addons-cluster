@@ -23,10 +23,10 @@ class http_helper(osv.Model):
         '''
         raise osv.except_osv(error, msg)
         
-    def _get_printer(self,cr,uid,id):
-        if id:
+    def _get_printer(self,cr,uid,ids):
+        if ids:
             p_obj = self.pool.get('pos_fiscal_printer.printer')
-            printer = p_obj.browse(cr,uid,id)[0]            
+            printer = p_obj.browse(cr,uid,ids)[0]            
             return {
                     'brand':printer.brand.brand_name,
                     'model':printer.model.model_name,
@@ -35,20 +35,20 @@ class http_helper(osv.Model):
         else:
             return {}
     
-    def _make_command(self, cr, uid,id,name,params):    
+    def _make_command(self, cr, uid,ids,name,params):    
         
         obj = self.browse(cr, uid, self.search(cr, uid, []))[0]    
         url = obj.proxy_url #+name 
         params = params or {}       
-        printer = self._get_printer(cr,uid,id)
+        printer = self._get_printer(cr,uid,ids)
         req_params = {'command':name,'printer':printer,'params':params}
         req_params_str = urllib.urlencode(req_params)
         request = urllib2.Request(url,req_params_str)
         return request
     
-    def send_command(self, cr, uid,id,name,*args,**kwargs):       
+    def send_command(self, cr, uid,ids,name,*args,**kwargs):       
         
-        request = self._make_command(cr, uid,id,name,kwargs)
+        request = self._make_command(cr, uid,ids,name,kwargs)
         try:
             response = urllib2.urlopen(request) 
         except HTTPError as e:
@@ -61,4 +61,4 @@ class http_helper(osv.Model):
         response = json.loads(response.read())
         if response['status'] == 'error':
             self._print_error("COMMAND ERROR",response['error'])
-        return response
+        return response['values']

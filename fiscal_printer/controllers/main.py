@@ -7,6 +7,8 @@ import json
 from point_of_sale.controllers.main import PointOfSaleController
 from stoqdrivers.printers import base
 from stoqdrivers.printers.fiscal import FiscalPrinter
+from serial import SerialException
+
 class CustomProxy(PointOfSaleController):
 
     def __init__(self):
@@ -14,15 +16,21 @@ class CustomProxy(PointOfSaleController):
     
     
 
-    def _get_printer_driver(self,printer):        
+    def _get_driver(self,printer):        
         fiscal = FiscalPrinter(brand=printer['brand'],model=printer['model'],
                     device=printer['port'])
         return fiscal    
     
     def read_printer_serial(self,request):
         printer = eval(request['printer'])
-        self._get_printer_driver(printer)
-    
+        serial =""
+        try:
+            driver = self._get_driver(printer)
+        except SerialException as e:
+            raise
+        serial = driver.get_serial()
+        return {"serial":serial}
+        
     def get_supported_printers(self, request): 
         printers = base.get_supported_printers()
         for brand in printers:
