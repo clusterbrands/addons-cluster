@@ -599,9 +599,9 @@ class SRP350(SerialBase):
     def get_tax_constants(self):
         s3 = self.read_status3()
         constants = []
-        constants.append(('!',s3['tax_value_1']))
-        constants.append(('"',s3['tax_value_2']))
-        constants.append(('#',s3['tax_value_3']))        
+        constants.append({'code':'!','value':s3['tax_value_1']})
+        constants.append({'code':'"','value':s3['tax_value_2']})
+        constants.append({'code':'#','value':s3['tax_value_2']})      
         return constants
 
     def get_payment_constants(self):
