@@ -33,7 +33,40 @@ class printer(osv.Model):
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_payment_methods')
         
-    
+    def read_tax_rates(self, cr, uid, ids, context=None):
+        context = context or {}
+        tax_rates = {}   
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        response = http_helper.send_command(cr, uid,ids,'read_tax_rates')        
+        tax_rates = response.get('tax_rates')
+        obj = self.pool.get('pos_fiscal_printer.tax_rate')
+        for tr in tax_rates:
+            tax_id = obj.search(cr,uid,[('code','=',tr.get('code'))],
+                        context=context)
+            if not tax_id:
+                vals = {'printer_id': ids[0],
+                       'current_value':tr.get('value'),
+                       'code':tr.get('code')
+                    }
+                obj.create(cr,uid,vals,context=context)
+        return
+        
+    def write_tax_rates(self, cr, uid, ids, context=None):
+        context = context or {}
+        tax_rates = []
+        printer = self.browse(cr,uid,ids)[0]
+        for tax in printer.tax_rate_ids:
+            tax_rates.append({'code':tax.code,'value':tax.current_value})
+        
+        params = {'tax_rates':tax_rates}
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        response = http_helper.send_command(cr, uid,ids,'write_tax_rates',params)   
+        
+        tax_rate = self.pool.get('pos_fiscal_printer.tax_rate')
+        for tax in printer.tax_rate_ids:
+            tax_rate.write(cr,uid,tax.id,{'value':tax.current_value},
+                      context=context)
+        
     def read_serial(self, cr, uid, ids, context=None):
         context = context or {}    
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
@@ -111,10 +144,9 @@ class tax_rate(osv.Model):
         'printer_id': fields.many2one('pos_fiscal_printer.printer'),
         'account_tax_id': fields.many2one('account.tax',
             string='Tax',domain=[('type_tax_use','=','sale')]),
-        'tax_rate_id': fields.integer(string='Id'),
-        'included':fields.boolean(string='Included'),
-        'value':fields.float(digits=(12,4),string='Value'),
-        'current_value':fields.float(digits=(12,4),string='Current Value'),
+        'code': fields.char(string='Tax Code',size=4),
+        'value':fields.float(digits=(12,2),string='Value'),
+        'current_value':fields.float(digits=(12,2),string='Current Value'),
     }
     
 class measure_unit (osv.Model):

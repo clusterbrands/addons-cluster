@@ -77,8 +77,7 @@
                                  <field name="tax_rate_ids">
                                     <tree string="" editable="bottom"> 
                                         <field name="account_tax_id"/>                                      
-                                        <field name="tax_rate_id"/>
-                                        <field name="included"/>
+                                        <field name="code"/>
                                         <field name="current_value" readonly="1"/>
                                         <field name="value"/>                                        
                                     </tree>

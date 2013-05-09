@@ -38,7 +38,7 @@ class http_helper(osv.Model):
     def _make_command(self, cr, uid,ids,name,params):    
         
         obj = self.browse(cr, uid, self.search(cr, uid, []))[0]    
-        url = obj.proxy_url #+name 
+        url = obj.proxy_url 
         params = params or {}       
         printer = self._get_printer(cr,uid,ids)
         req_params = {'command':name,'printer':printer,'params':params}
@@ -46,9 +46,9 @@ class http_helper(osv.Model):
         request = urllib2.Request(url,req_params_str)
         return request
     
-    def send_command(self, cr, uid,ids,name,*args,**kwargs):       
+    def send_command(self, cr, uid,ids,name,params):       
         
-        request = self._make_command(cr, uid,ids,name,kwargs)
+        request = self._make_command(cr, uid,ids,name,params)
         try:
             response = urllib2.urlopen(request) 
         except HTTPError as e:
