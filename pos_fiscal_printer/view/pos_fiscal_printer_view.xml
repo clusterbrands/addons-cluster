@@ -78,6 +78,7 @@
                                     <tree string="" editable="bottom"> 
                                         <field name="account_tax_id"/>                                      
                                         <field name="code"/>
+                                        <field name="description"/>
                                         <field name="current_value" readonly="1"/>
                                         <field name="value"/>                                        
                                     </tree>

@@ -46,7 +46,7 @@ class http_helper(osv.Model):
         request = urllib2.Request(url,req_params_str)
         return request
     
-    def send_command(self, cr, uid,ids,name,params):       
+    def send_command(self, cr, uid,ids,name,params={}):       
         
         request = self._make_command(cr, uid,ids,name,params)
         try:

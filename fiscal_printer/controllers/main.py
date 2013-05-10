@@ -6,6 +6,7 @@ import pdb
 import json
 from point_of_sale.controllers.main import PointOfSaleController
 from fiscal import FiscalPrinterEx
+from stoqdrivers.printers import base
 from serial import SerialException
 
 class CustomProxy(PointOfSaleController):
@@ -47,6 +48,7 @@ class CustomProxy(PointOfSaleController):
         params = eval(request.get('params'))
         tax_rates = params.get('tax_rates')
         driver = self._get_driver(printer)
+        pdb.set_trace()
         driver.set_tax_rates(tax_rates)
         
     def get_supported_printers(self, request): 
