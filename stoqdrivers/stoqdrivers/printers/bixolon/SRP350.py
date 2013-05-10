@@ -43,6 +43,10 @@ from stoqdrivers.exceptions import (HardwareFailure,OutofPaperError,
 _ = stoqdrivers_gettext
 
 
+#constants
+HEADER_LINE_SIZE = 40
+HEADER_LINE_NUMBER = 9
+
 #printer control characters
 STX = 0x02
 ENQ = 0x05
@@ -53,7 +57,8 @@ ETB = 0x17
 
 #printer commands
 CMD_ADD_CASHIER = 'PC'
-CMD_ADD_HEADER_OR_FOOTER = 'PH'
+CMD_SET_HEADER = 'PH'
+CMD_SET_FOOTER = 'PH'
 CMD_SET_PAYMENT_METHOD = 'PE'
 CMD_ADD_CUSTOMER_INFO = "i"
 CMD_START_CASHIER = '5'
@@ -371,9 +376,7 @@ class SRP350(SerialBase):
         return False
     
     def add_cashier(self,id,password,name):
-        self._send_command(CMD_ADD_CASHIER,id,password,name,response='c')
-        
-    
+        self._send_command(CMD_ADD_CASHIER,id,password,name,response='c')    
     
     def set_payment_method(self,id,name):
         self._send_command(CMD_SET_PAYMENT_METHOD,id,name,response='c')
@@ -397,10 +400,25 @@ class SRP350(SerialBase):
         else:
             raise DriverError(_("this printer just can set 4 fixed taxes"))
         return True
+    
+    def get_coupon_headers(self):
+        pdb.set_trace()
+        s8 = self.read_status8()        
+        return s8
         
-    def set_coupon_header_or_footer(self,id,message):
-        self._send_command(CMD_ADD_HEADER_OR_FOOTER,id,message,response='c')
-        
+    def set_coupon_headers(self,headers):
+        if len(headers) < HEADER_LINE_SIZE:
+            for i in range(0,len(headers)):
+                header =headers[i]
+                if len(header) < HEADER_LINE_NUMBER:
+                    self._send_command(CMD_SET_HEADER,"%02d" % (i+1),
+                        str(header),response='c')
+                else:
+                    raise DriverError(_("This printer supports a"
+                        "maximum of 40 characters per line"))
+        else:
+            raise DriverError(_("This printer supports up to 8 lines"
+                "of header"))
     
     def has_open_coupon(self):
         return (self._get_amount_to_pay() <> 0)
