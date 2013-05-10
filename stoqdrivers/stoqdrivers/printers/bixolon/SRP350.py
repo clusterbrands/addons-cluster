@@ -64,6 +64,7 @@ CMD_COUPON_SUBTOTAL = "3"
 CMD_SET_COUPON_ITEM_BARCODE = 'Y'
 CMD_SET_COUPON_BARCODE = 'y'
 CMD_SET_FLAG = "PJ"
+CMD_SET_TAXES = "PT"
 CMD_ADD_DISCOUNT_OR_SURCHAGE_VALUE = "q" 
 CMD_ADD_DISCOUNT_OR_SURCHAGE_PERCENT = "p"
 CMD_ADD_CREDIT_NOTE_ITEM = 'd' 
@@ -380,6 +381,24 @@ class SRP350(SerialBase):
        
     #Custom Coupon methods
     
+    def _set_tax_rates(self,tax_rates):
+        
+        if len(tax_rates) == 3:
+            taxes = {tax.get('code'):tax.get('value') for tax in tax_rates}
+            vcodes = set(['!','#','"'])
+            if vcodes.difference(set(taxes.keys())) == ():
+                data = ("2%05.2f2%05.2f2%05.2f") % (taxes.get('!'),
+                        taxes.get('"'),taxes.get('#'))
+                data = data.replace(".","")
+                self._send_command(CMD_SET_TAXES,data,response='c')
+            else:
+                raise DriverError(_("This tax codes is not supported from "
+                                    "the current printer"))
+        else:
+            raise DriverError(_("You need to specify the value of "
+                                "the three taxes"))
+        return True
+        
     def set_coupon_header_or_footer(self,id,message):
         self._send_command(CMD_ADD_HEADER_OR_FOOTER,id,message,response='c')
         
@@ -600,11 +619,16 @@ class SRP350(SerialBase):
         s3 = self.read_status3()
         constants = []
         constants.append({'code':'!',
-            'value':s3['tax_value_1'][:2]+'.'+s3['tax_value_1'][-2:]})
+            'value':s3['tax_value_1'][:2]+'.'+s3['tax_value_1'][-2:],
+            'descripcion':'Tax 1'})
         constants.append({'code':'"',
-            'value':s3['tax_value_2'][:2]+'.'+s3['tax_value_2'][-2:]})
+            'value':s3['tax_value_2'][:2]+'.'+s3['tax_value_2'][-2:],
+            'descripcion':'Tax 2'})
         constants.append({'code':'#',
-            'value':s3['tax_value_3'][:2]+'.'+s3['tax_value_3'][-2:]})     
+            'value':s3['tax_value_3'][:2]+'.'+s3['tax_value_3'][-2:],
+            'descripcion':'Tax 3'})
+        constants.append({'code':' ','value':'00.00',
+            'descripcion':'Exempt'}))
         return constants
 
     def get_payment_constants(self):
