@@ -381,12 +381,12 @@ class SRP350(SerialBase):
        
     #Custom Coupon methods
     
-    def _set_tax_rates(self,tax_rates):
+    def set_tax_rates(self,tax_rates):
         
-        if len(tax_rates) == 3:
+        if len(tax_rates) == 4:
             taxes = {tax.get('code'):tax.get('value') for tax in tax_rates}
-            vcodes = set(['!','#','"'])
-            if vcodes.difference(set(taxes.keys())) == ():
+            vcodes = set(['!','#','"', ' '])
+            if vcodes.difference(set(taxes.keys())) == set():
                 data = ("2%05.2f2%05.2f2%05.2f") % (taxes.get('!'),
                         taxes.get('"'),taxes.get('#'))
                 data = data.replace(".","")
@@ -395,8 +395,7 @@ class SRP350(SerialBase):
                 raise DriverError(_("This tax codes is not supported from "
                                     "the current printer"))
         else:
-            raise DriverError(_("You need to specify the value of "
-                                "the three taxes"))
+            raise DriverError(_("this printer just can set 4 fixed taxes"))
         return True
         
     def set_coupon_header_or_footer(self,id,message):
@@ -620,15 +619,15 @@ class SRP350(SerialBase):
         constants = []
         constants.append({'code':'!',
             'value':s3['tax_value_1'][:2]+'.'+s3['tax_value_1'][-2:],
-            'descripcion':'Tax 1'})
+            'description':'Tax 1'})
         constants.append({'code':'"',
             'value':s3['tax_value_2'][:2]+'.'+s3['tax_value_2'][-2:],
-            'descripcion':'Tax 2'})
+            'description':'Tax 2'})
         constants.append({'code':'#',
             'value':s3['tax_value_3'][:2]+'.'+s3['tax_value_3'][-2:],
-            'descripcion':'Tax 3'})
+            'description':'Tax 3'})
         constants.append({'code':' ','value':'00.00',
-            'descripcion':'Exempt'}))
+            'description':'Exempt'})
         return constants
 
     def get_payment_constants(self):
