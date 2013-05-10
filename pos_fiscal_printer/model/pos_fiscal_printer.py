@@ -72,6 +72,23 @@ class printer(osv.Model):
             #~ tax_rate.write(cr,uid,tax.id,{'value':tax.current_value},
                       #~ context=context)
         
+    def read_headers(self, cr, uid, ids, context=None):
+        context = context or {}
+        tax_rates = {}   
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        response = http_helper.send_command(cr, uid,ids,'read_headers')
+        
+        
+    def write_headers(self, cr, uid, ids, context=None):
+        context = context or {}
+        headers = []
+        printer = self.browse(cr,uid,ids)[0]
+        for header in printer.header_ids:
+            headers.append(header.value)
+        params = {'headers':headers}
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        response = http_helper.send_command(cr, uid,ids,'write_headers',params)   
+    
     def read_serial(self, cr, uid, ids, context=None):
         context = context or {}    
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
@@ -120,10 +137,10 @@ class printer(osv.Model):
             'printer_id',string="Tax Rates"),
         'measure_unit_ids' : fields.one2many('pos_fiscal_printer.measure_unit',
             'printer_id',string="Unit of Measure"),
-        'header_ids' : fields.one2many('pos_fiscal_printer.invoice_line',
-            'printer_id',string="Header",domain=[('type','=','h')]),
-        'footer_ids' : fields.one2many('pos_fiscal_printer.invoice_line',
-            'printer_id',string="Footers",domain=[('type','=','f')]),
+        'header_ids' : fields.one2many('pos_fiscal_printer.header',
+            'printer_id',string="Header"),
+        'footer_ids' : fields.one2many('pos_fiscal_printer.footer',
+            'printer_id',string="Footers"),
     }
     
 class payment_method(osv.Model):
@@ -167,12 +184,19 @@ class measure_unit (osv.Model):
         'code':fields.char(size=255,string='Code')
     }
     
-class invoice_line(osv.Model):
+class header(osv.Model):
     
-    _name = 'pos_fiscal_printer.invoice_line'
+    _name = 'pos_fiscal_printer.header'
     _columns = {
         'printer_id': fields.many2one('pos_fiscal_printer.printer'),
-        'type':fields.char(size=1),
+        'current_value':fields.char(size=255,string='Current Value'),
+        'value':fields.char(size=255,string='Value')
+    }
+class footer(osv.Model):
+    
+    _name = 'pos_fiscal_printer.footer'
+    _columns = {
+        'printer_id': fields.many2one('pos_fiscal_printer.printer'),
         'current_value':fields.char(size=255,string='Current Value'),
         'value':fields.char(size=255,string='Value')
     }

@@ -105,11 +105,21 @@
                                  </field>    
                             </page> 
                             <page string="Header and Footer">
+                                <div class="oe_right oe_button_box" name="buttons">
+                                    <button name="read_headers"                                  
+                                        string="Read for Printer" 
+                                        colspan="1"
+                                        type="object"/> 
+                                    <button name="write_headers"                                 
+                                        string="Write to Printer" 
+                                        colspan="1"
+                                            type="object"/>
+                                 </div>
                                 <separator string="Headers" />
                                 <field name="header_ids">
                                     <tree string="" editable="bottom"> 
                                         <field name="current_value" readonly="1"/>
-                                        <field name="value"/>                                        
+                                        <field name="value"/>                                                            
                                     </tree>
                                 </field> 
                                 <separator string="Footers" />

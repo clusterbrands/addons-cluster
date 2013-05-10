@@ -50,6 +50,20 @@ class CustomProxy(PointOfSaleController):
         driver = self._get_driver(printer)
         pdb.set_trace()
         driver.set_tax_rates(tax_rates)
+    
+    def read_headers(self,request):
+        printer = eval(request.get('printer'))
+        headers =[]
+        driver = self._get_driver(printer)
+        headers = driver.get_coupon_headers()
+        return {"headers":headers}
+        
+    def write_headers(self,request):
+        printer = eval(request.get('printer'))
+        params = eval(request.get('params'))
+        headers = params.get('headers')
+        driver = self._get_driver(printer)
+        driver.set_coupon_headers(headers)
         
     def get_supported_printers(self, request): 
         printers = base.get_supported_printers()

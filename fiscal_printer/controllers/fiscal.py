@@ -17,7 +17,20 @@ class FiscalPrinterEx(FiscalPrinter):
             self._driver.set_tax_rates(tax_rates)
         else:
             raise DriverError(_("This method is not supported from "
+                                "the current printer"))        
+    def get_coupon_headers(self):
+        log.info('get_coupon_headers()')        
+        if hasattr(self._driver,'get_coupon_headers'):              
+            self._driver.get_coupon_headers()
+        else:
+            raise DriverError(_("This method is not supported from "
                                 "the current printer"))
-        
-    
+                                
+    def set_coupon_headers(self,headers):
+        log.info('set_coupon_headers()')        
+        if hasattr(self._driver,'set_coupon_headers'):              
+            self._driver.set_coupon_headers(headers)
+        else:
+            raise DriverError(_("This method is not supported from "
+                                "the current printer"))
         
