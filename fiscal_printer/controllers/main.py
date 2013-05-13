@@ -31,10 +31,21 @@ class CustomProxy(PointOfSaleController):
         
     def read_payment_methods(self,request):
         printer = eval(request.get('printer'))
-        payment_methods =[]
+        params = eval(request.get('params'))
+        payment_methods = params.get('payment_methods')
         driver = self._get_driver(printer)
         payment_methods = driver.get_payment_constants()
         return ""
+        
+    def write_payment_methods(self,request):
+        printer = eval(request.get('printer'))
+        params = eval(request.get('params'))
+        payment_methods =params.get('payment_methods')
+        driver = self._get_driver(printer)
+        driver.set_payment_methods(payment_methods)
+        return {"exec":True}
+        
+    
         
     def read_tax_rates(self,request):
         printer = eval(request.get('printer'))
@@ -64,6 +75,22 @@ class CustomProxy(PointOfSaleController):
         headers = params.get('headers')
         driver = self._get_driver(printer)
         driver.set_coupon_headers(headers)
+        return {"exec":True}
+        
+    def read_footers(self,request):
+        printer = eval(request.get('printer'))
+        footers =[]
+        driver = self._get_driver(printer)
+        footers = driver.get_coupon_footers()
+        return {"footers":footers}
+        
+    def write_footers(self,request):
+        printer = eval(request.get('printer'))
+        params = eval(request.get('params'))
+        footers = params.get('footers')
+        driver = self._get_driver(printer)
+        driver.set_coupon_footers(footers)
+        return {"exec":True}
         
     def get_supported_printers(self, request): 
         printers = base.get_supported_printers()

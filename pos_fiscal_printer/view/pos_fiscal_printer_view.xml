@@ -33,7 +33,7 @@
                             <field name="type"/>
                             <label for="serial" />
                             <div>
-                                <field name="serial"  class="oe_inline"
+                                <field name="serial"  maxlength ="5" class="oe_inline"
                                     placeholder="Serial"/>
                                 <button name="read_serial"
                                     icon="STOCK_CONNECT"
@@ -46,7 +46,7 @@
                             <page string="Payment Methods">
                                 <div class="oe_right oe_button_box" name="buttons">
                                         <button name="read_payment_methods"                                  
-                                            string="Read for Printer" 
+                                            string="Read from Printer" 
                                             colspan="1"
                                             type="object"/> 
                                         <button name="write_payment_methods"                                 
@@ -57,7 +57,7 @@
                                  <field name="payment_method_ids">
                                     <tree string="" editable="bottom"> 
                                         <field name="account_journal_id"/>                                      
-                                        <field name="payment_method_id"/>
+                                        <field name="code"/>
                                         <field name="current_description" readonly="1"/>
                                         <field name="description"/>                                        
                                     </tree>
@@ -66,7 +66,7 @@
                             <page string="Tax Rates">
                                 <div class="oe_right oe_button_box" name="buttons">
                                         <button name="read_tax_rates"                                  
-                                            string="Read for Printer" 
+                                            string="Read from Printer" 
                                             colspan="1"
                                             type="object"/> 
                                         <button name="write_tax_rates"                                 
@@ -87,7 +87,7 @@
                             <page string="Measure Units">
                                  <div class="oe_right oe_button_box" name="buttons">
                                         <button name="read_measure_unit"                                  
-                                            string="Read for Printer" 
+                                            string="Read from Printer" 
                                             colspan="1"
                                             type="object"/> 
                                         <button name="write_measure_unit"                                 
@@ -107,7 +107,7 @@
                             <page string="Header and Footer">
                                 <div class="oe_right oe_button_box" name="buttons">
                                     <button name="read_headers"                                  
-                                        string="Read for Printer" 
+                                        string="Read from Printer" 
                                         colspan="1"
                                         type="object"/> 
                                     <button name="write_headers"                                 
@@ -123,6 +123,16 @@
                                     </tree>
                                 </field> 
                                 <separator string="Footers" />
+                                <div class="oe_right oe_button_box" name="buttons">
+                                    <button name="read_footers"                                  
+                                        string="Read from Printer" 
+                                        colspan="1"
+                                        type="object"/> 
+                                    <button name="write_footers"                                 
+                                        string="Write to Printer" 
+                                        colspan="1"
+                                            type="object"/>
+                                 </div>
                                 <field name="footer_ids">                                    
                                     <tree string="" editable="bottom"> 
                                         <field name="current_value" readonly="1"/>

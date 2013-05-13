@@ -33,6 +33,17 @@ class printer(osv.Model):
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_payment_methods')
         
+    def write_payment_methods(self, cr, uid, ids, context=None):
+        context = context or {}
+        payment_methods = []
+        printer = self.browse(cr,uid,ids)[0]
+        for pm in printer.payment_method_ids:
+            payment_methods.append({'code':str(pm.code),
+                'description':str(pm.description)})        
+        params = {'payment_methods':payment_methods}
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        response = http_helper.send_command(cr, uid,ids,'write_payment_methods',params) 
+        
     def read_tax_rates(self, cr, uid, ids, context=None):
         context = context or {}
         tax_rates = {}   
@@ -65,29 +76,84 @@ class printer(osv.Model):
         
         params = {'tax_rates':tax_rates}
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'write_tax_rates',params)   
-        
-        #~ tax_rate = self.pool.get('pos_fiscal_printer.tax_rate')
-        #~ for tax in printer.tax_rate_ids:
-            #~ tax_rate.write(cr,uid,tax.id,{'value':tax.current_value},
-                      #~ context=context)
-        
+        response = http_helper.send_command(cr, uid,ids,'write_tax_rates',params) 
+
     def read_headers(self, cr, uid, ids, context=None):
         context = context or {}
-        tax_rates = {}   
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_headers')
+        headers = response.get('headers')
+        obj = self.pool.get('pos_fiscal_printer.header')
+        for header in headers:
+            if header.strip() <> "":
+                header_id = obj.search(cr,uid,[('current_value','=',header.rstrip())],
+                            context=context)
+                if not header_id:
+                    vals = {'printer_id': ids[0],
+                           'current_value':header.rstrip(),
+                           'value':header.rstrip(),
+                        }
+                    obj.create(cr,uid,vals,context=context)
+        return True
         
+    
+          
         
     def write_headers(self, cr, uid, ids, context=None):
         context = context or {}
         headers = []
-        printer = self.browse(cr,uid,ids)[0]
+        header_ids = []
+        printer = self.browse(cr,uid,ids)[0]        
         for header in printer.header_ids:
-            headers.append(header.value)
+            if (header.value <> header.current_value):
+                headers.append(header.value)
+                header_ids.append(header.id)
         params = {'headers':headers}
         http_helper = self.pool.get('pos_fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'write_headers',params)   
+        response = http_helper.send_command(cr, uid,ids,'write_headers',params)
+        if (response.get('exec')):
+            for id in header_ids:
+                obj =self.pool.get('pos_fiscal_printer.header')
+                brw = obj.browse(cr,uid,id)
+                obj.write(cr,uid,id,{'current_value':brw.value},context=context)
+   
+    
+    def read_footers(self, cr, uid, ids, context=None):
+        context = context or {} 
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        response = http_helper.send_command(cr, uid,ids,'read_footers')
+        footers = response.get('footers')
+        obj = self.pool.get('pos_fiscal_printer.footer')
+        for footer in footers:
+            if footer.strip() <> "":
+                footer_id = obj.search(cr,uid,[('current_value','=',footer.rstrip())],
+                            context=context)
+                if not footer_id:
+                    vals = {'printer_id': ids[0],
+                           'current_value':footer.rstrip(),
+                           'value':footer.rstrip(),
+                        }
+                    obj.create(cr,uid,vals,context=context)
+        return True
+        
+    def write_footers(self, cr, uid, ids, context=None):
+        context = context or {}
+        footers = []
+        footer_ids = []
+        printer = self.browse(cr,uid,ids)[0]        
+        for footer in printer.footer_ids:
+            if (footer.value <> footer.current_value):
+                footers.append(footer.value)
+                footer_ids.append(footer.id)
+        params = {'footers':footers}
+        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        response = http_helper.send_command(cr, uid,ids,'write_footers',params)
+        if (response.get('exec')):
+            for id in footer_ids:
+                obj =self.pool.get('pos_fiscal_printer.footer')
+                brw = obj.browse(cr,uid,id)
+                obj.write(cr,uid,id,{'current_value':brw.value},context=context)
+    
     
     def read_serial(self, cr, uid, ids, context=None):
         context = context or {}    
@@ -150,7 +216,7 @@ class payment_method(osv.Model):
         'printer_id': fields.many2one('pos_fiscal_printer.printer'),   
         'account_journal_id': fields.many2one('account.journal',
             string='Payment Method',domain=[('journal_user','=','True')]),
-        'payment_method_id': fields.char(string='Id',size=2),
+        'code': fields.char(string='Code',size=2),
         'description':fields.char(string='Description', size=50),
         'current_description':fields.char(string='Current Description', size=50),        
     }
@@ -171,7 +237,11 @@ class tax_rate(osv.Model):
         'value':fields.float(digits=(12,2),string='Value'),
         'current_value':fields.float(digits=(12,2),string='Current Value'),
     }
-    
+    _defaults = {
+        'current_value': lambda *a: 0.0
+    }
+
+
 class measure_unit (osv.Model):
     
     _name = 'pos_fiscal_printer.measure_unit'
@@ -192,6 +262,10 @@ class header(osv.Model):
         'current_value':fields.char(size=255,string='Current Value'),
         'value':fields.char(size=255,string='Value')
     }
+    
+    _defaults = {
+        'current_value': lambda *a: "Not available"
+    }
 class footer(osv.Model):
     
     _name = 'pos_fiscal_printer.footer'
@@ -199,4 +273,8 @@ class footer(osv.Model):
         'printer_id': fields.many2one('pos_fiscal_printer.printer'),
         'current_value':fields.char(size=255,string='Current Value'),
         'value':fields.char(size=255,string='Value')
+    }
+    
+    _defaults = {
+        'current_value': lambda *a: "Not available"
     }
