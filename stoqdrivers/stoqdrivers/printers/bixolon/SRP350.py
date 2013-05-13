@@ -279,9 +279,11 @@ class SRP350(SerialBase):
         s5 = dict(zip(s5_keys,reply))        
         return s5
         
-    def read_status8(self):
-        reply = self._send_command("S8",response='333s')
-        reply = reply[0]
+    def read_status8(self,line):
+        reply = self._send_command("S8",line,response='333s')
+        reply = reply[0][4:331]
+        reply = reply.split("\n")
+        return reply
         
     def set_flag(self,flag,value):
 
@@ -376,13 +378,23 @@ class SRP350(SerialBase):
         return False
     
     def add_cashier(self,id,password,name):
-        self._send_command(CMD_ADD_CASHIER,id,password,name,response='c')    
-    
-    def set_payment_method(self,id,name):
-        self._send_command(CMD_SET_PAYMENT_METHOD,id,name,response='c')
-    
+        self._send_command(CMD_ADD_CASHIER,id,password,name,response='c')        
        
-    #Custom Coupon methods
+    #Custom Coupon methods    
+    def set_payment_methods(self,payment_methods):
+        for pm in payment_methods:
+            if (int(pm.get('code')) <= 16):
+                if (len(pm.get('description')) <= 14):
+                    data = "%02d%-14s" % (int(pm.get('code')),
+                        str(pm.get('description')))
+                    self._send_command(CMD_SET_PAYMENT_METHOD,data,
+                        response='c')
+                else:
+                    raise DriverError(_("The 'description'"
+                        "field has a maximum length of 14 characters"))       
+            else:                
+                raise DriverError(_("Invalid code: "+pm.get('code')+""
+                    "Try a value between 01-16"))        
     
     def set_tax_rates(self,tax_rates):
         
@@ -402,15 +414,18 @@ class SRP350(SerialBase):
         return True
     
     def get_coupon_headers(self):
-        pdb.set_trace()
-        s8 = self.read_status8()        
+        s8 = self.read_status8("E")        
+        return s8
+        
+    def get_coupon_footers(self):
+        s8 = self.read_status8("P")        
         return s8
         
     def set_coupon_headers(self,headers):
-        if len(headers) < HEADER_LINE_SIZE:
+        if len(headers) < HEADER_LINE_NUMBER:
             for i in range(0,len(headers)):
                 header =headers[i]
-                if len(header) < HEADER_LINE_NUMBER:
+                if len(header) < HEADER_LINE_SIZE:
                     self._send_command(CMD_SET_HEADER,"%02d" % (i+1),
                         str(header),response='c')
                 else:
@@ -419,6 +434,21 @@ class SRP350(SerialBase):
         else:
             raise DriverError(_("This printer supports up to 8 lines"
                 "of header"))
+                
+    def set_coupon_footers(self,footers):
+        if len(footers) < HEADER_LINE_NUMBER:
+            for i in range(0,len(footers)):
+                footer =footers[i]
+                if len(footer) < HEADER_LINE_SIZE:
+                    self._send_command(CMD_SET_FOOTER,"%02d" % (i+91),
+                        str(footer),response='c')
+                else:
+                    raise DriverError(_("This printer supports a"
+                        "maximum of 40 characters per line"))
+        else:
+            raise DriverError(_("This printer supports up to 8 lines"
+                "of header"))
+
     
     def has_open_coupon(self):
         return (self._get_amount_to_pay() <> 0)
@@ -649,8 +679,8 @@ class SRP350(SerialBase):
         return constants
 
     def get_payment_constants(self):
-        methods = []
-        return methods
+         raise DriverError(_("This command is not supported"
+                        "for the current printer"))
 
     def get_sintegra(self):
         taxes = []
