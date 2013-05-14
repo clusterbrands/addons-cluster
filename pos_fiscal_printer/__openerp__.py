@@ -14,4 +14,5 @@
         'view/pos_fiscal_printer_action_menu.xml',
         'view/point_of_sale_view.xml',
     ],
+    'js':['static/src/js/models.js'],
 }
