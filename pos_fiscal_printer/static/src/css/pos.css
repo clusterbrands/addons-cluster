@@ -1,0 +1,154 @@
+
+.point-of-sale .modal-dialog .popup-selection{
+    position: absolute;
+    left:30%;
+    top:10%;
+    width: 700px;
+    height:70%;
+    padding:10px;
+    padding-top:20px;
+    text-align:left;
+    font-size:14px;
+    font-weight:bold;
+    background-color: #F0EEEE;
+    border-radius: 4px;
+    box-shadow: 0px -1px white, 0px 1px white, 0px 4px #949494, 0px 10px 20px rgba(0, 0, 0, 0.3);
+    z-index:1200;
+}
+
+.point-of-sale .popup-selection .button{
+    float:right;
+    width: 110px;
+    height: 40px;
+    line-height:40px;
+    text-align:center;
+    margin:3px;
+    margin-top:10px;
+    margin-right:50px;
+
+    font-size:   14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border: 1px solid #cacaca;
+    border-radius: 4px;
+
+    background: #e2e2e2;
+    background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
+    background:    -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background:     -ms-linear-gradient(#f0f0f0, #e2e2e2);
+    background:         linear-gradient(#f0f0f0, #e2e2e2);
+    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+       -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+            box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+}
+.point-of-sale .popup-selection .button:hover {
+    color: white;
+    background: #7f82ac;
+    border: 1px solid #7f82ac;
+    background: -webkit-linear-gradient(#9d9fc5, #7f82ac);
+    background:    -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background:     -ms-linear-gradient(#9d9fc5, #7f82ac);
+    background:         linear-gradient(#9d9fc5, #7f82ac);
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+#customer-cancel {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}
+
+.point-of-sale .customer-list-container {
+    position: absolute;
+    top:70px;
+    left:5px;
+    right:5px;
+    bottom: 70px;
+    text-align: left;
+    overflow: auto;
+}
+
+.point-of-sale .customer-list-scroller {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    width:98%;
+}
+
+.customer-list-scroller ol {
+    list-style: none;
+}
+
+.customer-list-scroller ol li { }
+
+.customer-list-scroller ol li a {
+    display:block;
+    text-decoration:none;
+    color:#000000;
+    background-color:#FFFFFF;
+    line-height:20px;
+    border-bottom-style:solid;
+    border-bottom-width:1px;
+    border-bottom-color:#CCCCCC;
+    padding-left:10px;
+    cursor:pointer;
+}
+
+.customer-list-scroller ol li a:hover {
+    color:#FFFFFF;
+    background-image:url(/point_of_sale/static/src/img/hover.png);
+    background-repeat:repeat-x;
+}
+
+.point-of-sale .customer {
+    width: 100%;
+}
+
+.point-of-sale .customer a {
+    width: 100%;
+}
+
+.point-of-sale .customer .customer-field {
+    width: 130px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.point-of-sale .customer .customer-name{
+    width: 200px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.point-of-sale .customer .customer-phone {
+    width: 50px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.point-of-sale .customer-searchbox {
+    right: 2px;
+}
+.point-of-sale .customer-searchbox input {
+    width: 130px;
+    border-radius: 11px;
+    border: 1px solid #cecbcb;
+    padding: 3px 19px;
+    margin: 6px;
+    background: url("../img/search.png") no-repeat 5px;
+    background-color: white;
+}
+.point-of-sale .customer-search-clear {
+    postion: absolute;
+    top: 11px;
+    right: 600px;
+    cursor: pointer;
+    display: none;
+}
+

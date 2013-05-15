@@ -1,8 +1,8 @@
-openerp.pos_fiscal_printer = function(instance){
-    var module = instance.point_of_sale
-    
+function openerp_pos_screens_ex(instance,module){
+
     module.SelectCustomerPopupWidget = module.PopUpWidget.extend({
-        template:'SelectCustomerPopupWidget',        
+        template:'SelectCustomerPopupWidget',
+        
         start: function(){
             this._super();
             var self = this;
