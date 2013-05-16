@@ -1,5 +1,17 @@
 function openerp_pos_widgets_ex(instance, module){ 
     
+    //realizar comprobaciones aqui
+    module.PosWidget.include({
+        start: function(){  
+            var self = this          
+            pos = this._super()
+            return self.pos.ready.done(function() {
+                //console.debug('data cargada')
+                //self.screen_selector.show_popup('error', 'Not fiscal printer detected');
+            })
+        }
+    })
+    
     //@overwritten
     module.PosWidget.include({
         build_widgets: function(){

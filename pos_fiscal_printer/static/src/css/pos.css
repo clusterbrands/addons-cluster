@@ -102,7 +102,7 @@
 
 .customer-list-scroller ol li a:hover {
     color:#FFFFFF;
-    background-image:url(/point_of_sale/static/src/img/hover.png);
+    background-image:url(/pos_fiscal_printer/static/src/img/hover.png);
     background-repeat:repeat-x;
 }
 

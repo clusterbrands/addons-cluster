@@ -102,7 +102,7 @@ class CustomProxy(PointOfSaleController):
     
     @openerp.addons.web.http.jsonrequest
     def print_receipt(self, request, receipt):
-        return ""   
+        pdb.set_trace()   
         
     @openerp.addons.web.http.httprequest
     def index(self, req, s_action=None, db=None, **kw):
