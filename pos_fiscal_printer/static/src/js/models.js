@@ -8,7 +8,6 @@ function openerp_pos_models_ex(instance, module){
             this.set({'customers':new module.CustomerCollection()});
         },
         load_server_data : function(){
-            console.debug('load_server_data()')
             self = this
             loaded = _super.prototype.load_server_data.call(this)
                 .then(function(){
@@ -49,8 +48,17 @@ function openerp_pos_models_ex(instance, module){
         
     _super2 = module.Order
     module.Order = module.Order.extend({
+       addPaymentLine: function(cashRegister) {
+            //console.debug(this.pos.get('pos_config'))
+            var paymentLines = this.get('paymentLines');
+            var newPaymentline = new module.Paymentline({},
+                                    {cashRegister:cashRegister,pos:this.pos});
+            if(cashRegister.get('journal').type !== 'cash'){
+                newPaymentline.set_amount( this.getDueLeft() );
+            }
+            paymentLines.add(newPaymentline);
+        },
         export_for_printing : function(){
-            console.debug('export_for_printing()')
             order = _super2.prototype.export_for_printing.call(this);
             client  = this.get('client');
             order['client_vat'] = client ? client.vat:null
@@ -75,8 +83,8 @@ function openerp_pos_models_ex(instance, module){
             measure_units = this.pos.get('pos_config').printer.measure_units;
             
             unit = _.detect(measure_units,function(u){
-                            return u.product_uom_id[0] == uom_id
-                        })            
+                        return u.product_uom_id[0] == uom_id
+                    })            
             order_line = _super3.prototype.export_for_printing.call(this);    
             order_line.tax_code = tax.code
             order_line.unit_code = unit.code
@@ -92,7 +100,13 @@ function openerp_pos_models_ex(instance, module){
         },
         export_for_printing : function(){
            account_journal_id = this.cashregister.get('journal_id')[0]
-           return _super4.prototype.export_for_printing.call(this)
+           payment_methods = this.pos.get('pos_config').printer.payment_methods;
+           payment_method = _.detect(payment_methods,function(p){
+                                return p.account_journal_id[0] == account_journal_id
+                            })  
+           payment_line = _super4.prototype.export_for_printing.call(this)
+           payment_line.payment_method_code = payment_method.code
+           return payment_line
         }
     })
     
