@@ -1,8 +1,25 @@
 function openerp_pos_screens_ex(instance,module){
+    
+    module.PaymentScreenWidget.include({
+        
+        check_printer_params:function(){
+            //console.debug(currentOrder)
+        },        
+        validateCurrentOrder : function(){
+            var currentOrder = this.pos.get('selectedOrder');
+            this.pos.push_order(currentOrder.exportAsJSON()) 
+            if(this.pos.iface_print_via_proxy){
+                this.check_printer_params()
+                this.pos.proxy.print_receipt(currentOrder.export_for_printing());
+                this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
+            }else{
+                this.pos_widget.screen_selector.set_current_screen(this.next_screen);
+            }
+        }
+    })
 
     module.SelectCustomerPopupWidget = module.PopUpWidget.extend({
-        template:'SelectCustomerPopupWidget',
-        
+        template:'SelectCustomerPopupWidget',        
         start: function(){
             this._super();
             var self = this;

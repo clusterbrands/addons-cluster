@@ -1,3 +1,9 @@
+.point-of-sale .popup .header{
+    width:100%;
+    height:35px;
+    border-bottom: 1px solid #E0DDDD;
+    margin:0 0 8px
+}
 
 .point-of-sale .modal-dialog .popup-selection{
     position: absolute;

@@ -43,9 +43,7 @@ class CustomProxy(PointOfSaleController):
         payment_methods =params.get('payment_methods')
         driver = self._get_driver(printer)
         driver.set_payment_methods(payment_methods)
-        return {"exec":True}
-        
-    
+        return {"exec":True} 
         
     def read_tax_rates(self,request):
         printer = eval(request.get('printer'))

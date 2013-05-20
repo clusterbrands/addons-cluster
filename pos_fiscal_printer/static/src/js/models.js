@@ -19,8 +19,9 @@ function openerp_pos_models_ex(instance, module){
                         [['id','=', self.get('pos_session').config_id[0]]])
                 }).then(function(config){
                     return self.fetch('pos_fiscal_printer.printer',
-                        ['brand','name','port','serial','payment_method_ids',
-                        'tax_rate_ids','measure_unit_ids'],
+                        ['brand','name','port','serial','model',
+                        'payment_method_ids','tax_rate_ids',
+                        'measure_unit_ids'],
                         [['id','=',config[0].printer_id[0]]])
                 }).then(function(printer){
                     self.get('pos_config').printer = printer[0]
@@ -61,9 +62,20 @@ function openerp_pos_models_ex(instance, module){
         export_for_printing : function(){
             order = _super2.prototype.export_for_printing.call(this);
             client  = this.get('client');
-            order['client_vat'] = client ? client.vat:null
-            order['client_street'] = client ? client.street:null
-            order['client_street2'] = client ? client.street2:null
+            printer = this.pos.get('pos_config').printer;
+            street =  client ? client.street:""
+            street2 = client ? client.street2:""
+            order['client'] = {
+                vat: client ? client.vat:"",
+                name: order['client'],
+                address : street + " " + street2,
+            }
+            order['printer'] = {
+                model : printer.model[1],
+                brand : printer.brand[1],
+                port : printer.port,
+                serial : printer.serial
+            }
             return order;
         }
     })

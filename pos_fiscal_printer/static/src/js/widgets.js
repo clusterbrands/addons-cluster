@@ -6,8 +6,8 @@ function openerp_pos_widgets_ex(instance, module){
             var self = this          
             pos = this._super()
             return self.pos.ready.done(function() {
-                //console.debug('data cargada')
-                //self.screen_selector.show_popup('error', 'Not fiscal printer detected');
+                if (self.pos.get('pos_config').printer == null)
+                    self.screen_selector.show_popup('not-printer-error');
             })
         }
     })
@@ -17,8 +17,12 @@ function openerp_pos_widgets_ex(instance, module){
         build_widgets: function(){
             this._super()
             var self = this;
+            
             this.select_customer_popup = new module.SelectCustomerPopupWidget(this, {});
             this.select_customer_popup.appendTo($('.point-of-sale'));
+            
+            this.not_printer_error_popup = new module.NotPrinterErrorPopupWidget(this,{})
+            this.not_printer_error_popup.appendTo($('.point-of-sale'));
             
             this.select_customer_button = new module.HeaderButtonWidget(this,{
                 label:'Select Customer',
@@ -48,6 +52,7 @@ function openerp_pos_widgets_ex(instance, module){
                     'error-negative-price': this.error_negative_price_popup,
                     'choose-receipt': this.choose_receipt_popup,
                     'select-customer': this.select_customer_popup,
+                    'not-printer-error':this.not_printer_error_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
@@ -132,5 +137,9 @@ function openerp_pos_widgets_ex(instance, module){
                 .invoke('appendTo', this.$('.customer-list'));
 
         },
+    });
+    
+    module.NotPrinterErrorPopupWidget = module.ErrorPopupWidget.extend({
+        template:'NotPrinterErrorPopupWidget',
     });
 }
