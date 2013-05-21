@@ -6,8 +6,11 @@ function openerp_pos_widgets_ex(instance, module){
             var self = this          
             pos = this._super()
             return self.pos.ready.done(function() {
+                console.debug("estoy aqui")
                 if (self.pos.get('pos_config').printer == null)
                     self.screen_selector.show_popup('not-printer-error');
+                else
+                    console.debug("proxy: "+self.pos.proxy)
             })
         }
     })
@@ -141,5 +144,13 @@ function openerp_pos_widgets_ex(instance, module){
     
     module.NotPrinterErrorPopupWidget = module.ErrorPopupWidget.extend({
         template:'NotPrinterErrorPopupWidget',
+        show: function(){
+            self = this
+            this._super();
+            this.$('.button').off('click').click(function(){
+                self.pos_widget.try_close()
+            })
+        }
+        
     });
 }

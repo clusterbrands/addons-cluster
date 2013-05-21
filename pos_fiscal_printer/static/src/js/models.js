@@ -25,23 +25,26 @@ function openerp_pos_models_ex(instance, module){
                         [['id','=',config[0].printer_id[0]]])
                 }).then(function(printer){
                     self.get('pos_config').printer = printer[0]
-                    return self.fetch('pos_fiscal_printer.tax_rate',
-                        ['account_tax_id','code'],
-                        [['printer_id','=',self.get('pos_config').printer.id]])
-                }).then(function(tax_rates){                
-                    self.get('pos_config').printer.tax_rates = tax_rates
-                    return self.fetch('pos_fiscal_printer.payment_method',
-                        ['account_journal_id','code'],
-                        [['printer_id','=',self.get('pos_config').printer.id]])
-                }).then(function(payment_methods){
-                    console.debug( self.get('pos_config').printer.tax_rates)
-                    self.get('pos_config').printer.payment_methods = payment_methods
-                    return self.fetch('pos_fiscal_printer.measure_unit',
-                        ['product_uom_id','code'],
-                        [['printer_id','=',self.get('pos_config').printer.id]])
-                }).then(function(measure_units){
-                    self.get('pos_config').printer.measure_units = measure_units
-                })             
+                    if (printer[0]){
+                        return self.fetch('pos_fiscal_printer.tax_rate', 
+                            ['account_tax_id','code'],
+                            [['printer_id','=',self.get('pos_config').printer.id]]
+                        ).then(function(tax_rates){                
+                            self.get('pos_config').printer.tax_rates = tax_rates
+                            return self.fetch('pos_fiscal_printer.payment_method',
+                                ['account_journal_id','code'],
+                                [['printer_id','=',self.get('pos_config').printer.id]])
+                        }).then(function(payment_methods){
+                            self.get('pos_config').printer.payment_methods = payment_methods
+                            return self.fetch('pos_fiscal_printer.measure_unit',
+                                ['product_uom_id','code'],
+                                [['printer_id','=',self.get('pos_config').printer.id]])
+                        }).then(function(measure_units){
+                            self.get('pos_config').printer.measure_units = measure_units
+                        })
+                    }
+                })
+                
             return loaded
         }
         
