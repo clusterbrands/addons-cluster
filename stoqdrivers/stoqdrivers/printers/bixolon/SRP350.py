@@ -131,8 +131,8 @@ class SRP350Status(object):
     
         0x08:(HardwareFailure(_("Till Error"))),
         0x41:(OutofPaperError(_("Out of paper"))),
-        0x42:(HardwareFailure(_("Mechanical printer error / Paper"))),
-        0x43:(HardwareFailure(_("Mechanical printer error / Out of paper"))),       
+        0x42:(HardwareFailure(_("Printer cover is open / Low paper"))), 
+        0x43:(HardwareFailure(_("Mechanical printer error / Out of paper"))),              
         0x60:(PrinterError(_("Fiscal Error"))), 
         0x64:(HardwareFailure(_("Fiscal Memory Error"))),  
         0x6C:(HardwareFailure(_("Out of fiscal memory error"))),
@@ -144,9 +144,9 @@ class SRP350Status(object):
         
         for key in self.st2_codes:
             if (key & value) == key:
-                print self.st2_codes[key]
-                #break
-    
+                print chr(key)
+                raise self.st2_codes[key]
+                
 
 def bcd2dec(data):
     return int(''.join(['%02x' % ord(i) for i in data]))
