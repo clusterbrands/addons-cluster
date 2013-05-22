@@ -20,7 +20,15 @@ class CustomProxy(PointOfSaleController):
         fiscal = FiscalPrinterEx(brand=printer.get('brand'),
                     model=printer.get('model'),
                     device=printer.get('port'))
-        return fiscal    
+        return fiscal
+        
+    def _check_printer_status(self,request,printer):      
+        try:
+            driver = self._get_driver(printer)
+            driver.check_printer_status()
+        except Exception as e:
+            return {"status":'error',"error": str(e)}
+        return {"status":'ok'}
     
     def read_printer_serial(self,request):
         printer = eval(request.get('printer'))
@@ -98,9 +106,15 @@ class CustomProxy(PointOfSaleController):
         return printers
     
     
+        
     @openerp.addons.web.http.jsonrequest
     def print_receipt(self, request, receipt):
         pdb.set_trace()   
+        
+    @openerp.addons.web.http.jsonrequest
+    def check_printer_status(self, request,printer):
+        return self._check_printer_status(request,printer)
+        
         
     @openerp.addons.web.http.httprequest
     def index(self, req, s_action=None, db=None, **kw):

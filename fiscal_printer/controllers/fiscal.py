@@ -70,4 +70,5 @@ class FiscalPrinterEx(FiscalPrinter):
         else:
             raise DriverError(_("This method is not supported from "
                                 "the current printer"))
-        
+    def check_printer_status(self):
+        self._driver._check_error()

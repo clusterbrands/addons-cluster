@@ -2,17 +2,35 @@ function openerp_pos_widgets_ex(instance, module){
     
     //realizar comprobaciones aqui
     module.PosWidget.include({
+        
+                
         start: function(){  
-            var self = this          
-            pos = this._super()
+            var self = this    
+            pos = this._super()           
             return self.pos.ready.done(function() {
-                console.debug("estoy aqui")
-                if (self.pos.get('pos_config').printer == null)
-                    self.screen_selector.show_popup('not-printer-error');
-                else
-                    console.debug("proxy: "+self.pos.proxy)
+                self.check_printer_status()
             })
-        }
+        },
+        check_printer_status:function(){
+            var self = this    
+            printer = self.pos.get('pos_config').printer
+            if (printer == null)
+                self.screen_selector.show_popup('not-printer-error');
+            else
+                self.pos.proxy.check_printer_status(
+                    {
+                        model:printer.model[1],
+                        brand:printer.brand[1],
+                        port:printer.port
+                    }
+                ).done(function(response){
+                    
+                    if (response.status == "error"){
+                        self.printer_error_popup.set_message(response.error)
+                        self.screen_selector.show_popup('printer-error');
+                    }
+                })            
+        },
     })
     
     //@overwritten
@@ -26,6 +44,9 @@ function openerp_pos_widgets_ex(instance, module){
             
             this.not_printer_error_popup = new module.NotPrinterErrorPopupWidget(this,{})
             this.not_printer_error_popup.appendTo($('.point-of-sale'));
+            
+            this.printer_error_popup = new module.PrinterErrorPopupWidget(this,{})
+            this.printer_error_popup.appendTo($('.point-of-sale'));
             
             this.select_customer_button = new module.HeaderButtonWidget(this,{
                 label:'Select Customer',
@@ -56,6 +77,7 @@ function openerp_pos_widgets_ex(instance, module){
                     'choose-receipt': this.choose_receipt_popup,
                     'select-customer': this.select_customer_popup,
                     'not-printer-error':this.not_printer_error_popup,
+                    'printer-error':this.printer_error_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
@@ -142,15 +164,39 @@ function openerp_pos_widgets_ex(instance, module){
         },
     });
     
-    module.NotPrinterErrorPopupWidget = module.ErrorPopupWidget.extend({
+     module.PrinterErrorPopupWidget = module.PopUpWidget.extend({
+        template:'PrinterErrorPopupWidget',
+        show: function(){
+            self = this
+            this._super();
+            this.$('.retry').off('click').click(_.bind(this.click_retry,this))
+            this.$('.close').off('click').click(_.bind(this.click_close,this))            
+        },
+        click_retry :function(){
+            self.pos_widget.screen_selector.close_popup();
+            self.pos_widget.check_printer_status()
+        },
+        click_close :function(){
+            this.pos_widget.try_close()
+        },        
+        set_message : function(message){
+            this.message = message
+            this.renderElement();
+        }        
+        
+    });        
+    
+    module.NotPrinterErrorPopupWidget = module.PopUpWidget.extend({
         template:'NotPrinterErrorPopupWidget',
         show: function(){
             self = this
             this._super();
-            this.$('.button').off('click').click(function(){
-                self.pos_widget.try_close()
-            })
-        }
-        
+            this.$('.button').off('click').click(_.bind(this.click_close,this))
+        },
+        click_close :function(){
+            this.pos_widget.try_close()
+        },
+      
     });
+    
 }
