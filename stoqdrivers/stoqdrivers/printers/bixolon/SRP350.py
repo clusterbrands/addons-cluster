@@ -478,7 +478,7 @@ class SRP350(SerialBase):
     # Coupon methods    
    
     
-    def coupon_is_customer_idCouponentified(self):
+    def coupon_is_customer_identified(self):
         """ Returns True, if the customer have already been identified,
         False otherwise.
         """
@@ -491,30 +491,27 @@ class SRP350(SerialBase):
         self._document = "Cedula/RIF: "+document      
 
     def coupon_open(self):
-   
-        #if not (self.has_open_coupon):
-        self._reset        
-        self._send_command(CMD_ADD_CUSTOMER_INFO,("%02d%-40s") % (0,self._customer),response='c')
-        self._send_command(CMD_ADD_CUSTOMER_INFO,("%02d%-40s") % (1,self._address ),response='c')
-        self._send_command(CMD_ADD_CUSTOMER_INFO,("%02d%-40s") % (2,self._document),response='c')
-
-        #else:
-        #    raise CouponOpenError(_("Coupon already is open"))
+                
+        lines = []
+        name_lines = [self._customer[i:i+40] for i in range(0,len(self._customer),40)]
+        address_lines = [self._address[i:i+40] for i in range(0,len(self._address),40)] 
+        lines = name_lines+[self._document]+address_lines
+        for i in range(0,len(lines)):
+            self._send_command(CMD_ADD_CUSTOMER_INFO,("%02d%-40s") % (i+1,lines[i]),response='c')
+        
 
     def coupon_cancel(self):
         self._send_command(CMD_COUPON_CANCEL,response='c')
-        self.reset()
+        self._reset()
         
     def coupon_close(self, message):  
-
-        coupon_number = self.get_last_coupon_number()
+        
         for payment in self._payments:
             data = ('%2s%013.2f' % (payment['payment_method'],
                     payment['value']))
             data = data.replace(".","")
-
             self._send_command(CMD_ADD_PAYMENT,data,response='c')        
-              
+        coupon_number = self.get_last_coupon_number()      
         return coupon_number
         
 
@@ -522,10 +519,10 @@ class SRP350(SerialBase):
                         quantity=Decimal("1.0"), unit=UnitType.EMPTY,
                         discount=Decimal("0.0"), surchage=Decimal("0.0"),
                         unit_desc="",refund = False):
-                                         
-        data = ("%011.2f%09.3f%-10s%-30s") %(float(price),
+        desc = code+description                                 
+        data = ("%011.2f%09.3f%-40s") %(float(price),
                                             float(quantity),
-                                            code,description)
+                                            desc[0:40])
         data = data.replace(".","")
         self._send_command(taxcode,data,response='c')         
         if (discount):
@@ -540,7 +537,7 @@ class SRP350(SerialBase):
         self._send_command(CMD_COUPON_CANCEL_ITEM,response='c')
 
     def coupon_add_payment(self, payment_method, value, description):
-        
+    
         self._payments.append({'payment_method':payment_method,'value':value})
         self.remainder_value -= value        
         if self.remainder_value < 0.0:
