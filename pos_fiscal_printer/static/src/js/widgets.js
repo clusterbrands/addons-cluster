@@ -1,6 +1,28 @@
+/*
+***************************************************************************
+*    Module Writen to OpenERP, Open Source Management Solution
+*    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
+*    All Rights Reserved
+***************Credits******************************************************
+*    Coded by: Eduardo Ochoa    <eduardo.ochoa@clusterbrands.com.ve>
+*                               <elos3000@gmail.com>
+*****************************************************************************
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Affero General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the GNU Affero General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 function openerp_pos_widgets_ex(instance, module){ 
     
-    //realizar comprobaciones aqui
     module.PosWidget.include({        
                 
         start: function(){  
@@ -32,8 +54,7 @@ function openerp_pos_widgets_ex(instance, module){
                 })            
         },
     })
-    
-    //@overwritten
+
     module.PosWidget.include({
         build_widgets: function(){
             this._super()
