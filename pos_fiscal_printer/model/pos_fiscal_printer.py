@@ -251,7 +251,7 @@ class measure_unit (osv.Model):
             string='Tax',domain=[('active','=','True')]),
         'Name':fields.char(size=255,string='Name'),
         'current_code':fields.char(size=255,string='Current Code'),
-        'code':fields.char(size=255,string='Code')
+        'code':fields.char(size=2,string='Code')
     }
     
 class header(osv.Model):

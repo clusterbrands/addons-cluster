@@ -13,6 +13,7 @@
         'view/pos_fiscal_printer_view.xml',
         'view/pos_fiscal_printer_action_menu.xml',
         'view/point_of_sale_view.xml',
+        'view/account_invoice_view.xml',
     ],
     'js':[   
         'static/src/js/db.js',

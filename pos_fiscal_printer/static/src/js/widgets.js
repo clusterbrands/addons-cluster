@@ -1,8 +1,7 @@
 function openerp_pos_widgets_ex(instance, module){ 
     
     //realizar comprobaciones aqui
-    module.PosWidget.include({
-        
+    module.PosWidget.include({        
                 
         start: function(){  
             var self = this    
@@ -21,7 +20,8 @@ function openerp_pos_widgets_ex(instance, module){
                     {
                         model:printer.model[1],
                         brand:printer.brand[1],
-                        port:printer.port
+                        port:printer.port,
+                        serial:printer.serial,
                     }
                 ).done(function(response){
                     
@@ -47,6 +47,9 @@ function openerp_pos_widgets_ex(instance, module){
             
             this.printer_error_popup = new module.PrinterErrorPopupWidget(this,{})
             this.printer_error_popup.appendTo($('.point-of-sale'));
+            
+            this.print_error_popup = new module.PrintErrorPopupWidget(this,{})
+            this.print_error_popup.appendTo($('.point-of-sale'));
             
             this.select_customer_button = new module.HeaderButtonWidget(this,{
                 label:'Select Customer',
@@ -78,6 +81,7 @@ function openerp_pos_widgets_ex(instance, module){
                     'select-customer': this.select_customer_popup,
                     'not-printer-error':this.not_printer_error_popup,
                     'printer-error':this.printer_error_popup,
+                    'print-error':this.print_error_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
@@ -184,7 +188,24 @@ function openerp_pos_widgets_ex(instance, module){
             this.renderElement();
         }        
         
-    });        
+    }); 
+    
+    module.PrintErrorPopupWidget = module.PopUpWidget.extend({
+        template:'PrintErrorPopupWidget',
+        show: function(){
+            self = this
+            this._super();
+            this.$('.close').off('click').click(_.bind(this.click_close,this))            
+        },
+        click_close :function(){
+            self.pos_widget.screen_selector.close_popup();
+        },        
+        set_message : function(message){
+            this.message = message
+            this.renderElement();
+        }     
+    })
+           
     
     module.NotPrinterErrorPopupWidget = module.PopUpWidget.extend({
         template:'NotPrinterErrorPopupWidget',

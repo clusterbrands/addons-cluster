@@ -52,7 +52,16 @@ function openerp_pos_models_ex(instance, module){
         
     _super2 = module.Order
     module.Order = module.Order.extend({
-       addPaymentLine: function(cashRegister) {
+       
+        set_printer_serial:function (printer_serial){
+            this.printer_serial = printer_serial
+        },
+        
+        set_printer_receipt_number: function(printer_receipt_number){
+            this.printer_receipt_number = printer_receipt_number
+        },
+                
+        addPaymentLine: function(cashRegister) {
             //console.debug(this.pos.get('pos_config'))
             var paymentLines = this.get('paymentLines');
             var newPaymentline = new module.Paymentline({},
@@ -61,6 +70,14 @@ function openerp_pos_models_ex(instance, module){
                 newPaymentline.set_amount( this.getDueLeft() );
             }
             paymentLines.add(newPaymentline);
+        },
+        exportAsJSON : function(){
+            order = _super2.prototype.exportAsJSON.call(this);
+            order['partner_id'] = this.get('client') ? this.get('client').id: undefined;
+            order['printer_serial'] = this.printer_serial;         
+            order['printer_receipt_number'] = this.printer_receipt_number;
+            console.debug(order);
+            return order
         },
         export_for_printing : function(){
             order = _super2.prototype.export_for_printing.call(this);
@@ -88,11 +105,12 @@ function openerp_pos_models_ex(instance, module){
         export_for_printing : function(){          
             product = this.get_product();
             taxes_ids = product.get('taxes_id');        
-            tax_rates = this.pos.get('pos_config').printer.tax_rates;       
+            tax_rates = this.pos.get('pos_config').printer.tax_rates;
+            tax = ""       
             _.each(taxes_ids,function(tax_id){
                 tax = _.detect(tax_rates,function(t){
                             return t.account_tax_id[0] == tax_id
-                        })            
+                        }) 
             })
             uom_id = product.get('uom_id')[0]
             measure_units = this.pos.get('pos_config').printer.measure_units;
@@ -101,8 +119,8 @@ function openerp_pos_models_ex(instance, module){
                         return u.product_uom_id[0] == uom_id
                     })            
             order_line = _super3.prototype.export_for_printing.call(this);    
-            order_line.tax_code = tax.code
-            order_line.unit_code = unit.code
+            order_line.tax_code = tax != "" ? tax.code:tax
+            order_line.unit_code = unit ? unit.code:""
             return order_line
         }
     })
@@ -120,7 +138,7 @@ function openerp_pos_models_ex(instance, module){
                                 return p.account_journal_id[0] == account_journal_id
                             })  
            payment_line = _super4.prototype.export_for_printing.call(this)
-           payment_line.payment_method_code = payment_method.code
+           payment_line.payment_method_code = payment_method ? payment_method.code:""
            return payment_line
         }
     })

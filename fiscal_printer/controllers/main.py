@@ -7,28 +7,31 @@ import json
 from point_of_sale.controllers.main import PointOfSaleController
 from fiscal import FiscalPrinterEx
 from stoqdrivers.printers import base
+from stoqdrivers.enum import PaymentMethodType, TaxType, UnitType
 from serial import SerialException
+from decimal import Decimal
 
 class CustomProxy(PointOfSaleController):
 
     def __init__(self):
-        super(CustomProxy,self).__init__()
-    
-    
+        super(CustomProxy,self).__init__()    
 
     def _get_driver(self,printer):        
         fiscal = FiscalPrinterEx(brand=printer.get('brand'),
                     model=printer.get('model'),
                     device=printer.get('port'))
         return fiscal
-        
-    def _check_printer_status(self,request,printer):      
-        try:
-            driver = self._get_driver(printer)
-            driver.check_printer_status()
-        except Exception as e:
-            return {"status":'error',"error": str(e)}
-        return {"status":'ok'}
+    
+    def _check_printer_serial(self,printer,driver):
+        serial = driver.get_serial()
+        if serial <> printer.get('serial'):
+            raise Exception("The connected printer does not match with the configured for this POS")
+        return True
+    
+    def _check_printer_status(self,printer):       
+        driver = self._get_driver(printer)
+        driver.check_printer_status()
+        self._check_printer_serial(printer,driver)     
     
     def read_printer_serial(self,request):
         printer = eval(request.get('printer'))
@@ -106,15 +109,84 @@ class CustomProxy(PointOfSaleController):
         return printers
     
     
-        
+    def _add_items(self,driver,order_lines):
+        for product in order_lines:
+            driver.add_item(
+                "",
+                str(product.get('product_name')),
+                Decimal(product.get('price_with_tax')),
+                str(product.get('tax_code')),
+                items_quantity= Decimal(product.get('quantity')),
+                unit = UnitType.CUSTOM, 
+                discount = Decimal(product.get('discount')),
+                unit_desc = ("%-2s") % str(product.get('unit_code'))
+            )
+    
+    def _open_coupon(self,driver):
+        if (driver.has_open_coupon()):
+            driver.cancel()
+        driver.open()            
+            
+    def _add_payments(self,driver,payment_lines):
+        for payment in payment_lines:
+            driver.add_payment(
+                str(payment.get('payment_method_code')),
+                Decimal(payment.get('amount'))
+            )            
+    
+    def _check_printer_params(self,receipt):
+        order_lines = receipt.get('orderlines')
+        payment_lines = receipt.get('paymentlines') 
+        for product in order_lines:
+            if (product.get('tax_code') == ""):
+                raise Exception("The product : '"+
+                    product.get('product_name') +
+                    "' does not have a tax rate configured for the current printer")
+            #~ if (product.get('unit_code') == ""):
+                  #~ raise Exception("The product : '"+
+                    #~ product.get('product_name') +
+                    #~ "' does not have a measure unit configured for the current printer")
+        for payment in payment_lines:
+            if (payment.get('payment_method_code') == ""):
+                raise Exception("The payment method "+
+                    payment.get("journal")+" is not configured for the current printer")
+    
+    def _print_receipt(self,receipt):
+        printer = receipt.get('printer')
+        client = receipt.get('client')
+        order_lines = receipt.get('orderlines')
+        payment_lines = receipt.get('paymentlines') 
+        printer_status = self._check_printer_status(printer)
+        driver = self._get_driver(printer)
+        driver.identify_customer(str(client.get('name')),
+           str(client.get('address')), str(client.get('vat')))
+        self._open_coupon(driver)           
+        try:
+            self._add_items(driver,order_lines)
+            driver.totalize()
+            self._add_payments(driver,payment_lines)  
+            receipt_id = driver.close()
+            return {"status":"ok","receipt_id":receipt_id,"serial":printer.get('serial')}
+        except Exception as e:
+            driver.cancel()
+            return {"status":"error","error":str(e)}            
+       
+            
     @openerp.addons.web.http.jsonrequest
     def print_receipt(self, request, receipt):
-        pdb.set_trace()   
-        
+        try:
+            self._check_printer_params(receipt)
+            return self._print_receipt(receipt) 
+        except Exception as e:
+            return {"status":"error","error":str(e)}
+    
     @openerp.addons.web.http.jsonrequest
     def check_printer_status(self, request,printer):
-        return self._check_printer_status(request,printer)
-        
+        try:
+            self._check_printer_status(printer)
+            return {"status":"ok"}
+        except Exception as e:
+            return {"status":"error","error":str(e)}
         
     @openerp.addons.web.http.httprequest
     def index(self, req, s_action=None, db=None, **kw):

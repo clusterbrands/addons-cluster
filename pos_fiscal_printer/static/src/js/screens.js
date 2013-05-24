@@ -1,20 +1,27 @@
 function openerp_pos_screens_ex(instance,module){
     
     module.PaymentScreenWidget.include({
-        
-        check_printer_params:function(){
-            //console.debug(currentOrder)
-        },        
+               
         validateCurrentOrder : function(){
-            var currentOrder = this.pos.get('selectedOrder');
-            this.pos.push_order(currentOrder.exportAsJSON()) 
+            var self = this
+            var currentOrder = this.pos.get('selectedOrder');           
             if(this.pos.iface_print_via_proxy){
-                this.check_printer_params()
-                this.pos.proxy.print_receipt(currentOrder.export_for_printing());
-                this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
+                this.pos.proxy.print_receipt(currentOrder.export_for_printing())
+                .done(function(response){
+                    if (response.status == "ok"){
+                        console.debug(response)
+                        currentOrder.set_printer_serial(response.serial)
+                        currentOrder.set_printer_receipt_number(response.receipt_id)
+                        self.pos.push_order(currentOrder.exportAsJSON()) 
+                        self.pos.get('selectedOrder').destroy();
+                    }else{
+                        self.pos_widget.print_error_popup.set_message(response.error)
+                        self.pos_widget.screen_selector.show_popup('print-error');
+                    }
+                })
             }else{
                 this.pos_widget.screen_selector.set_current_screen(this.next_screen);
-            }
+            } 
         }
     })
 

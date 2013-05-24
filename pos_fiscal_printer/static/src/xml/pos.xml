@@ -104,5 +104,23 @@
             </div>
         </div>
     </t>
+    <t t-name="PrintErrorPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <div class="header">
+                    <div>Print Error</div>
+                </div>
+                <img src="/pos_fiscal_printer/static/src/img/printer.jpg" />
+                <p class="message">
+                    <t t-esc="widget.message"/>
+                </p>
+                <div class="footer">
+                    <div class="button close">
+                        Close
+                    </div>                   
+                </div>
+            </div>
+        </div>
+    </t>
     
 </templates>

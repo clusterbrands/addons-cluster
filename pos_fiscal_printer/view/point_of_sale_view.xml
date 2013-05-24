@@ -11,5 +11,27 @@
                 </field>
             </field>
         </record>
+        <record model="ir.ui.view" id="view_pos_order_tree_inherit">
+            <field name="name">Orders</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="session_id" position="after">
+                    <field name="printer_receipt_number"/>
+                    <field name="printer_serial"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_pos_pos_form_inherit">
+            <field name="name">pos.order.inherit</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="printer_receipt_number"/>
+                    <field name="printer_serial"/>
+                </field>
+            </field>
+        </record>
     </data>
 </openerp>
