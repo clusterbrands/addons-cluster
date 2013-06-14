@@ -31,9 +31,12 @@
     'data' : [        
     ],
     'js':[ 
+        'static/src/js/screens.js',
         'static/src/js/widgets.js',
         'static/src/js/main.js',         
     ],
     'css': [
+        'static/src/css/pos.css'
     ],
+    'qweb': ['static/src/xml/pos.xml'],
 }
