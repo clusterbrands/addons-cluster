@@ -27,10 +27,12 @@
     'author' : "Me",
     'description' : """Enables add clients in the POS module orders""",
     'init_xml': [
-     ],
+    ],
     'data' : [        
     ],
-    'js':[                      
+    'js':[ 
+        'static/src/js/widgets.js',
+        'static/src/js/main.js',         
     ],
     'css': [
     ],
