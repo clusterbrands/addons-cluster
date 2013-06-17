@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CustomerPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <div class="header">
+                    <div>Customer Form</div>
+                </div>
+                <div class="footer">
+                    <div class="button close">
+                        Close
+                    </div>               
+                </div>
+            </div>
+        </div>
+    </t>        
+</templates>
