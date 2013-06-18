@@ -1,5 +1,49 @@
-#customer-cancel {
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
+/*
+.ui-dialog .ui-dialog-titlebar {
+    background: url("images/ui-bg_highlight-soft_75_cccccc_1x100.png") repeat-x scroll 50% 50% #CCCCCC;
+    border: 1px solid #AAAAAA;
+    color: #222222;
 }
+*/
+
+.point-of-sale #rightheader .header-button{
+    border-right: none;
+}
+
+.customer-container{
+    font-size:15px;
+}
+
+.customer-container .long-label{
+    display:block;
+}
+
+.customer-container label{
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+.customer-container input[type=text]{
+    padding: 0.4em;
+    width:94%;
+}
+
+.customer-container textarea{
+    padding: 0.4em;
+    width:94%;
+}
+
+#rut{
+   width:86%;
+}
+
+#rut_type{
+   width:5%; 
+   text-align:center;
+}
+
+
+
+
+
+
+

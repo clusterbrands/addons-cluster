@@ -1,16 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="CustomerPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-help">
-                <div class="header">
-                    <div>Customer Form</div>
+        <div id="customer-form" title="Customer Form">
+            <div class="customer-container">                
+                <div id="choice_type">
+                    <input type="radio" id="chk_v" name="choice_type" checked="checked"/>
+                    <label for="chk_v">V</label>
+                    <input type="radio" id="chk_e" name="choice_type"/>
+                    <label for="chk_e">E</label>
+                    <input type="radio" id="chk_j" name="choice_type"/>
+                    <label for="chk_j">J</label>
+                    <input type="radio" id="chk_g" name="choice_type"/>
+                    <label for="chk_g">G</label>
+                    <input type="radio" id="chk_p" name="choice_type"/>
+                    <label for="chk_p">P</label>
                 </div>
-                <div class="footer">
-                    <div class="button close">
-                        Close
-                    </div>               
+                
+                <label class="long-label">RUT</label>
+                <input type="text" id="rut_type" class="text ui-widget-content ui-corner-all"/>
+                <input type="text" id="rut" class="text ui-widget-content ui-corner-all"/>
+                
+                <label class="long-label">Name</label>
+                <input type="text" id="name" class="text ui-widget-content ui-corner-all"/>
+                
+                <div id="choice_taxpayer" width="50%" style="float:left">
+                    <label  class="long-label">Taxpayer</label>
+                    <input type="radio" id="chk_yes" name="choice_taxpayer" checked="checked"/>
+                    <label for="chk_yes">Yes</label>
+                    <input type="radio" id="chk_not" name="choice_taxpayer"/>
+                    <label for="chk_not">No</label>
                 </div>
+                <div id="choice_special_taxpayer">
+                    <label class="long-label">Special Taxpayer</label>
+                    <input type="radio" id="chk_yes_s" name="choice_special_taxpayer" checked="checked"/>
+                    <label for="chk_yes_s">Yes</label>
+                    <input type="radio" id="chk_not_s" name="choice_special_taxpayer"/>
+                    <label for="chk_not_s">No</label>
+                </div>  
+                <label class="long-label">Address</label>
+                <textarea id="address" rows="2" class="text ui-widget-content ui-corner-all"></textarea>
+                
+                <label class="long-label">Phone</label>
+                <input type="text" width="5%" class="text ui-widget-content ui-corner-all"/>
+                
+                <label class="long-label">Email</label>
+                <input type="text" width="5%" class="text ui-widget-content ui-corner-all"/>
+                
             </div>
         </div>
     </t>        

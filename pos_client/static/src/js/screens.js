@@ -1,15 +1,26 @@
 function openerp_pos_screens_ex(instance,module){
     module.CustomerPopupWidget = module.PopUpWidget.extend({
-        template:'CustomerPopupWidget',        
-        start: function(){
-            this._super();
-            var self = this;
-            console.debug("hola mundo")
-        },        
+        template:'CustomerPopupWidget',              
         show: function(){
+            self = this;
             this._super();
-            var self = this;
-            this.renderElement();
+            $("#customer-form").dialog({
+                modal: true,
+                width:600,
+                height:600,
+                buttons:{
+                    Save:function(){
+                    
+                    },
+                    Cancel:function(){
+                        $(this).dialog("close");
+                        self.pos_widget.screen_selector.close_popup()
+                    }                
+                }
+            });
+            $("#choice_type").buttonset();
+            $("#choice_taxpayer").buttonset();
+            $("#choice_special_taxpayer").buttonset();
         },
     })
 }
