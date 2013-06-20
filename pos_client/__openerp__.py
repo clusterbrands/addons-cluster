@@ -31,8 +31,9 @@
     'data' : [        
     ],
     'js':[ 
-        'static/src/js/screens.js',
+        'static/src/js/models.js',
         'static/src/js/widgets.js',
+        'static/src/js/screens.js',
         'static/src/js/main.js',         
     ],
     'css': [

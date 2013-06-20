@@ -3,6 +3,7 @@
     <t t-name="CustomerPopupWidget">
         <div id="customer-form" title="Customer Form">
             <div class="customer-container">                
+<!--
                 <div id="choice_type">
                     <input type="radio" id="chk_v" name="choice_type" checked="checked"/>
                     <label for="chk_v">V</label>
@@ -15,10 +16,13 @@
                     <input type="radio" id="chk_p" name="choice_type"/>
                     <label for="chk_p">P</label>
                 </div>
+-->
                 
                 <label class="long-label">RUT</label>
-                <input type="text" id="rut_type" class="text ui-widget-content ui-corner-all"/>
-                <input type="text" id="rut" class="text ui-widget-content ui-corner-all"/>
+                <div>
+                    <input id="rut" type="text" class="text ui-widget-content ui-corner-all"/>
+                    <button id="search">search</button>
+                </div>
                 
                 <label class="long-label">Name</label>
                 <input type="text" id="name" class="text ui-widget-content ui-corner-all"/>
@@ -45,6 +49,7 @@
                 
                 <label class="long-label">Email</label>
                 <input type="text" width="5%" class="text ui-widget-content ui-corner-all"/>
+    
                 
             </div>
         </div>

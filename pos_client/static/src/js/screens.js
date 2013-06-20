@@ -18,10 +18,16 @@ function openerp_pos_screens_ex(instance,module){
                     }                
                 }
             });
+            $("#search").button({icons: {primary: "ui-icon-search"},text:false})
+            $("#search").click(_.bind(this.on_btnsearch_click,this))
             $("#choice_type").buttonset();
             $("#choice_taxpayer").buttonset();
             $("#choice_special_taxpayer").buttonset();
         },
+        on_btnsearch_click: function(){
+            alert("Searching customer...")
+        }
+        
     })
 }
 
