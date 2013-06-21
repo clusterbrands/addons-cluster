@@ -3,42 +3,39 @@
     <t t-name="CustomerPopupWidget">
         <div id="customer-form" title="Customer Form">
             <div class="customer-container">                
-<!--
                 <div id="choice_type">
-                    <input type="radio" id="chk_v" name="choice_type" checked="checked"/>
-                    <label for="chk_v">V</label>
-                    <input type="radio" id="chk_e" name="choice_type"/>
-                    <label for="chk_e">E</label>
-                    <input type="radio" id="chk_j" name="choice_type"/>
-                    <label for="chk_j">J</label>
-                    <input type="radio" id="chk_g" name="choice_type"/>
-                    <label for="chk_g">G</label>
-                    <input type="radio" id="chk_p" name="choice_type"/>
-                    <label for="chk_p">P</label>
-                </div>
--->
-                
+                    <input type="radio" id="opt_v" name="choice_type" value="V" checked="checked"/>
+                    <label for="opt_v">V</label>
+                    <input type="radio" id="opt_e" name="choice_type" value="E" />
+                    <label for="opt_e">E</label>
+                    <input type="radio" id="opt_j" name="choice_type" value="J" />
+                    <label for="opt_j">J</label>
+                    <input type="radio" id="opt_g" name="choice_type" value="G" />
+                    <label for="opt_g">G</label>
+                    <input type="radio" id="opt_p" name="choice_type" value="P" />
+                    <label for="opt_p">P</label>
+                </div>                
                 <label class="long-label">RUT</label>
                 <div>
-                    <input id="rut" type="text" class="text ui-widget-content ui-corner-all"/>
+                    <input id="txt_vat" type="text" class="text ui-widget-content ui-corner-all"/>
                     <button id="search">search</button>
                 </div>
                 
                 <label class="long-label">Name</label>
-                <input type="text" id="name" class="text ui-widget-content ui-corner-all"/>
+                <input type="text" id="txt_name" class="text ui-widget-content ui-corner-all"/>
                 
                 <div id="choice_taxpayer" width="50%" style="float:left">
                     <label  class="long-label">Taxpayer</label>
-                    <input type="radio" id="chk_yes" name="choice_taxpayer" checked="checked"/>
+                    <input type="radio" id="chk_yes" name="choice_taxpayer" value="true" checked="checked"/>
                     <label for="chk_yes">Yes</label>
-                    <input type="radio" id="chk_not" name="choice_taxpayer"/>
+                    <input type="radio" id="chk_not" name="choice_taxpayer" value="false" />
                     <label for="chk_not">No</label>
                 </div>
                 <div id="choice_special_taxpayer">
                     <label class="long-label">Special Taxpayer</label>
-                    <input type="radio" id="chk_yes_s" name="choice_special_taxpayer" checked="checked"/>
+                    <input type="radio" id="chk_yes_s" name="choice_special_taxpayer" value="true" checked="checked"/>
                     <label for="chk_yes_s">Yes</label>
-                    <input type="radio" id="chk_not_s" name="choice_special_taxpayer"/>
+                    <input type="radio" id="chk_not_s" name="choice_special_taxpayer" value="false"/>
                     <label for="chk_not_s">No</label>
                 </div>  
                 <label class="long-label">Address</label>
