@@ -1,45 +1,45 @@
-/*
-.ui-dialog .ui-dialog-titlebar {
-    background: url("images/ui-bg_highlight-soft_75_cccccc_1x100.png") repeat-x scroll 50% 50% #CCCCCC;
-    border: 1px solid #AAAAAA;
-    color: #222222;
+table {
+   border-collapse:collapse;
 }
-*/
-
-.point-of-sale #rightheader .header-button{
-    border-right: none;
-}
-
-.customer-container{
-    font-size:15px;
+.oe_text_field {
+    -webkit-border-radius: 3px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    height: 22px;
+    margin: 2px 2px 2px 2px;
 }
 
-.customer-container .long-label{
-    display:block;
+.oe_text_area {
+    -webkit-border-radius: 3px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    height: 32px;
 }
 
-.customer-container label{
-    margin-top: 6px;
-    margin-bottom: 6px;
-}
-.customer-container input[type=text]{
-    padding: 0.4em;
-    width:94%;
+td {
+    vertical-align:top;
+    padding: 2px 4px 2px;
 }
 
-.customer-container textarea{
-    padding: 0.4em;
-    width:94%;
+label {
+    font-weight:bold;
+    font-size:15px
 }
 
-#rut{
-   width:91%;
+
+.oe_form_label {
+    text-weigh:bold;
 }
 
-#rut_type{
-   width:5%; 
-   text-align:center;
+.oe_form_group_cell1 {
+    border-right: 1px solid #dddddd;   
+    width:21%    
 }
+.oe_form_group_cell2 {
+    border-right: 1px solid #dddddd;   
+}
+    
+
 
 
 

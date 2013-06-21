@@ -2,53 +2,80 @@
 <templates id="template" xml:space="preserve">
     <t t-name="CustomerPopupWidget">
         <div id="customer-form" title="Customer Form">
-            <div class="customer-container">                
-                <div id="choice_type">
-                    <input type="radio" id="opt_v" name="choice_type" value="V" checked="checked"/>
-                    <label for="opt_v">V</label>
-                    <input type="radio" id="opt_e" name="choice_type" value="E" />
-                    <label for="opt_e">E</label>
-                    <input type="radio" id="opt_j" name="choice_type" value="J" />
-                    <label for="opt_j">J</label>
-                    <input type="radio" id="opt_g" name="choice_type" value="G" />
-                    <label for="opt_g">G</label>
-                    <input type="radio" id="opt_p" name="choice_type" value="P" />
-                    <label for="opt_p">P</label>
-                </div>                
-                <label class="long-label">RUT</label>
-                <div>
-                    <input id="txt_vat" type="text" class="text ui-widget-content ui-corner-all"/>
-                    <button id="search">search</button>
-                </div>
-                
-                <label class="long-label">Name</label>
-                <input type="text" id="txt_name" class="text ui-widget-content ui-corner-all"/>
-                
-                <div id="choice_taxpayer" width="50%" style="float:left">
-                    <label  class="long-label">Taxpayer</label>
-                    <input type="radio" id="chk_yes" name="choice_taxpayer" value="true" checked="checked"/>
-                    <label for="chk_yes">Yes</label>
-                    <input type="radio" id="chk_not" name="choice_taxpayer" value="false" />
-                    <label for="chk_not">No</label>
-                </div>
-                <div id="choice_special_taxpayer">
-                    <label class="long-label">Special Taxpayer</label>
-                    <input type="radio" id="chk_yes_s" name="choice_special_taxpayer" value="true" checked="checked"/>
-                    <label for="chk_yes_s">Yes</label>
-                    <input type="radio" id="chk_not_s" name="choice_special_taxpayer" value="false"/>
-                    <label for="chk_not_s">No</label>
-                </div>  
-                <label class="long-label">Address</label>
-                <textarea id="address" rows="2" class="text ui-widget-content ui-corner-all"></textarea>
-                
-                <label class="long-label">Phone</label>
-                <input type="text" width="5%" class="text ui-widget-content ui-corner-all"/>
-                
-                <label class="long-label">Email</label>
-                <input type="text" width="5%" class="text ui-widget-content ui-corner-all"/>
-    
-                
-            </div>
+            <table>
+                <br/>
+                <tr>
+                    <td class="oe_form_group_cell1">
+                        <label>Vat</label>
+                    </td>
+                    <td>
+                         <div id="choice_type">
+                            <input type="radio" id="opt_v" name="choice_type" value="V" checked="checked"/>
+                            <label for="opt_v">V</label>
+                            <input type="radio" id="opt_e" name="choice_type" value="E" />
+                            <label for="opt_e">E</label>
+                            <input type="radio" id="opt_j" name="choice_type" value="J" />
+                            <label for="opt_j">J</label>
+                            <input type="radio" id="opt_g" name="choice_type" value="G" />
+                            <label for="opt_g">G</label>
+                            <input type="radio" id="opt_p" name="choice_type" value="P" />
+                            <label for="opt_p">P</label>
+                        </div>                    
+                    </td>
+                    <td>
+                        <input id="txtVat" type="text" class="oe_text_field" style="width:100%" placeholder=" e.g 123456789"/>                                             
+                    </td>
+                    <td>
+                        <button id="search">search</button> 
+                    </td>
+                </tr>               
+                <tr>
+                    <td class="oe_form_group_cell1">
+                         <label>VAT Legal Statement</label>                
+                    </td>
+                    <td>
+                        <input type="checkbox" id="chk_yes"/>
+                    </td>
+                    <td colspan="2">
+                        <label>Wh. Agent</label>
+                        <input type="checkbox" id="chk_yes"/>              
+                    </td>                    
+                </tr>
+                <tr>
+                    <td class="oe_form_group_cell1">
+                         <label>Name</label>                
+                    </td>
+                    <td colspan="3">
+                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="oe_form_group_cell1">
+                         <label>Address</label>                
+                    </td>
+                    <td colspan="3">
+                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%" placeholder=" Av. Siempre Viva"/>
+                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%"/>
+                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%" placeholder=" Caracas"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="oe_form_group_cell1">
+                         <label>Phone</label>                
+                    </td>
+                    <td colspan="3">
+                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%" placeholder=" +58 426 3504371"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="oe_form_group_cell1">
+                         <label>Email</label>                
+                    </td>
+                    <td colspan="3">
+                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%"/>
+                    </td>
+                </tr>
+            </table>
         </div>
     </t>        
 </templates>

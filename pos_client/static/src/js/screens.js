@@ -6,17 +6,18 @@ function openerp_pos_screens_ex(instance,module){
             this._super(); 
             this.client = new instance.web.Model('res.partner');
             this.seniat_url = new instance.web.Model('seniat.url');
-            this.build_form()         
+            this.build_form();
+            this.add_listeners();      
         },
         build_form: function(){
             self = this;
             $("#customer-form").dialog({
                 modal: true,
                 width:600,
-                height:650,
+                height:420,
                 buttons:{
                     Save:function(){
-                    
+                        $(this).icon({primary: "ui-icon-search"})
                     },
                     Cancel:function(){
                         $(this).dialog("close");
@@ -24,21 +25,23 @@ function openerp_pos_screens_ex(instance,module){
                     }                
                 }
             });
-            $("#search").button({icons: {primary: "ui-icon-search"},text:false})
-            $("#search").click(_.bind(this.on_btnsearch_click,this))
-            
-            $("#choice_type").buttonset();
-            $("#choice_type").change(_.bind(this.on_choice_type_change,this))
-             
+            $("#search").button({icons: {primary: "ui-icon-search"},text:false})          
+            $("#choice_type").buttonset();             
             $("#choice_taxpayer").buttonset();
             $("#choice_special_taxpayer").buttonset();
+            $("#txtVat").focus()
         },
-        on_choice_type_change:function(e){
-            type = $("#choice_type :radio:checked").val()
-            $("#txt_vat").val(type)
+        add_listeners:function(){
+            $("#search").click(_.bind(this.on_btnsearch_click,this));
+            $("#txtVat").keypress(_.bind(this.on_txtVat_keypress,this));
+            
         },
+        on_txtVat_keypress:function(){
+            
+        },        
         on_btnsearch_click: function(){
-            vat = $("#txt_vat").val()
+            letter = $("#choice_type :radio:checked").val()
+            vat = letter + $("#txt_vat").val() 
             this.seniat_url.call('check_rif',[vat]).then(function(res){
                 $("#txt_name").val(res.name)
             })
