@@ -9,24 +9,24 @@
                         <label>Vat</label>
                     </td>
                     <td>
-                         <div id="choice_type">
-                            <input type="radio" id="opt_v" name="choice_type" value="V" checked="checked"/>
+                         <div id="choiceType">
+                            <input type="radio" id="opt_v" name="choiceType" value="V" checked="checked"/>
                             <label for="opt_v">V</label>
-                            <input type="radio" id="opt_e" name="choice_type" value="E" />
+                            <input type="radio" id="opt_e" name="choiceType" value="E" />
                             <label for="opt_e">E</label>
-                            <input type="radio" id="opt_j" name="choice_type" value="J" />
+                            <input type="radio" id="opt_j" name="choiceType" value="J" />
                             <label for="opt_j">J</label>
-                            <input type="radio" id="opt_g" name="choice_type" value="G" />
+                            <input type="radio" id="opt_g" name="choiceType" value="G" />
                             <label for="opt_g">G</label>
-                            <input type="radio" id="opt_p" name="choice_type" value="P" />
+                            <input type="radio" id="opt_p" name="choiceType" value="P" />
                             <label for="opt_p">P</label>
                         </div>                    
                     </td>
                     <td>
-                        <input id="txtVat" type="text" class="oe_text_field" style="width:100%" placeholder=" e.g 123456789"/>                                             
+                        <input id="txtVat" type="text" class="oe_text_field" style="width:100%" placeholder="e.g 123456789"/>                                             
                     </td>
                     <td>
-                        <button id="search">search</button> 
+                        <button id="btnSearch">search</button> 
                     </td>
                 </tr>               
                 <tr>
@@ -34,11 +34,11 @@
                          <label>VAT Legal Statement</label>                
                     </td>
                     <td>
-                        <input type="checkbox" id="chk_yes"/>
+                        <input type="checkbox" id="chkSt"/>
                     </td>
                     <td colspan="2">
                         <label>Wh. Agent</label>
-                        <input type="checkbox" id="chk_yes"/>              
+                        <input type="checkbox" id="chkWh"/>              
                     </td>                    
                 </tr>
                 <tr>
@@ -46,7 +46,7 @@
                          <label>Name</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%"/>
+                        <input type="text" id="txtName" class="oe_text_field" style="width:100%"/>
                     </td>
                 </tr>
                 <tr>
@@ -54,9 +54,9 @@
                          <label>Address</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%" placeholder=" Av. Siempre Viva"/>
-                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%"/>
-                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%" placeholder=" Caracas"/>
+                        <input type="text" id="txtStreet" class="oe_text_field" style="width:100%" placeholder="Av. Siempre Viva"/>
+                        <input type="text" id="txtStreet2" class="oe_text_field" style="width:100%"/>
+                        <input type="text" id="txtCity" class="oe_text_field" style="width:100%" placeholder="Caracas"/>
                     </td>
                 </tr>
                 <tr>
@@ -64,7 +64,7 @@
                          <label>Phone</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%" placeholder=" +58 426 3504371"/>
+                        <input type="text" id="txtPhone" class="oe_text_field" style="width:100%" placeholder=" +58 426 3504371"/>
                     </td>
                 </tr>
                 <tr>
@@ -72,7 +72,7 @@
                          <label>Email</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" id="txt_name" class="oe_text_field" style="width:100%"/>
+                        <input type="text" id="txtEmail" class="oe_text_field" style="width:100%"/>
                     </td>
                 </tr>
             </table>
