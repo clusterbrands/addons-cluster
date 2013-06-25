@@ -1,10 +1,40 @@
 function openerp_pos_screens_ex(instance,module){
-    module.CustomerPopupWidget = module.PopUpWidget.extend({
-        template:'CustomerPopupWidget',              
+    
+    module.CustomerPopup = module.PopUpWidget.extend({
+        template:'CustomerPopup',
+        show: function(title,msg){
+            self = this;
+            this.title = title;
+            this.msg = msg;
+            this._super();
+            this.build_ui();
+        },
+        build_ui: function(){
+            self = this;
+            $("#message").html(this.msg);
+            $("#customer-popup").dialog({
+                modal: true,
+                title: self.title,
+                width:310,
+                height:200,
+                buttons:{
+                    Ok:function(){
+                        $(this).dialog('close');
+                        self.close();
+                    }                
+                }
+            });
+            
+        }
+    })
+        
+    module.CustomerPopupForm = module.PopUpWidget.extend({
+        template:'CustomerPopupForm',              
         show: function(){
             self = this;
             this._super(); 
             this.client = new instance.web.Model('res.partner');
+            this.ready = $.Deferred();
             this.seniat_url = new instance.web.Model('seniat.url');
             this.build_form();
             this.add_listeners();
@@ -21,7 +51,6 @@ function openerp_pos_screens_ex(instance,module){
                         $(this).icon({primary: "ui-icon-search"})
                     },
                     Cancel:function(){
-                        console.debug(self)
                         self.on_btnCancel_click();
                         self.disable_controls();
                         $("#txtVat").focus();
@@ -32,19 +61,65 @@ function openerp_pos_screens_ex(instance,module){
             $("#choiceType").buttonset();             
             $("#choice_taxpayer").buttonset();
             $("#choice_special_taxpayer").buttonset();
-            $("#txtVat").focus();
-           
+            $("#txtVat").focus();           
+        },
+        customer_search: function(){
+            var self = this;
+            var customers = this.pos.db.get_all_customers();
+            console.debug(this.pos.db.customer_list_search_strings)
+        },
+        on_btnSearch_click: function(){
+            self = this;
+            vat = $("#choiceType :radio:checked").val() + $("#txtVat").val();
+            regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
+            if (regex.test(vat)){
+                this.customer_search()
+            }else{
+                self.show_popup("Error","This VAT number does not seem to be valid!");
+            }
+            //~ this.seniat_url.call('check_rif',[vat]).then(function(res){
+                //~ console.debug(res)
+                //~ if (res !== null){
+                    //~ $("#txtName").val(res.name);
+                    //~ $("#chkSt").attr('checked',res.vat_subjected);
+                    //~ $("#chkWh").attr('checked',res.wh_iva_agent);                    
+                    //~ self.enable_controls();
+                    //~ $("#txtStreet").focus();
+                //~ }
+            //~ }).fail(function(obj, event){
+                //~ console.debug(obj)
+                //~ if (obj.message == "XmlHttpRequestError"){
+                    //~ alert("Error de Conexion");
+                    //~ event.preventDefault();
+                //~ }
+            //~ })
             
+        },     
+        show_popup: function(title,msg){
+            customer_popup = new module.CustomerPopup(this, {});
+            customer_popup.appendTo($('.point-of-sale'));
+            customer_popup.show(title,msg);
+        },
+        on_btnCancel_click: function(){
+            $("#txtVat").val("");
+            $("#txtName").val("");
+            $("#txtStreet").val("");
+            $("#txtStreet2").val("");
+            $("#txtCity").val("");
+            $("#txtPhone").val("");
+            $("#txtEmail").val("");
+            $("#chkSt").attr('checked',false);
+            $("#chkWh").attr('checked',false);            
         },
         add_listeners:function(){
-            $("#btnSearch").click(_.bind(this.on_btnSearch_click,this));
-            $("#choiceType").change(_.bind(this.on_choiceType_change,this));
-            $("#txtVat").keypress(_.bind(this.on_txtVat_keypress,this));
-            $("#txtStreet").keypress(_.bind(this.on_txtStreet_keypress,this));
-            $("#txtStreet2").keypress(_.bind(this.on_txtStreet2_keypress,this));
-            $("#txtCity").keypress(_.bind(this.on_txtCity_keypress,this));
-            $("#txtPhone").keypress(_.bind(this.on_txtPhone_keypress,this));
-            $("#txtEmail").keypress(_.bind(this.on_txtEmail_keypress,this));
+            $("#btnSearch").off('click').click(_.bind(this.on_btnSearch_click,this));
+            $("#choiceType").off('change').change(_.bind(this.on_choiceType_change,this));
+            $("#txtVat").off('keypress').keypress(_.bind(this.on_txtVat_keypress,this));
+            $("#txtStreet").off('keypress').keypress(_.bind(this.on_txtStreet_keypress,this));
+            $("#txtStreet2").off('keypress').keypress(_.bind(this.on_txtStreet2_keypress,this));
+            $("#txtCity").off('keypress').keypress(_.bind(this.on_txtCity_keypress,this));
+            $("#txtPhone").off('keypress').keypress(_.bind(this.on_txtPhone_keypress,this));
+            $("#txtEmail").off('keypress').keypress(_.bind(this.on_txtEmail_keypress,this));
         },
         disable_controls : function(){
             $("#txtVat").removeAttr("disabled");
@@ -68,19 +143,7 @@ function openerp_pos_screens_ex(instance,module){
             $("#txtVat").attr("disabled","disabled");
             $("#btnSearch").attr("disabled","disabled");
             $("#choiceType :radio").button("disable");
-        },
-        
-        on_btnCancel_click: function(){
-            $("#txtVat").val("");
-            $("#txtName").val("");
-            $("#txtStreet").val("");
-            $("#txtStreet2").val("");
-            $("#txtCity").val("");
-            $("#txtPhone").val("");
-            $("#txtEmail").val("");
-            $("#chkSt").attr('checked',false);
-            $("#chkWh").attr('checked',false);            
-        },
+        },    
         on_choiceType_change:function(){
             $("#txtVat").focus();
         },
@@ -120,21 +183,7 @@ function openerp_pos_screens_ex(instance,module){
                 e.preventDefault();
             }
         },
-        on_btnSearch_click: function(){
-            self = this;
-            letter = $("#choiceType :radio:checked").val()
-            vat = letter + $("#txtVat").val() 
-            this.seniat_url.call('check_rif',[vat]).then(function(res){
-                console.debug(res)
-                if (res !== null){
-                    $("#txtName").val(res.name);
-                    $("#chkSt").attr('checked',res.vat_subjected);
-                    $("#chkWh").attr('checked',res.wh_iva_agent);                    
-                    self.enable_controls();
-                    $("#txtStreet").focus();
-                }
-            })
-        }
+        
         
     })
 }

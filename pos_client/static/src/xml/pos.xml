@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="CustomerPopupWidget">
+    <t t-name="CustomerPopup">
+        <div id="customer-popup" title="">
+            <p>
+                <span id="message" style="font-weight:bold"></span>   
+            </p>
+        </div>
+    </t>
+    <t t-name="CustomerPopupForm">
         <div id="customer-form" title="Customer Form">
             <table>
                 <br/>

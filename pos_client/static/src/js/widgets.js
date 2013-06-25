@@ -5,12 +5,12 @@ function openerp_pos_widgets_ex(instance, module){
             this._super();
             var self = this;   
             
-            this.customer_popup = new module.CustomerPopupWidget(this, {});
-            this.customer_popup.appendTo($('.point-of-sale'));
-                     
+            this.customer_form = new module.CustomerPopupForm(this, {});
+            this.customer_form.appendTo($('.point-of-sale'));
+            
             this.select_customer_button = new module.HeaderButtonWidget(this,{
                 label:'Customer',
-                action: function(){self.screen_selector.show_popup('customer-popup');},
+                action: function(){self.screen_selector.show_popup('customer-form');},
             });
             this.select_customer_button.appendTo(this.$('#rightheader'));
             
@@ -32,7 +32,7 @@ function openerp_pos_widgets_ex(instance, module){
                     'error-session': this.error_session_popup,
                     'error-negative-price': this.error_negative_price_popup,
                     'choose-receipt': this.choose_receipt_popup,
-                    'customer-popup': this.customer_popup,
+                    'customer-form': this.customer_form,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',

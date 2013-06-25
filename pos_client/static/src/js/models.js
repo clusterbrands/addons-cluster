@@ -14,7 +14,7 @@ function openerp_pos_models_ex(instance, module){
                      return self.fetch('res.partner', ['name','vat','email',
                         'phone','mobile','street','street2'],[['customer', '=', true]]);
                 }).then(function(customers){
-                    //self.db.add_customers(customers);
+                    self.db.add_customers(customers);
                 })
             return loaded
         }
