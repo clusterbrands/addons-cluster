@@ -69,7 +69,30 @@ function openerp_pos_screens_ex(instance,module){
         },
         load_customer:function(id){
             customer = this.pos.db.get_customer_by_id(id);
-            console.debug(customer);
+            this.load_data(customer);
+        },
+        load_data:function(c){            
+            c.street = _.has(c,"street") ? c.street:""
+            c.street2 = _.has(c,"street2") ? c.street2:""
+            c.city = _.has(c,"city") ? c.city:""
+            c.phone = _.has(c,"phone") ? c.phone:""
+            c.email = _.has(c,"email") ? c.email:""
+            $("#txtName").val(c.name);
+            $("#txtStreet").val(c.street ? c.street:"");
+            $("#txtStreet2").val(c.street2 ? c.street2:"");
+            $("#txtCity").val(c.city ? c.city:"");
+            $("#txtPhone").val(c.phone ? c.phone:"");
+            $("#txtEmail").val(c.email ? c.email:"");
+        },
+        seniat_request:function(){
+            self = this
+            this.seniat_url.call('check_rif',[vat]).then(function(customer){
+                if (customer != null){
+                    self.load_data(customer);
+                }
+            }).fail(function(obj, event){ 
+                alert("algo fallo");             
+            })
         },
         on_btnSearch_click: function(){
             self = this;
@@ -84,22 +107,7 @@ function openerp_pos_screens_ex(instance,module){
             }else{
                 self.show_popup("Error","This VAT number does not seem to be valid!");
             }
-            //~ this.seniat_url.call('check_rif',[vat]).then(function(res){
-                //~ console.debug(res)
-                //~ if (res !== null){
-                    //~ $("#txtName").val(res.name);
-                    //~ $("#chkSt").attr('checked',res.vat_subjected);
-                    //~ $("#chkWh").attr('checked',res.wh_iva_agent);                    
-                    //~ self.enable_controls();
-                    //~ $("#txtStreet").focus();
-                //~ }
-            //~ }).fail(function(obj, event){
-                //~ console.debug(obj)
-                //~ if (obj.message == "XmlHttpRequestError"){
-                    //~ alert("Error de Conexion");
-                    //~ event.preventDefault();
-                //~ }
-            //~ })
+
             
         },     
         show_popup: function(title,msg){

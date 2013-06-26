@@ -12,7 +12,7 @@ function openerp_pos_models_ex(instance, module){
             loaded = _super.prototype.load_server_data.call(this)
                 .then(function(){
                      return self.fetch('res.partner', ['name','vat','email',
-                        'phone','mobile','street','street2','vat_subjected',
+                        'phone','mobile','street','street2','city','vat_subjected',
                         'wh_iva_agent','seniat_updated'],[['customer', '=', true]]);
                 }).then(function(customers){
                     self.db.add_customers(customers);
