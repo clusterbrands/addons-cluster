@@ -1,5 +1,57 @@
 function openerp_pos_screens_ex(instance,module){
     
+    
+    module.CustomerConfirm = module.PopUpWidget.extend({
+        template:'CustomerConfirm',
+        show: function(parent,msg){
+            this.parent = parent;
+            this.msg = msg;
+            this._super();
+            this.build_ui();
+        },
+        build_ui: function(){
+            self = this;
+            $("#customer-confirm #message").html(this.msg);
+            $("#customer-confirm").dialog({
+                modal: true,
+                title: "Question",
+                width:310,
+                height:205,
+                buttons:{
+                    Yes:function(){
+                        self.on_btnYes_click();
+                        $(this).dialog('close');
+                        self.close();
+                    },
+                    No:function(){
+                        self.on_btnNo_click();
+                        $(this).dialog('close');
+                        self.close();
+                    },
+                                    
+                }
+            });
+            
+        },
+        on_btnYes_click:function(){
+        },
+        on_btnNo_click:function(){
+        },
+        
+    })
+    
+    
+    module.CustomerConfirmUpdate = module.CustomerConfirm.extend({
+        on_btnYes_click:function(){
+            vat = $("#choiceType :radio:checked").val() + $("#txtVat").val();
+            this.parent.seniat_request(vat);
+            $("#txtStreet").focus();
+        },
+        on_btnNo_click:function(){
+            $("#btnSave").focus();
+        },
+    })
+    
     module.CustomerPopup = module.PopUpWidget.extend({
         template:'CustomerPopup',
         show: function(title,msg){
@@ -11,12 +63,12 @@ function openerp_pos_screens_ex(instance,module){
         },
         build_ui: function(){
             self = this;
-            $("#message").html(this.msg);
+            $("#customer-popup #message").html(this.msg);
             $("#customer-popup").dialog({
                 modal: true,
                 title: self.title,
                 width:310,
-                height:220,
+                height:205,
                 buttons:{
                     Ok:function(){
                         $(this).dialog('close');
@@ -46,16 +98,20 @@ function openerp_pos_screens_ex(instance,module){
                 modal: true,
                 width:600,
                 height:440,
-                buttons:{
-                    Save:function(){
-                        $(this).icon({primary: "ui-icon-search"})
+                buttons:[
+                    {
+                        id:"btnSave",
+                        text:"Save",
+                        click:function(){
+                            alert("we are the world");
+                        }
                     },
-                    Cancel:function(){
-                        self.on_btnCancel_click();
-                        self.disable_controls();
-                        $("#txtVat").focus();
-                    }                
-                }
+                    {
+                        text:"Cancel",
+                        click:_.bind(self.on_btnCancel_click,this) 
+                    },
+                ],
+
             });
             $("#btnSearch").button({icons: {primary: "ui-icon-search"},text:false})          
             $("#choiceType").buttonset();             
@@ -67,9 +123,16 @@ function openerp_pos_screens_ex(instance,module){
             var id = this.pos.db.search_customer(vat);
             return id;
         },
+        ask_for_update:function(){
+            ccu = new module.CustomerConfirmUpdate(this, {});
+            ccu.appendTo($('.point-of-sale'));
+            ccu.show(this,"This client already exists. Do you want to upgrade it?");
+        },
         load_customer:function(id){
             customer = this.pos.db.get_customer_by_id(id);
             this.load_data(customer);
+            this.ask_for_update();
+            
         },
         load_data:function(c){            
             c.street = _.has(c,"street") ? c.street:""
@@ -84,11 +147,18 @@ function openerp_pos_screens_ex(instance,module){
             $("#txtPhone").val(c.phone ? c.phone:"");
             $("#txtEmail").val(c.email ? c.email:"");
         },
-        seniat_request:function(){
+        load_data_seniat:function(c){            
+            $("#txtName").val(c.name);
+            $("#chkSt").attr("checked",c.vat_subjected);
+            $("#chkWh").attr("checked",c.wh_iva_agent);            
+        },
+        seniat_request:function(vat){
             self = this
             this.seniat_url.call('check_rif',[vat]).then(function(customer){
                 if (customer != null){
-                    self.load_data(customer);
+                    self.load_data_seniat(customer);
+                    self.enable_controls();
+                    $("#txtStreet").focus();
                 }
             }).fail(function(obj, event){ 
                 alert("algo fallo");             
@@ -115,7 +185,7 @@ function openerp_pos_screens_ex(instance,module){
             customer_popup.appendTo($('.point-of-sale'));
             customer_popup.show(title,msg);
         },
-        on_btnCancel_click: function(){
+        clear:function(){
             $("#txtVat").val("");
             $("#txtName").val("");
             $("#txtStreet").val("");
@@ -124,7 +194,12 @@ function openerp_pos_screens_ex(instance,module){
             $("#txtPhone").val("");
             $("#txtEmail").val("");
             $("#chkSt").attr('checked',false);
-            $("#chkWh").attr('checked',false);            
+            $("#chkWh").attr('checked',false);    
+        },
+        on_btnCancel_click: function(){
+            this.clear();
+            this.disable_controls();
+            $("#txtVat").focus();
         },
         add_listeners:function(){
             $("#btnSearch").off('click').click(_.bind(this.on_btnSearch_click,this));
@@ -155,9 +230,11 @@ function openerp_pos_screens_ex(instance,module){
             $("#txtCity").removeAttr("disabled");
             $("#txtPhone").removeAttr("disabled");
             $("#txtEmail").removeAttr("disabled");
+            $("#chkSt").removeAttr("disabled");
+            $("#chkWh").removeAttr("disabled");
             $("#txtVat").attr("disabled","disabled");
             $("#btnSearch").attr("disabled","disabled");
-            $("#choiceType :radio").button("disable");
+            $("#choiceType :radio").button("disable");         
         },    
         on_choiceType_change:function(){
             $("#txtVat").focus();
