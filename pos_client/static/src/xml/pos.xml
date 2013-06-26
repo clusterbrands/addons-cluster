@@ -3,6 +3,7 @@
     <t t-name="CustomerPopup">
         <div id="customer-popup" title="">
             <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
                 <span id="message" style="font-weight:bold"></span>   
             </p>
         </div>

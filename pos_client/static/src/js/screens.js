@@ -16,7 +16,7 @@ function openerp_pos_screens_ex(instance,module){
                 modal: true,
                 title: self.title,
                 width:310,
-                height:200,
+                height:220,
                 buttons:{
                     Ok:function(){
                         $(this).dialog('close');
@@ -45,7 +45,7 @@ function openerp_pos_screens_ex(instance,module){
             $("#customer-form").dialog({
                 modal: true,
                 width:600,
-                height:420,
+                height:440,
                 buttons:{
                     Save:function(){
                         $(this).icon({primary: "ui-icon-search"})
@@ -63,17 +63,24 @@ function openerp_pos_screens_ex(instance,module){
             $("#choice_special_taxpayer").buttonset();
             $("#txtVat").focus();           
         },
-        customer_search: function(){
-            var self = this;
-            var customers = this.pos.db.get_all_customers();
-            console.debug(this.pos.db.customer_list_search_strings)
+        customer_search: function(vat){
+            var id = this.pos.db.search_customer(vat);
+            return id;
+        },
+        load_customer:function(id){
+            customer = this.pos.db.get_customer_by_id(id);
+            console.debug(customer);
         },
         on_btnSearch_click: function(){
             self = this;
             vat = $("#choiceType :radio:checked").val() + $("#txtVat").val();
             regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
             if (regex.test(vat)){
-                this.customer_search()
+                id = this.customer_search(vat)
+                if (id != -1)
+                    this.load_customer(id);
+                else
+                    this.seniat_request(vat);
             }else{
                 self.show_popup("Error","This VAT number does not seem to be valid!");
             }

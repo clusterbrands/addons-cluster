@@ -17,7 +17,7 @@ function openerp_pos_db_ex(instance, module){
                 stored_customers[c.id] = c;
             }
             this.save('customers',stored_customers);
-        },
+        },        
         _customer_search_string: function(customer){
             var str = '' + customer.id + ':'
             if(customer.vat){
@@ -40,6 +40,9 @@ function openerp_pos_db_ex(instance, module){
                 list.push(stored_customers[i]);
             }
             return list;
-        },        
+        },
+        get_customer_by_id: function(id){
+            return this.load('customers',{})[id];
+        },     
     })
 }
