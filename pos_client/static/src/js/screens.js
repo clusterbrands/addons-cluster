@@ -105,13 +105,11 @@ function openerp_pos_screens_ex(instance,module){
                     {
                         id:"btnSave",
                         text:"Save",
-                        click:function(){
-                            
-                        }
+                        click:_.bind(self.on_btnSave_click,this),
                     },
                     {
                         text:"Cancel",
-                        click:_.bind(self.on_btnCancel_click,this) 
+                        click:_.bind(self.on_btnCancel_click,this),
                     },
                 ],
 
@@ -172,6 +170,16 @@ function openerp_pos_screens_ex(instance,module){
             }).fail(function(obj, event){ 
                 alert("algo fallo");             
             })
+        },
+        save_customer: function(){
+            
+        },
+        on_btnSave_click:function(){
+           text = $("#btnSave span").text();   
+           if (text == "Save")
+                this.save_customer();
+           else
+                alert("select")
         },
         on_btnSearch_click: function(){
             self = this;
