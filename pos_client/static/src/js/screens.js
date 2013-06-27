@@ -16,7 +16,7 @@ function openerp_pos_screens_ex(instance,module){
                 modal: true,
                 title: "Question",
                 width:310,
-                height:205,
+                height:210,
                 buttons:{
                     Yes:function(){
                         self.on_btnYes_click();
@@ -45,9 +45,11 @@ function openerp_pos_screens_ex(instance,module){
         on_btnYes_click:function(){
             vat = $("#choiceType :radio:checked").val() + $("#txtVat").val();
             this.parent.seniat_request(vat);
+            $("#btnSave span").text("Save");
             $("#txtStreet").focus();
         },
         on_btnNo_click:function(){
+            $("#btnSave span").text("Accept");
             $("#btnSave").focus();
         },
     })
@@ -71,6 +73,7 @@ function openerp_pos_screens_ex(instance,module){
                 height:205,
                 buttons:{
                     Ok:function(){
+                        $("#txtVat").focus();
                         $(this).dialog('close');
                         self.close();
                     }                
@@ -103,7 +106,7 @@ function openerp_pos_screens_ex(instance,module){
                         id:"btnSave",
                         text:"Save",
                         click:function(){
-                            alert("we are the world");
+                            
                         }
                     },
                     {
@@ -127,6 +130,8 @@ function openerp_pos_screens_ex(instance,module){
             ccu = new module.CustomerConfirmUpdate(this, {});
             ccu.appendTo($('.point-of-sale'));
             ccu.show(this,"This client already exists. Do you want to upgrade it?");
+            $("#btnSave span").text("Accept");
+            
         },
         load_customer:function(id){
             customer = this.pos.db.get_customer_by_id(id);
@@ -147,10 +152,14 @@ function openerp_pos_screens_ex(instance,module){
             $("#txtPhone").val(c.phone ? c.phone:"");
             $("#txtEmail").val(c.email ? c.email:"");
         },
-        load_data_seniat:function(c){            
+        load_data_seniat:function(c){
+            letter = $("#choiceType :radio:checked").val();
             $("#txtName").val(c.name);
-            $("#chkSt").attr("checked",c.vat_subjected);
-            $("#chkWh").attr("checked",c.wh_iva_agent);            
+            $("#chkWh").attr("checked",c.wh_iva_agent);         
+            $("#chkWh").attr("checked",c.wh_iva_agent);         
+            if (letter != "V")
+                $("#chkSt").attr("checked",c.vat_subjected);
+                        
         },
         seniat_request:function(vat){
             self = this
@@ -194,7 +203,8 @@ function openerp_pos_screens_ex(instance,module){
             $("#txtPhone").val("");
             $("#txtEmail").val("");
             $("#chkSt").attr('checked',false);
-            $("#chkWh").attr('checked',false);    
+            $("#chkWh").attr('checked',false);
+            $("#btnSave span").text("Save");    
         },
         on_btnCancel_click: function(){
             this.clear();
@@ -271,7 +281,7 @@ function openerp_pos_screens_ex(instance,module){
         },
         on_txtEmail_keypress:function(e){            
             if (e.which == '13'){
-                //
+                $("#btnSave").focus();
                 e.preventDefault();
             }
         },

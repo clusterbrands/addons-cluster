@@ -39,7 +39,7 @@
                         </div>                    
                     </td>
                     <td>
-                        <input id="txtVat" type="text" class="oe_text_field" style="width:100%" placeholder="e.g 123456789"/>                                             
+                        <input id="txtVat" type="text" class="oe_text_field" style="width:100%" onfocus="this.select()" placeholder="e.g 123456789"/>                                             
                     </td>
                     <td>
                         <button id="btnSearch">search</button> 
