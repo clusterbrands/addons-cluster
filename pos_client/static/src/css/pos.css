@@ -1,3 +1,54 @@
+.oe_modal_dialog{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+}
+.oe_modal_dialog .oe_popup{
+    position: absolute;
+    left:50%;
+    top:50%;
+    width:630px;
+    height:420px;
+    margin-left: -250px;
+    margin-top: -200px;
+    padding:5px;
+    padding-top:20px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0px -1px white, 0px 1px white, 0px 4px #949494, 0px 10px 20px rgba(0, 0, 0, 0.3);
+    z-index:1200;
+}
+
+.oe_popup .oe_header{
+    width:100%;
+    height:35px;
+    border-bottom: 1px solid #E0DDDD;
+    margin:0 0 8px
+}
+
+.oe_popup .oe_header .oe_title{
+    width: 93%;
+    float: left;
+    text-align: left;
+    margin-left: 16px;
+}
+
+.oe_popup .oe_header .oe_close{
+    right: .3em;
+    top: 50%;
+}
+
+.oe_content{
+    padding:.5em 1em
+}
+
 table {
    border-collapse:collapse;
 }
@@ -17,28 +68,25 @@ table {
     height: 32px;
 }
 
-td {
-    vertical-align:top;
-    padding: 2px 4px 2px;
-}
 
 label {
     font-weight:bold;
     font-size:15px
 }
 
-
-.oe_form_label {
-    text-weigh:bold;
+input:disabled {
+    background-color: rgb(235, 235, 228);
 }
 
-.oe_form_group_cell1 {
-    border-right: 1px solid #dddddd;   
-    width:21%    
+.point-of-sale td {
+    padding:2px 4px 2px;
 }
-.oe_form_group_cell2 {
-    border-right: 1px solid #dddddd;   
+
+td:first-child{
+    border-right: 1px solid #dddddd;
 }
+
+
     
 
 

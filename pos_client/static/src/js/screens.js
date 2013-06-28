@@ -84,17 +84,37 @@ function openerp_pos_screens_ex(instance,module){
     })
         
     module.CustomerPopupForm = module.PopUpWidget.extend({
-        template:'CustomerPopupForm',              
+        template:'CustomerPopupForm',
+        events:{
+            "click button[name='search']":"onClickBtnSearch",
+            "change .oe_text_field": "onChangeTextbox",
+            "change input[type='radio']":"onChangeRadio",
+            "change input[name='vat_subjected']":"onChangeVatSubjected",
+            "change input[name='wh_iva_agent']":"onChangeWhIvaAgent",  
+            "keypress input[name='vat']":"onKeypressVat", 
+            "keypress input[name='street']":"onKeypressStreet",
+            "keypress input[name='street2']":"onKeypressStreet2",
+            "keypress input[name='city']":"onKeypressCity",
+            "keypress input[name='phone']":"onKeypressPhone", 
+            "keypress input[name='email']":"onKeypressEmail",                
+        },       
+        init: function(parent, options){
+            this._super(parent, options);
+            this.customer = new module.Customer();
+            this.customer.bind('change',this.renderElement,this);
+            this.letter = "V";
+            
+        }, 
         show: function(){
             self = this;
             this._super(); 
-            this.client = new instance.web.Model('res.partner');
             this.ready = $.Deferred();
             this.seniat_url = new instance.web.Model('seniat.url');
             this.build_form();
-            this.add_listeners();
-            this.disable_controls();      
-        },
+            this.renderElement();
+            this.disable_controls(); 
+    
+        },        
         build_form: function(){
             self = this;
             $("#customer-form").dialog({
@@ -105,19 +125,16 @@ function openerp_pos_screens_ex(instance,module){
                     {
                         id:"btnSave",
                         text:"Save",
-                        click:_.bind(self.on_btnSave_click,this),
+                        click:_.bind(self.onClickBtnSave,this),
                     },
                     {
                         text:"Cancel",
-                        click:_.bind(self.on_btnCancel_click,this),
+                        click:_.bind(self.onClickBtnCancel,this),
                     },
                 ],
-
             });
             $("#btnSearch").button({icons: {primary: "ui-icon-search"},text:false})          
             $("#choiceType").buttonset();             
-            $("#choice_taxpayer").buttonset();
-            $("#choice_special_taxpayer").buttonset();
             $("#txtVat").focus();           
         },
         customer_search: function(vat){
@@ -172,68 +189,26 @@ function openerp_pos_screens_ex(instance,module){
             })
         },
         save_customer: function(){
-            
+            alert(this.customer.get('street'));
         },
-        on_btnSave_click:function(){
+        onClickBtnSave:function(){
+           console.debug(this.customer);
            text = $("#btnSave span").text();   
            if (text == "Save")
                 this.save_customer();
            else
                 alert("select")
-        },
-        on_btnSearch_click: function(){
-            self = this;
-            vat = $("#choiceType :radio:checked").val() + $("#txtVat").val();
-            regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
-            if (regex.test(vat)){
-                id = this.customer_search(vat)
-                if (id != -1)
-                    this.load_customer(id);
-                else
-                    this.seniat_request(vat);
-            }else{
-                self.show_popup("Error","This VAT number does not seem to be valid!");
-            }
-
-            
-        },     
+        },         
         show_popup: function(title,msg){
             customer_popup = new module.CustomerPopup(this, {});
             customer_popup.appendTo($('.point-of-sale'));
             customer_popup.show(title,msg);
-        },
-        clear:function(){
-            $("#txtVat").val("");
-            $("#txtName").val("");
-            $("#txtStreet").val("");
-            $("#txtStreet2").val("");
-            $("#txtCity").val("");
-            $("#txtPhone").val("");
-            $("#txtEmail").val("");
-            $("#chkSt").attr('checked',false);
-            $("#chkWh").attr('checked',false);
-            $("#btnSave span").text("Save");    
-        },
-        on_btnCancel_click: function(){
-            this.clear();
-            this.disable_controls();
-            $("#txtVat").focus();
-        },
-        add_listeners:function(){
-            $("#btnSearch").off('click').click(_.bind(this.on_btnSearch_click,this));
-            $("#choiceType").off('change').change(_.bind(this.on_choiceType_change,this));
-            $("#txtVat").off('keypress').keypress(_.bind(this.on_txtVat_keypress,this));
-            $("#txtStreet").off('keypress').keypress(_.bind(this.on_txtStreet_keypress,this));
-            $("#txtStreet2").off('keypress').keypress(_.bind(this.on_txtStreet2_keypress,this));
-            $("#txtCity").off('keypress').keypress(_.bind(this.on_txtCity_keypress,this));
-            $("#txtPhone").off('keypress').keypress(_.bind(this.on_txtPhone_keypress,this));
-            $("#txtEmail").off('keypress').keypress(_.bind(this.on_txtEmail_keypress,this));
-        },
+        },    
         disable_controls : function(){
             $("#txtVat").removeAttr("disabled");
             $("#btnSearch").removeAttr("disabled","disabled");
             $("#choiceType :radio").button("enable");
-            $("#txtName").attr("disabled","disabled");
+            this.$("input[name='name']").attr("disabled","disabled");
             $("#txtStreet").attr("disabled","disabled");
             $("#txtStreet2").attr("disabled","disabled");
             $("#txtCity").attr("disabled","disabled");
@@ -253,43 +228,84 @@ function openerp_pos_screens_ex(instance,module){
             $("#txtVat").attr("disabled","disabled");
             $("#btnSearch").attr("disabled","disabled");
             $("#choiceType :radio").button("disable");         
-        },    
-        on_choiceType_change:function(){
+        },
+        renderElement: function(){
+            $("#customer-form").dialog('destroy');
+            this._super();
+            this.build_form();
+        },
+        clear:function(){
+            this.customer = new module.Customer();
+            this.renderElement();
+        },   
+        onClickBtnSearch: function(){
+            
+            vat = this.letter + this.$("input[name='vat']").val();
+            regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
+            if (regex.test(vat)){
+                id = this.customer_search(vat)
+                if (id != -1)
+                    this.load_customer(id);
+                else
+                    this.seniat_request(vat);
+            }else{
+                self.show_popup("Error","This VAT number does not seem to be valid!");
+            }           
+        }, 
+         onClickBtnCancel: function(){
+            this.clear();
+            this.disable_controls();
             $("#txtVat").focus();
+        },    
+        onChangeTextbox:function(e){
+            name = e.target.name;
+            value = e.target.value;
+            this.customer.set(name,value);
         },
-        on_txtVat_keypress:function(e){            
+        onChangeRadio:function(e){
+            this.letter = e.target.value;
+            this.$("#txtVat").focus();
+        },
+        onChangeVatSubjected:function(e){
+            this.set('vat_subjected',e.target.value);
+        },
+        onChangeWhIvaAgent:function(e){
+            this.set('wh_iva_agent',e.target.value)
+        },  
+        onKeypressVat:function(e){
             if (e.which == '13'){
-                $("#btnSearch").trigger('click');
+                this.customer.set('vat',e.target.value);
+                this.$("#btnSearch").trigger('click');
                 e.preventDefault();
             }
         },
-        on_txtStreet_keypress:function(e){            
+        onKeypressStreet:function(e){            
             if (e.which == '13'){
-                $("#txtStreet2").focus();
+                this.$("#txtStreet2").focus();
                 e.preventDefault();
             }
         }, 
-        on_txtStreet2_keypress:function(e){            
+        onKeypressStreet2:function(e){            
             if (e.which == '13'){
-                $("#txtCity").focus();
+                this.$("#txtCity").focus();
                 e.preventDefault();
             }
         }, 
-        on_txtCity_keypress:function(e){            
+        onKeypressCity:function(e){            
             if (e.which == '13'){
-                $("#txtPhone").focus();
+                this.$("#txtPhone").focus();
                 e.preventDefault();
             }
         },
-        on_txtPhone_keypress:function(e){            
+        onKeypressPhone:function(e){            
             if (e.which == '13'){
-                $("#txtEmail").focus();
+                this.$("#txtEmail").focus();
                 e.preventDefault();
             }
         },
-        on_txtEmail_keypress:function(e){            
+        onKeypressEmail:function(e){            
             if (e.which == '13'){
-                $("#btnSave").focus();
+                this.$("#btnSave").focus();
                 e.preventDefault();
             }
         },
