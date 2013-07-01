@@ -1,90 +1,76 @@
 function openerp_pos_screens_ex(instance,module){
     
     
-    module.CustomerConfirm = module.PopUpWidget.extend({
+    module.CustomerBasePopup = module.PopUpWidget.extend({
+        template:"CustomerBasePopup",
+        renderElement:function(){
+            this._super();
+            this.$("a.close").off('click').click(_.bind(this.closePopup,this))
+        },
+        closePopup:function(e){
+            this.close();
+            this.hide();
+        },       
+        
+    });
+    
+    module.CustomerConfirm = module.CustomerBasePopup.extend({
         template:'CustomerConfirm',
-        show: function(parent,msg){
+        events:{
+            "click button[name='confirm']":"onClickBtnConfirm",
+            "click button[name='reject']":"onClickBtnReject",            
+        },
+        init: function(parent, options){
+            this.id="customer-confirm";
+            this._super();            
+        },
+        show: function(parent,title,msg){
             this.parent = parent;
+            this.title = title;
             this.msg = msg;
             this._super();
+            this.renderElement();
             this.build_ui();
         },
-        build_ui: function(){
-            self = this;
-            $("#customer-confirm #message").html(this.msg);
-            $("#customer-confirm").dialog({
-                modal: true,
-                title: "Question",
-                width:310,
-                height:210,
-                buttons:{
-                    Yes:function(){
-                        self.on_btnYes_click();
-                        $(this).dialog('close');
-                        self.close();
-                    },
-                    No:function(){
-                        self.on_btnNo_click();
-                        $(this).dialog('close');
-                        self.close();
-                    },
-                                    
-                }
-            });
-            
+        build_ui:function(){
+            this.$("#customer-confirm").position({my:"center",of:"#customer-form"});
+            this.$(".popup").draggable();
         },
-        on_btnYes_click:function(){
+        onClickBtnConfirm:function(){
         },
-        on_btnNo_click:function(){
-        },
-        
-    })
-    
-    
-    module.CustomerConfirmUpdate = module.CustomerConfirm.extend({
-        on_btnYes_click:function(){
-            vat = $("#choiceType :radio:checked").val() + $("#txtVat").val();
-            this.parent.seniat_request(vat);
-            $("#btnSave span").text("Save");
-            $("#txtStreet").focus();
-        },
-        on_btnNo_click:function(){
-            $("#btnSave span").text("Accept");
-            $("#btnSave").focus();
+        onClickBtnReject:function(){
         },
     })
     
-    module.CustomerPopup = module.PopUpWidget.extend({
-        template:'CustomerPopup',
+    module.CustomerPopup = module.CustomerBasePopup.extend({
+        template:'CustomerAlert',
+        events:{
+            "click button":function(e){
+                this.close();
+                this.hide();
+            },            
+        },
+        init: function(parent, options){
+            this.id="customer-alert";
+            this._super();            
+        },        
         show: function(title,msg){
             self = this;
             this.title = title;
             this.msg = msg;
-            this._super();
-            this.build_ui();
+            this._super();            
+            this.renderElement();
+            this.build_ui();           
         },
-        build_ui: function(){
-            self = this;
-            $("#customer-popup #message").html(this.msg);
-            $("#customer-popup").dialog({
-                modal: true,
-                title: self.title,
-                width:310,
-                height:205,
-                buttons:{
-                    Ok:function(){
-                        $("#txtVat").focus();
-                        $(this).dialog('close');
-                        self.close();
-                    }                
-                }
-            });
-            
+        build_ui:function(){
+            this.$("#customer-alert").position({my:"center",of:"#customer-form"});
+            this.$(".popup").draggable();
+            this.$("button").focus();
         }
-    })
+    });
         
-    module.CustomerPopupForm = module.PopUpWidget.extend({
-        template:'CustomerPopupForm',
+    module.CustomerForm = module.CustomerBasePopup.extend({
+        template:'CustomerForm',
         events:{
             "click button[name='cancel']":"onClickBtnCancel",
             "click button[name='search']":"onClickBtnSearch",
@@ -101,34 +87,37 @@ function openerp_pos_screens_ex(instance,module){
         },       
         init: function(parent, options){
             this._super(parent, options);
+            this.id = "customer-form";
             this.customer = new module.Customer();
             this.customer.bind('change',this.renderElement,this)
-            this.letter = "V";
-            
+            parent= module.CustomerBasePopup
+            this.events = _.extend({},parent.prototype.events,this.events)
+            this.letter = "V";            
         }, 
         show: function(){
             self = this;
             this._super(); 
             this.ready = $.Deferred();
             this.seniat_url = new instance.web.Model('seniat.url');
-            this.build_form();
+            this.build_ui();
             this.disable_controls();
-            $("#txtVat").focus(); 
-            
+            $("#txtVat").focus();            
     
         },        
-        build_form: function(){
+        build_ui: function(){
             self = this;             
-            $("#choiceType").buttonset();                     
+            $("#choiceType").buttonset();           
+            $("#customer-form").position({my:"center",of:".point-of-sale"});
+            $(".popup").draggable();
         },
         customer_search: function(vat){
             var id = this.pos.db.search_customer(vat);
             return id;
         },
         ask_for_update:function(){
-            ccu = new module.CustomerConfirmUpdate(this, {});
+            ccu = new module.CustomerConfirm(this, {});
             ccu.appendTo($('.point-of-sale'));
-            ccu.show(this,"This client already exists. Do you want to upgrade it?");
+            ccu.show(this,"Question","This customer already exists. Do you want to upgrade it?");
             $("#btnSave span").text("Accept");
             
         },
@@ -216,7 +205,7 @@ function openerp_pos_screens_ex(instance,module){
         renderElement: function(){
             ids = $('input:disabled')
             this._super();
-            this.build_form();
+            this.build_ui();
             $(ids).each(function(index,value){
                 console.debug(value.name) 
                 $("input[name='"+value.name+"']").attr("disabled","disabled");               
@@ -235,7 +224,7 @@ function openerp_pos_screens_ex(instance,module){
                 else
                     this.seniat_request(vat);
             }else{
-                self.show_popup("Error","This VAT number does not seem to be valid!");
+                this.show_popup("Error","This VAT number does not seem to be valid!");
             }           
         }, 
          onClickBtnCancel: function(){

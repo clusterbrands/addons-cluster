@@ -5,7 +5,7 @@ function openerp_pos_widgets_ex(instance, module){
             this._super();
             var self = this;   
             
-            this.customer_form = new module.CustomerPopupForm(this, {});
+            this.customer_form = new module.CustomerForm(this, {});
             this.customer_form.appendTo($('.point-of-sale'));
             
             this.select_customer_button = new module.HeaderButtonWidget(this,{
