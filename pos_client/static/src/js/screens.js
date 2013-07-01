@@ -86,6 +86,7 @@ function openerp_pos_screens_ex(instance,module){
     module.CustomerPopupForm = module.PopUpWidget.extend({
         template:'CustomerPopupForm',
         events:{
+            "click button[name='cancel']":"onClickBtnCancel",
             "click button[name='search']":"onClickBtnSearch",
             "change .oe_text_field": "onChangeTextbox",
             "change input[type='radio']":"onChangeRadio",
@@ -101,7 +102,7 @@ function openerp_pos_screens_ex(instance,module){
         init: function(parent, options){
             this._super(parent, options);
             this.customer = new module.Customer();
-            this.customer.bind('change',this.renderElement,this);
+            this.customer.bind('change',this.renderElement,this)
             this.letter = "V";
             
         }, 
@@ -111,31 +112,14 @@ function openerp_pos_screens_ex(instance,module){
             this.ready = $.Deferred();
             this.seniat_url = new instance.web.Model('seniat.url');
             this.build_form();
-            this.renderElement();
-            this.disable_controls(); 
+            this.disable_controls();
+            $("#txtVat").focus(); 
+            
     
         },        
         build_form: function(){
-            self = this;
-            $("#customer-form").dialog({
-                modal: true,
-                width:600,
-                height:440,
-                buttons:[
-                    {
-                        id:"btnSave",
-                        text:"Save",
-                        click:_.bind(self.onClickBtnSave,this),
-                    },
-                    {
-                        text:"Cancel",
-                        click:_.bind(self.onClickBtnCancel,this),
-                    },
-                ],
-            });
-            //$("#btnSearch").button({icons: {primary: "ui-icon-search"},text:false})          
-            $("#choiceType").buttonset();             
-            $("#txtVat").focus();           
+            self = this;             
+            $("#choiceType").buttonset();                     
         },
         customer_search: function(vat){
             var id = this.pos.db.search_customer(vat);
@@ -205,41 +189,43 @@ function openerp_pos_screens_ex(instance,module){
             customer_popup.show(title,msg);
         },    
         disable_controls : function(){
-            $("#txtVat").removeAttr("disabled");
-            $("#btnSearch").removeAttr("disabled","disabled");
-            $("#choiceType :radio").button("enable");
+            this.$("#txtVat").removeAttr("disabled");
+            this.$("#btnSearch").removeAttr("disabled","disabled");            
             this.$("input[name='name']").attr("disabled","disabled");
-            $("#txtStreet").attr("disabled","disabled");
-            $("#txtStreet2").attr("disabled","disabled");
-            $("#txtCity").attr("disabled","disabled");
-            $("#txtPhone").attr("disabled","disabled");
-            $("#txtEmail").attr("disabled","disabled");
-            $("#chkSt").attr("disabled","disabled");
-            $("#chkWh").attr("disabled","disabled");
+            this.$("#txtStreet").attr("disabled","disabled");
+            this.$("#txtStreet2").attr("disabled","disabled");
+            this.$("#txtCity").attr("disabled","disabled");
+            this.$("#txtPhone").attr("disabled","disabled");
+            this.$("#txtEmail").attr("disabled","disabled");
+            this.$("#chkSt").attr("disabled","disabled");
+            this.$("#chkWh").attr("disabled","disabled");
+            this.$("#choiceType :radio").button("enable");
         },
         enable_controls : function(){          
-            $("#txtStreet").removeAttr("disabled");
-            $("#txtStreet2").removeAttr("disabled");
-            $("#txtCity").removeAttr("disabled");
-            $("#txtPhone").removeAttr("disabled");
-            $("#txtEmail").removeAttr("disabled");
-            $("#chkSt").removeAttr("disabled");
-            $("#chkWh").removeAttr("disabled");
-            $("#txtVat").attr("disabled","disabled");
-            $("#btnSearch").attr("disabled","disabled");
-            $("#choiceType :radio").button("disable");         
+            this.$("#txtStreet").removeAttr("disabled");
+            this.$("#txtStreet2").removeAttr("disabled");
+            this.$("#txtCity").removeAttr("disabled");
+            this.$("#txtPhone").removeAttr("disabled");
+            this.$("#txtEmail").removeAttr("disabled");
+            this.$("#chkSt").removeAttr("disabled");
+            this.$("#chkWh").removeAttr("disabled");
+            this.$("#txtVat").attr("disabled","disabled");
+            this.$("#btnSearch").attr("disabled","disabled");
+            this.$("#choiceType :radio").button("disable");         
         },
         renderElement: function(){
-            $("#customer-form").dialog('destroy');
+            ids = $('input:disabled')
             this._super();
             this.build_form();
+            $(ids).each(function(index,value){
+                console.debug(value.name) 
+                $("input[name='"+value.name+"']").attr("disabled","disabled");               
+            });
         },
         clear:function(){
-            this.customer = new module.Customer();
-            this.renderElement();
+            this.customer.clear().set(this.customer.defaults);
         },   
-        onClickBtnSearch: function(){
-            
+        onClickBtnSearch: function(){            
             vat = this.letter + this.$("input[name='vat']").val();
             regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
             if (regex.test(vat)){

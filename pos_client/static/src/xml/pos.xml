@@ -101,8 +101,8 @@
                     </table>
                 </div>
                 <div class="footer">
-                    <button style="height:40px;width:110px">Cancel</button>
-                    <button style="height:40px;width:110px">Save</button>                      
+                    <button name="cancel" style="height:35px;width:110px">Cancel</button>
+                    <button name="save" style="height:35px;width:110px">Save</button>                      
                 </div>
             </div>
         </div>
