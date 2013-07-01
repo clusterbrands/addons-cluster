@@ -133,7 +133,7 @@ function openerp_pos_screens_ex(instance,module){
                     },
                 ],
             });
-            $("#btnSearch").button({icons: {primary: "ui-icon-search"},text:false})          
+            //$("#btnSearch").button({icons: {primary: "ui-icon-search"},text:false})          
             $("#choiceType").buttonset();             
             $("#txtVat").focus();           
         },

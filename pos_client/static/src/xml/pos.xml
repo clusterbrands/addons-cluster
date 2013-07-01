@@ -17,19 +17,18 @@
         </div>
     </t>
     <t t-name="CustomerPopupForm">
-        <div class="oe_modal_dialog">
-            <div class="oe_popup">
-                <div class="oe_header">
-                    <span class="oe_title">Customer Form</span>
-                    <a href="#" class="oe_close" role="button">
+        <div class="modal_dialog">
+            <div class="popup">
+                <div class="header">
+                    <span class="title">Customer Form</span>
+                    <a href="#" class="close" role="button">
                         <span class="ui-icon ui-icon-closethick">close</span>
                     </a>
                 </div>
-                <div class="oe_content">                    
+                <div class="content">                    
                     <table>
-                        <br/>
                         <tr>
-                            <td class="oe_form_group_cell1">
+                            <td>
                                 <label>Vat</label>
                             </td>
                             <td>
@@ -46,15 +45,15 @@
                                     <label for="opt_p">P</label>
                                 </div>                    
                             </td>
-                            <td>
-                                <input id="txtVat" name="vat" type="text" t-att-value="widget.customer.get('vat')" class="oe_text_field" onfocus="this.select()" placeholder="e.g 123456789"/>                                             
+                            <td >
+                                <input id="txtVat"  name="vat" type="text" style="width:95%" t-att-value="widget.customer.get('vat')" onfocus="this.select()" placeholder="e.g 123456789"/>                                             
                             </td>
                             <td>
-                                <button id="btnSearch" name="search">search</button> 
+                                <button id="btnSearch" name="search">Search</button> 
                             </td>
                         </tr>               
                         <tr>
-                            <td class="oe_form_group_cell1">
+                            <td>
                                  <label>VAT Legal Statement</label>                
                             </td>
                             <td>
@@ -66,7 +65,7 @@
                             </td>                    
                         </tr>
                         <tr>
-                            <td class="oe_form_group_cell1">
+                            <td>
                                  <label>Name</label>                
                             </td>
                             <td colspan="3">
@@ -74,7 +73,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="oe_form_group_cell1">
+                            <td>
                                  <label>Address</label>                
                             </td>
                             <td colspan="3">
@@ -84,7 +83,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="oe_form_group_cell1">
+                            <td>
                                  <label>Phone</label>                
                             </td>
                             <td colspan="3">
@@ -92,7 +91,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="oe_form_group_cell1">
+                            <td>
                                  <label>Email</label>                
                             </td>
                             <td colspan="3">
@@ -100,6 +99,10 @@
                             </td>
                         </tr>
                     </table>
+                </div>
+                <div class="footer">
+                    <button style="height:40px;width:110px">Cancel</button>
+                    <button style="height:40px;width:110px">Save</button>                      
                 </div>
             </div>
         </div>
