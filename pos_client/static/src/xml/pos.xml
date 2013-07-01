@@ -135,7 +135,7 @@
         </t>
          <t t-jquery="div.buttonset" t-operation="append">
             <button name="cancel" style="height:35px;width:110px">Cancel</button>
-            <button name="save" style="height:35px;width:110px">Save</button>
+            <button name="save" style="height:35px;width:110px"><t t-esc="widget.operation"></t></button>
         </t>
     </t>     
 </templates>

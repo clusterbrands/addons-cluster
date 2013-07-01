@@ -68,6 +68,28 @@ function openerp_pos_screens_ex(instance,module){
             this.$("button").focus();
         }
     });
+    
+    module.CustomerConfirmUpdate = module.CustomerConfirm.extend({
+        show:function(parent,title,msg){
+            this.renderElement();            
+            this._super(parent,title,msg);
+            this.$("button[name='reject']").focus();            
+        },
+        onClickBtnConfirm:function(){
+            vat = this.parent.letter + this.parent.customer.get('vat');
+            this.parent.seniat_request(vat);
+            this.parent.setOperation("Update");
+            this.parent.$("input[name='street']").focus();
+            this.close();
+            this.hide();
+        },
+        onClickBtnReject:function(){
+            this.close();
+            this.hide();
+            this.parent.setOperation("Select");
+            this.parent.$("button[name='save']").focus()
+        },
+    });
         
     module.CustomerForm = module.CustomerBasePopup.extend({
         template:'CustomerForm',
@@ -89,10 +111,8 @@ function openerp_pos_screens_ex(instance,module){
             this._super(parent, options);
             this.id = "customer-form";
             this.customer = new module.Customer();
-            this.customer.bind('change',this.renderElement,this)
-            parent= module.CustomerBasePopup
-            this.events = _.extend({},parent.prototype.events,this.events)
-            this.letter = "V";            
+            this.letter = "V";
+            this.operation="Create";
         }, 
         show: function(){
             self = this;
@@ -110,98 +130,6 @@ function openerp_pos_screens_ex(instance,module){
             $("#customer-form").position({my:"center",of:".point-of-sale"});
             $(".popup").draggable();
         },
-        customer_search: function(vat){
-            var id = this.pos.db.search_customer(vat);
-            return id;
-        },
-        ask_for_update:function(){
-            ccu = new module.CustomerConfirm(this, {});
-            ccu.appendTo($('.point-of-sale'));
-            ccu.show(this,"Question","This customer already exists. Do you want to upgrade it?");
-            $("#btnSave span").text("Accept");
-            
-        },
-        load_customer:function(id){
-            customer = this.pos.db.get_customer_by_id(id);
-            this.load_data(customer);
-            this.ask_for_update();
-            
-        },
-        load_data:function(c){            
-            c.street = _.has(c,"street") ? c.street:""
-            c.street2 = _.has(c,"street2") ? c.street2:""
-            c.city = _.has(c,"city") ? c.city:""
-            c.phone = _.has(c,"phone") ? c.phone:""
-            c.email = _.has(c,"email") ? c.email:""
-            $("#txtName").val(c.name);
-            $("#txtStreet").val(c.street ? c.street:"");
-            $("#txtStreet2").val(c.street2 ? c.street2:"");
-            $("#txtCity").val(c.city ? c.city:"");
-            $("#txtPhone").val(c.phone ? c.phone:"");
-            $("#txtEmail").val(c.email ? c.email:"");
-        },
-        load_data_seniat:function(c){
-            letter = $("#choiceType :radio:checked").val();
-            $("#txtName").val(c.name);
-            $("#chkWh").attr("checked",c.wh_iva_agent);         
-            $("#chkWh").attr("checked",c.wh_iva_agent);         
-            if (letter != "V")
-                $("#chkSt").attr("checked",c.vat_subjected);
-                        
-        },
-        seniat_request:function(vat){
-            self = this
-            this.seniat_url.call('check_rif',[vat]).then(function(customer){
-                if (customer != null){
-                    self.load_data_seniat(customer);
-                    self.enable_controls();
-                    $("#txtStreet").focus();
-                }
-            }).fail(function(obj, event){ 
-                alert("algo fallo");             
-            })
-        },
-        save_customer: function(){
-            alert(this.customer.get('street'));
-        },
-        onClickBtnSave:function(){
-           console.debug(this.customer);
-           text = $("#btnSave span").text();   
-           if (text == "Save")
-                this.save_customer();
-           else
-                alert("select")
-        },         
-        show_popup: function(title,msg){
-            customer_popup = new module.CustomerPopup(this, {});
-            customer_popup.appendTo($('.point-of-sale'));
-            customer_popup.show(title,msg);
-        },    
-        disable_controls : function(){
-            this.$("#txtVat").removeAttr("disabled");
-            this.$("#btnSearch").removeAttr("disabled","disabled");            
-            this.$("input[name='name']").attr("disabled","disabled");
-            this.$("#txtStreet").attr("disabled","disabled");
-            this.$("#txtStreet2").attr("disabled","disabled");
-            this.$("#txtCity").attr("disabled","disabled");
-            this.$("#txtPhone").attr("disabled","disabled");
-            this.$("#txtEmail").attr("disabled","disabled");
-            this.$("#chkSt").attr("disabled","disabled");
-            this.$("#chkWh").attr("disabled","disabled");
-            this.$("#choiceType :radio").button("enable");
-        },
-        enable_controls : function(){          
-            this.$("#txtStreet").removeAttr("disabled");
-            this.$("#txtStreet2").removeAttr("disabled");
-            this.$("#txtCity").removeAttr("disabled");
-            this.$("#txtPhone").removeAttr("disabled");
-            this.$("#txtEmail").removeAttr("disabled");
-            this.$("#chkSt").removeAttr("disabled");
-            this.$("#chkWh").removeAttr("disabled");
-            this.$("#txtVat").attr("disabled","disabled");
-            this.$("#btnSearch").attr("disabled","disabled");
-            this.$("#choiceType :radio").button("disable");         
-        },
         renderElement: function(){
             ids = $('input:disabled')
             this._super();
@@ -211,11 +139,93 @@ function openerp_pos_screens_ex(instance,module){
                 $("input[name='"+value.name+"']").attr("disabled","disabled");               
             });
         },
+        setOperation:function(value){
+            this.operation = value;
+            this.renderElement();
+        },
         clear:function(){
+            this.operation = "Create";
             this.customer.clear().set(this.customer.defaults);
-        },   
+            this.renderElement();
+        },
+        customer_search: function(vat){
+            var id = this.pos.db.search_customer(vat);
+            return id;
+        },
+        ask_for_update:function(){
+            ccu = new module.CustomerConfirmUpdate(this, {});
+            ccu.appendTo($('.point-of-sale'));
+            ccu.show(this,"Question","This customer already exists. Do you want to upgrade it?");          
+        },
+        load_customer:function(id){
+            customer = this.pos.db.get_customer_by_id(id);
+            this.load_data(customer);
+            this.ask_for_update();
+            
+        },
+        load_data:function(c){
+            console.debug(c);           
+            this.customer.set('name',c.name || "");
+            this.customer.set('vat_subjected',c.vat_subjected || null);
+            this.customer.set('wh_iva_agent',c.wh_iva_agent || null);
+            this.customer.set('street',c.street || "");
+            this.customer.set('street2',c.street2 || "");
+            this.customer.set('city',c.city || "");
+            this.customer.set('phone',c.phone || "");
+            this.customer.set('email',c.email || "");
+            this.renderElement();
+        },
+        load_data_seniat:function(c){
+            this.customer.set("name",c.name)          
+            this.customer.set("wh_iva_agent",c.wh_iva_agent)
+            if (this.letter != "V")
+                this.customer.set("vat_subjected",c.vat_subjected);
+            this.renderElement();
+        },
+        seniat_request:function(vat){
+            self = this
+            this.seniat_url.call('check_rif',[vat]).then(function(customer){
+                if (customer != null){
+                    self.load_data_seniat(customer);
+                    self.enable_controls();
+                    self.$("input[name='street']").focus();
+                }
+            }).fail(function(obj, event){ 
+                alert("algo fallo");             
+            })
+        },
+        save_customer: function(){
+            alert(this.customer.get('street'));
+        },
+        show_popup: function(title,msg){
+            customer_popup = new module.CustomerPopup(this, {});
+            customer_popup.appendTo($('.point-of-sale'));
+            customer_popup.show(title,msg);
+        },    
+        disable_controls : function(){              
+            this.$("input[type=text]").attr("disabled","disabled");
+            this.$(":checkbox").attr("disabled","disabled");
+            this.$("input[name='vat']").removeAttr("disabled");
+            this.$("button[name='search']").removeAttr("disabled","disabled"); 
+            this.$("#choiceType :radio").button("enable");                             
+        },
+        enable_controls : function(){          
+            this.$("input[type=text]").removeAttr("disabled");
+            this.$(":checkbox").removeAttr("disabled");
+            this.$("input[name='vat']").attr("disabled","disabled");
+            this.$("button[name='search']").attr("disabled","disabled");
+            this.$("#choiceType :radio").button("disable");         
+        },
+        onClickBtnSave:function(){
+           console.debug(this.customer);
+           text = $("#btnSave span").text();   
+           if (text == "Save")
+                this.save_customer();
+           else
+                alert("select")
+        }, 
         onClickBtnSearch: function(){            
-            vat = this.letter + this.$("input[name='vat']").val();
+            vat = this.letter + this.customer.get('vat');
             regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
             if (regex.test(vat)){
                 id = this.customer_search(vat)
@@ -280,7 +290,7 @@ function openerp_pos_screens_ex(instance,module){
         },
         onKeypressEmail:function(e){            
             if (e.which == '13'){
-                this.$("#btnSave").focus();
+                this.$("button[name='save']").focus();
                 e.preventDefault();
             }
         },
