@@ -23,7 +23,6 @@ function openerp_pos_models_ex(instance, module){
     
     module.Customer = Backbone.Model.extend({
         defaults:{
-            id:null,
             vat:"",
             name:"",
             street:"",
@@ -33,6 +32,8 @@ function openerp_pos_models_ex(instance, module){
             city:"",
             vat_subjected:null,
             wh_iva_agent:null,
+            seniat_updated:null,
+            create:false,
             update:false,       
         }
     });
