@@ -136,7 +136,6 @@ function openerp_pos_screens_ex(instance,module){
             this._super();
             this.build_ui();
             $(ids).each(function(index,value){
-                console.debug(value.name) 
                 $("input[name='"+value.name+"']").attr("disabled","disabled");               
             });
         },
@@ -164,8 +163,7 @@ function openerp_pos_screens_ex(instance,module){
             this.ask_for_update();
             
         },
-        load_data:function(c){
-            console.debug(c);           
+        load_data:function(c){          
             this.customer.set('name',c.name || "");
             this.customer.set('vat_subjected',c.vat_subjected || null);
             this.customer.set('wh_iva_agent',c.wh_iva_agent || null);
