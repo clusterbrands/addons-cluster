@@ -13,12 +13,16 @@ function openerp_pos_models_ex(instance, module){
                 .then(function(){
                      return self.fetch('res.partner', ['name','vat','email',
                         'phone','mobile','street','street2','city','vat_subjected',
-                        'wh_iva_agent','seniat_updated'],[['customer', '=', true]]);
+                        'wh_iva_agent','seniat_updated'],[['customer', '=', true],
+                        ['vat','!=','']]);
                 }).then(function(customers){
                     self.db.add_customers(customers);
                 })
             return loaded
-        }
+        },
+        add_customer:function(custumer){
+            this.db.add_customer(customer);
+        },
     })
     
     module.Customer = Backbone.Model.extend({

@@ -25,9 +25,9 @@
 from stoqdrivers.printers.fiscal import FiscalPrinter
 from stoqdrivers.printers import base
 from stoqdrivers.exceptions import DriverError
-from kiwi.log import Logger
 from stoqdrivers.translation import stoqdrivers_gettext
 _ = stoqdrivers_gettext
+from kiwi.log import Logger
 log = Logger('fiscalex')
 
 class FiscalPrinterEx(FiscalPrinter):

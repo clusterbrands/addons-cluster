@@ -94,6 +94,7 @@ function openerp_pos_screens_ex(instance,module){
     module.CustomerForm = module.CustomerBasePopup.extend({
         template:'CustomerForm',
         events:{
+            "click button[name='save']":"onClickBtnSave",
             "click button[name='cancel']":"onClickBtnCancel",
             "click button[name='search']":"onClickBtnSearch",
             "change .oe_text_field": "onChangeTextbox",
@@ -195,7 +196,6 @@ function openerp_pos_screens_ex(instance,module){
             })
         },
         save_customer: function(){
-            alert(this.customer.get('street'));
         },
         show_popup: function(title,msg){
             customer_popup = new module.CustomerPopup(this, {});
@@ -217,12 +217,9 @@ function openerp_pos_screens_ex(instance,module){
             this.$("#choiceType :radio").button("disable");         
         },
         onClickBtnSave:function(){
-           console.debug(this.customer);
-           text = $("#btnSave span").text();   
-           if (text == "Save")
+           if (this.operation == "Create")
                 this.save_customer();
-           else
-                alert("select")
+            
         }, 
         onClickBtnSearch: function(){            
             vat = this.letter + this.customer.get('vat');
