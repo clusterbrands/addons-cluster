@@ -11,10 +11,15 @@ function openerp_pos_models_ex(instance, module){
             self = this
             loaded = _super.prototype.load_server_data.call(this)
                 .then(function(){
+                    return self.fetch(
+                        'pos.config',['country_id'],
+                        [['id','=', self.get('pos_session').config_id[0]]]);
+                }).then(function(config){
+                     country_id = config[0].country_id[0]
                      return self.fetch('res.partner', ['name','vat','email',
                         'phone','mobile','street','street2','city','vat_subjected',
                         'wh_iva_agent','seniat_updated'],[['customer', '=', true],
-                        ['vat','!=','']]);
+                        ['vat','!=',''],['country_id','=',country_id]]);
                 }).then(function(customers){
                     self.db.add_customers(customers);
                 })
