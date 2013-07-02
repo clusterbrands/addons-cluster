@@ -28,7 +28,8 @@
     'description' : """Enables add clients in the POS module orders""",
     'init_xml': [
     ],
-    'data' : [        
+    'data' : [  
+        'view/point_of_sale_view.xml',
     ],
     'js':[ 
         'static/src/js/db.js',
