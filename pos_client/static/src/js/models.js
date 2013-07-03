@@ -4,8 +4,10 @@ function openerp_pos_models_ex(instance, module){
     module.PosModel = module.PosModel.extend({
         initialize : function(session, attributes) {
             _super.prototype.initialize.call(this,session, attributes)
-            this.db.clear('products','categories','customers');
+            this.db.clear('products','categories','customers','new_customers','updated-customer');
             this.set({'customers':new module.CustomerCollection()});
+            this.set({'new-customers':new module.CustomerCollection()});
+            this.set({'updated-customers':new module.CustomerCollection()});
         },
         load_server_data : function(){
             self = this
@@ -41,9 +43,7 @@ function openerp_pos_models_ex(instance, module){
             city:"",
             vat_subjected:null,
             wh_iva_agent:null,
-            seniat_updated:null,
-            create:false,
-            update:false,       
+            seniat_updated:null,    
         }
     });
 
