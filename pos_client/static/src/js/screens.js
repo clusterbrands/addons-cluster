@@ -97,7 +97,7 @@ function openerp_pos_screens_ex(instance,module){
             "click button[name='save']":"onClickBtnSave",
             "click button[name='cancel']":"onClickBtnCancel",
             "click button[name='search']":"onClickBtnSearch",
-            "change .oe_text_field": "onChangeTextbox",
+            "change input[type='text']": "onChangeTextbox",
             "change input[type='radio']":"onChangeRadio",
             "change input[name='vat_subjected']":"onChangeVatSubjected",
             "change input[name='wh_iva_agent']":"onChangeWhIvaAgent",  
@@ -163,21 +163,24 @@ function openerp_pos_screens_ex(instance,module){
             
         },
         load_data:function(c){          
-            this.customer.set('name',c.name || "");
-            this.customer.set('vat_subjected',c.vat_subjected || null);
-            this.customer.set('wh_iva_agent',c.wh_iva_agent || null);
-            this.customer.set('street',c.street || "");
-            this.customer.set('street2',c.street2 || "");
-            this.customer.set('city',c.city || "");
-            this.customer.set('phone',c.phone || "");
-            this.customer.set('email',c.email || "");
+            this.customer.set({
+                'name':c.name || "",
+                'vat_subjected':c.vat_subjected || null,
+                'wh_iva_agent':c.wh_iva_agent || null,
+                'street':c.street || "",
+                'street':c.street || "",
+                'street2':c.street2 || "",
+                'city':c.city || "",
+                'phone':c.phone || "",
+                'email':c.email || "",
+            });                
             this.renderElement();
         },
         load_data_seniat:function(c){
             this.customer.set("name",c.name)          
-            this.customer.set("wh_iva_agent",c.wh_iva_agent)
+            this.customer.set("wh_iva_agent",c.wh_iva_agent || null)
             if (this.letter != "V")
-                this.customer.set("vat_subjected",c.vat_subjected);
+                this.customer.set("vat_subjected",c.vat_subjected || null);
             this.renderElement();
         },
         seniat_request:function(vat){
@@ -192,7 +195,11 @@ function openerp_pos_screens_ex(instance,module){
                 alert("algo fallo");             
             })
         },
-        save_customer: function(){
+        createCustomer:function(){       
+        },
+        updateCustomer:function(){
+        },
+        selectCustomer:function(){            
         },
         show_popup: function(title,msg){
             customer_popup = new module.CustomerPopup(this, {});
@@ -214,11 +221,15 @@ function openerp_pos_screens_ex(instance,module){
             this.$("#choiceType :radio").button("disable");         
         },
         onClickBtnSave:function(){
-           if (this.operation == "Create")
-                this.save_customer();
+            if (this.operation == "Create")
+                this.createCustomer();
+            else if (this.operation == "Update")
+                this.updateCustomer();
+            else
+                this.selectCustomer();
             
         }, 
-        onClickBtnSearch: function(){            
+        onClickBtnSearch: function(){
             vat = this.letter + this.customer.get('vat');
             regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
             if (regex.test(vat)){
@@ -231,7 +242,7 @@ function openerp_pos_screens_ex(instance,module){
                 this.show_popup("Error","This VAT number does not seem to be valid!");
             }           
         }, 
-         onClickBtnCancel: function(){
+        onClickBtnCancel: function(){
             this.clear();
             this.disable_controls();
             $("#txtVat").focus();
@@ -246,10 +257,16 @@ function openerp_pos_screens_ex(instance,module){
             this.$("#txtVat").focus();
         },
         onChangeVatSubjected:function(e){
-            this.set('vat_subjected',e.target.value);
-        },
+            if (this.$(e.target).attr('checked'))
+                this.customer.set('vat_subjected',true);
+            else
+                this.customer.set('wh_iva_agent',false);
+        },  
         onChangeWhIvaAgent:function(e){
-            this.set('wh_iva_agent',e.target.value)
+            if (this.$(e.target).attr('checked'))
+                this.customer.set('wh_iva_agent',true)
+            else
+                this.customer.set('wh_iva_agent',false)
         },  
         onKeypressVat:function(e){
             if (e.which == '13'){

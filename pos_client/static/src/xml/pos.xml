@@ -79,10 +79,10 @@
                         </div>                    
                     </td>
                     <td >
-                        <input id="txtVat"  name="vat" type="text" style="width:95%" t-att-value="widget.customer.get('vat')" onfocus="this.select()" placeholder="e.g 123456789"/>                                             
+                        <input name="vat" type="text" style="width:95%" t-att-value="widget.customer.get('vat')" onfocus="this.select()" placeholder="e.g 123456789"/>                                             
                     </td>
                     <td>
-                        <button id="btnSearch" name="search">Search</button> 
+                        <button name="search">Search</button> 
                     </td>
                 </tr>               
                 <tr>
@@ -90,11 +90,11 @@
                          <label>VAT Legal Statement</label>                
                     </td>
                     <td>
-                        <input type="checkbox" t-att-checked="widget.customer.get('vat_subjected')" id="chkSt"/>
+                        <input type="checkbox" name="vat_subjected" t-att-checked="widget.customer.get('vat_subjected')" />
                     </td>
                     <td colspan="2">
                         <label>Wh. Agent</label>
-                        <input type="checkbox" t-att-checked="widget.customer.get('wh_iva_agent')" id="chkWh"/>              
+                        <input type="checkbox" name="wh_iva_agent" t-att-checked="widget.customer.get('wh_iva_agent')"/>              
                     </td>                    
                 </tr>
                 <tr>
@@ -102,7 +102,7 @@
                          <label>Name</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" name="name" t-att-value="widget.customer.get('name')"  id="txtName" class="oe_text_field" style="width:100%"/>
+                        <input type="text" name="name" t-att-value="widget.customer.get('name')"  style="width:100%"/>
                     </td>
                 </tr>
                 <tr>
@@ -110,9 +110,9 @@
                          <label>Address</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" name="street" id="txtStreet" t-att-value="widget.customer.get('street')" class="oe_text_field" style="width:100%" placeholder="Av. Siempre Viva"/>
-                        <input type="text" name="street2" id="txtStreet2" t-att-value="widget.customer.get('street2')"  class="oe_text_field" style="width:100%"/>
-                        <input type="text" name="city" id="txtCity" t-att-value="widget.customer.get('city')" class="oe_text_field" style="width:100%" placeholder="Caracas"/>
+                        <input type="text" name="street"  t-att-value="widget.customer.get('street')" style="width:100%" placeholder="Av. Siempre Viva"/>
+                        <input type="text" name="street2" t-att-value="widget.customer.get('street2')" style="width:100%"/>
+                        <input type="text" name="city"  t-att-value="widget.customer.get('city')" style="width:100%" placeholder="Caracas"/>
                     </td>
                 </tr>
                 <tr>
@@ -120,7 +120,7 @@
                          <label>Phone</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" name="phone" id="txtPhone" t-att-value="widget.customer.get('phone')" class="oe_text_field" style="width:100%" placeholder=" +58 426 3504371"/>
+                        <input type="text" name="phone" t-att-value="widget.customer.get('phone')" style="width:100%" placeholder=" +58 426 3504371"/>
                     </td>
                 </tr>
                 <tr>
@@ -128,7 +128,7 @@
                          <label>Email</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" name="email" id="txtEmail" t-att-value="widget.customer.get('email')" class="oe_text_field" style="width:100%"/>
+                        <input type="text" name="email" t-att-value="widget.customer.get('email')" style="width:100%"/>
                     </td>
                 </tr>
             </table>

@@ -44,6 +44,13 @@ function openerp_pos_models_ex(instance, module){
             vat_subjected:null,
             wh_iva_agent:null,
             seniat_updated:null,    
+        },
+        set: function(key,value,options) {
+            options = options || {};
+            if (!('silent' in options)) {
+                options.silent = true;
+            }
+            return Backbone.Model.prototype.set.call(this,key,value,options);
         }
     });
 
