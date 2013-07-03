@@ -45,19 +45,17 @@ function openerp_pos_screens_ex(instance,module){
     module.CustomerPopup = module.CustomerBasePopup.extend({
         template:'CustomerAlert',
         events:{
-            "click button":function(e){
-                this.close();
-                this.hide();
-            },            
+            "click button":"onClickBtn",
         },
         init: function(parent, options){
             this.id="customer-alert";
             this._super();            
         },        
-        show: function(title,msg){
+        show: function(title,msg,el){
             self = this;
             this.title = title;
             this.msg = msg;
+            this.elem = el;
             this._super();            
             this.renderElement();
             this.build_ui();           
@@ -66,6 +64,11 @@ function openerp_pos_screens_ex(instance,module){
             this.$("#customer-alert").position({my:"center",of:"#customer-form"});
             this.$(".popup").draggable();
             this.$("button").focus();
+        },
+        onClickBtn: function(e){
+            $(this.elem).focus();
+            this.close();
+            this.hide();   
         }
     });
     
@@ -137,13 +140,14 @@ function openerp_pos_screens_ex(instance,module){
             this.build_ui();
             $(ids).each(function(index,value){
                 $("input[name='"+value.name+"']").attr("disabled","disabled");               
-            });
+            });           
         },
         setOperation:function(value){
             this.operation = value;
             this.renderElement();
         },
         clear:function(){
+            this.letter = "V";
             this.operation = "Create";
             this.customer.clear().set(this.customer.defaults);
             this.renderElement();
@@ -164,9 +168,10 @@ function openerp_pos_screens_ex(instance,module){
         },
         load_data:function(c){          
             this.customer.set({
+                'id':c.id,
                 'name':c.name || "",
-                'vat_subjected':c.vat_subjected || null,
-                'wh_iva_agent':c.wh_iva_agent || null,
+                'vat_subjected':c.vat_subjected,
+                'wh_iva_agent':c.wh_iva_agent,
                 'street':c.street || "",
                 'street':c.street || "",
                 'street2':c.street2 || "",
@@ -178,9 +183,9 @@ function openerp_pos_screens_ex(instance,module){
         },
         load_data_seniat:function(c){
             this.customer.set("name",c.name)          
-            this.customer.set("wh_iva_agent",c.wh_iva_agent || null)
+            this.customer.set("wh_iva_agent",c.wh_iva_agent)
             if (this.letter != "V")
-                this.customer.set("vat_subjected",c.vat_subjected || null);
+                this.customer.set("vat_subjected",c.vat_subjected);
             this.renderElement();
         },
         seniat_request:function(vat){
@@ -195,16 +200,54 @@ function openerp_pos_screens_ex(instance,module){
                 alert("algo fallo");             
             })
         },
-        createCustomer:function(){       
+        validateFields:function(){
+            if (this.customer.get('vat') == ""){
+                this.show_popup("Error","The field 'vat' is required","input[name='vat']");
+                return false;
+            }else if (this.customer.get('name')==""){
+                this.show_popup("Error","The field 'name' is required","input[name='name']");
+                return false;
+            }else if (this.customer.get('street')==""){
+                this.show_popup("Error","The field 'street' is required","input[name='street']");
+                return false;
+            }else if (this.customer.get('city')==""){
+                this.show_popup("Error","The field 'city' is required","input[name='city']");
+                return false;
+            }else if (this.customer.get('phone')==""){
+                this.show_popup("Error","The field 'phone' is required","input[name='phone']");
+                return false;
+            }
+            return true;
+        },
+        saveCustomer:function(){
+            if (this.operation == "Create")
+                this.createCustomer();
+            else if (this.operation == "Update")
+                this.updateCustomer();
+            else
+                this.selectCustomer();
+        },
+        createCustomer:function(){    
+            this.customer.set('vat',this.letter+this.customer.get('vat'));
+            this.pos.create_customer(this.customer.toJSON()); 
+            this.show_popup("Notification","Customer successfully created");
+            this.onClickBtnCancel();
         },
         updateCustomer:function(){
+            if (this.customer.hasChanged()){
+                customer = this.customer.changedAttributes();
+                customer.id = this.customer.get('id');
+                this.pos.update_customer(customer);
+                this.show_popup("Notification","Customer successfully update");
+                this.onClickBtnCancel(); 
+            }
         },
         selectCustomer:function(){            
         },
-        show_popup: function(title,msg){
+        show_popup: function(title,msg,el){
             customer_popup = new module.CustomerPopup(this, {});
             customer_popup.appendTo($('.point-of-sale'));
-            customer_popup.show(title,msg);
+            customer_popup.show(title,msg,el);
         },    
         disable_controls : function(){              
             this.$("input[type=text]").attr("disabled","disabled");
@@ -221,13 +264,8 @@ function openerp_pos_screens_ex(instance,module){
             this.$("#choiceType :radio").button("disable");         
         },
         onClickBtnSave:function(){
-            if (this.operation == "Create")
-                this.createCustomer();
-            else if (this.operation == "Update")
-                this.updateCustomer();
-            else
-                this.selectCustomer();
-            
+            if (this.validateFields())
+                this.saveCustomer();
         }, 
         onClickBtnSearch: function(){
             vat = this.letter + this.customer.get('vat');
@@ -245,7 +283,7 @@ function openerp_pos_screens_ex(instance,module){
         onClickBtnCancel: function(){
             this.clear();
             this.disable_controls();
-            $("#txtVat").focus();
+            this.$("input[name='vat']").focus();
         },    
         onChangeTextbox:function(e){
             name = e.target.name;
@@ -254,7 +292,7 @@ function openerp_pos_screens_ex(instance,module){
         },
         onChangeRadio:function(e){
             this.letter = e.target.value;
-            this.$("#txtVat").focus();
+            this.$("input[name='vat']").focus();
         },
         onChangeVatSubjected:function(e){
             if (this.$(e.target).attr('checked'))
@@ -271,31 +309,31 @@ function openerp_pos_screens_ex(instance,module){
         onKeypressVat:function(e){
             if (e.which == '13'){
                 this.customer.set('vat',e.target.value);
-                this.$("#btnSearch").trigger('click');
+                this.$("button[name='search']").trigger('click');
                 e.preventDefault();
             }
         },
         onKeypressStreet:function(e){            
             if (e.which == '13'){
-                this.$("#txtStreet2").focus();
+                this.$("input[name='street2']").focus();
                 e.preventDefault();
             }
         }, 
         onKeypressStreet2:function(e){            
             if (e.which == '13'){
-                this.$("#txtCity").focus();
+                this.$("input[name='city']").focus();
                 e.preventDefault();
             }
         }, 
         onKeypressCity:function(e){            
             if (e.which == '13'){
-                this.$("#txtPhone").focus();
+                this.$("input[name='phone']").focus();
                 e.preventDefault();
             }
         },
         onKeypressPhone:function(e){            
             if (e.which == '13'){
-                this.$("#txtEmail").focus();
+                this.$("input[name='email']").focus();
                 e.preventDefault();
             }
         },

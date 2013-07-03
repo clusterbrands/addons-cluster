@@ -27,13 +27,19 @@ function openerp_pos_models_ex(instance, module){
                 })
             return loaded
         },
-        add_customer:function(custumer){
+        create_customer:function(customer){
             this.db.add_customer(customer);
+        },
+        
+        update_customer:function(customer){
+            console.debug(customer)
+            this.db.update_customer(customer);
         },
     })
     
     module.Customer = Backbone.Model.extend({
         defaults:{
+            id:null,
             vat:"",
             name:"",
             street:"",
@@ -41,8 +47,8 @@ function openerp_pos_models_ex(instance, module){
             phone:"",
             email:"",
             city:"",
-            vat_subjected:null,
-            wh_iva_agent:null,
+            vat_subjected:false,
+            wh_iva_agent:false,
             seniat_updated:null,    
         },
         set: function(key,value,options) {

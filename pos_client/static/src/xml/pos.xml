@@ -66,15 +66,15 @@
                     </td>
                     <td>
                          <div id="choiceType">
-                            <input type="radio" id="opt_v" name="choiceType" value="V" checked="checked"/>
+                            <input type="radio" id="opt_v" name="choiceType" value="V" t-att-checked="widget.letter=='V'?'checked':undefined"/>
                             <label for="opt_v">V</label>
-                            <input type="radio" id="opt_e" name="choiceType" value="E" />
+                            <input type="radio" id="opt_e" name="choiceType" value="E" t-att-checked="widget.letter=='E'?'checked':undefined" />
                             <label for="opt_e">E</label>
-                            <input type="radio" id="opt_j" name="choiceType" value="J" />
+                            <input type="radio" id="opt_j" name="choiceType" value="J" t-att-checked="widget.letter=='J'?'checked':undefined"/>
                             <label for="opt_j">J</label>
-                            <input type="radio" id="opt_g" name="choiceType" value="G" />
+                            <input type="radio" id="opt_g" name="choiceType" value="G" t-att-checked="widget.letter=='G'?'checked':undefined"/>
                             <label for="opt_g">G</label>
-                            <input type="radio" id="opt_p" name="choiceType" value="P" />
+                            <input type="radio" id="opt_p" name="choiceType" value="P" t-att-checked="widget.letter=='P'?'checked':undefined"/>
                             <label for="opt_p">P</label>
                         </div>                    
                     </td>
@@ -90,11 +90,11 @@
                          <label>VAT Legal Statement</label>                
                     </td>
                     <td>
-                        <input type="checkbox" name="vat_subjected" t-att-checked="widget.customer.get('vat_subjected')" />
+                        <input type="checkbox" name="vat_subjected" t-att-checked="widget.customer.get('vat_subjected') == true ? 'checked':undefined" />
                     </td>
                     <td colspan="2">
                         <label>Wh. Agent</label>
-                        <input type="checkbox" name="wh_iva_agent" t-att-checked="widget.customer.get('wh_iva_agent')"/>              
+                        <input type="checkbox" name="wh_iva_agent" t-att-checked="widget.customer.get('wh_iva_agent') == true ? 'checked':undefined"/>              
                     </td>                    
                 </tr>
                 <tr>
@@ -102,7 +102,7 @@
                          <label>Name</label>                
                     </td>
                     <td colspan="3">
-                        <input type="text" name="name" t-att-value="widget.customer.get('name')"  style="width:100%"/>
+                        <input type="text" name="name" t-att-value="widget.customer.get('name')" t-att="{'required':''}" style="width:100%"/>
                     </td>
                 </tr>
                 <tr>
