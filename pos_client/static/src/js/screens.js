@@ -157,9 +157,8 @@ function openerp_pos_screens_ex(instance,module){
             ccu.appendTo($('.point-of-sale'));
             ccu.show(this,"Question","This customer already exists. Do you want to upgrade it?");          
         },
-        load_customer:function(id){
-            customer = this.pos.db.get_customer_by_id(id);
-            this.load_data(customer);
+        load_customer:function(c){
+            this.load_data(c);
             this.ask_for_update();
             
         },
@@ -223,9 +222,9 @@ function openerp_pos_screens_ex(instance,module){
             vat = this.letter + this.customer.get('vat');
             regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
             if (regex.test(vat)){
-                id = this.customer_search(vat)
-                if (id != -1)
-                    this.load_customer(id);
+                c = this.customer_search(vat)
+                if (c != null)
+                    this.load_customer(c);
                 else
                     this.seniat_request(vat);
             }else{
