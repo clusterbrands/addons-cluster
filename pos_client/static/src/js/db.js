@@ -16,36 +16,65 @@ function openerp_pos_db_ex(instance, module){
             this.save('customers',stored_customers);
         },  
         add_customer:function(customer){
-            var customers =  this.load('new-customers',{}); 
-            customers[customer.vat] = customer
-            this.save('new-customers',customers)
-        },
+            var new_customers =  this.load('new-customers',{}); 
+            new_customers[customer.vat] = customer
+            this.save('new-customers',new_customers)
+        },        
         update_customer:function(customer){
-            var customers =  this.load('new-customers',{}); 
-            customers[customer.vat] = customer
-            this.save('new-customers',customers)
+            var updated_customers =  this.load('updated-customers',{}); 
+            updated_customers[customer.vat] = customer;
+            this.save('updated-customers',updated_customers);
+        },
+        remove_created_customer:function(vat){
+            var customers =  this.load('customers',{}); 
+            var new_customers =  this.load('new-customers',{}); 
+            customers[vat] = new_customers[vat]
+            new_customers = _.filter(new_customers, function(customer){
+                return customer.vat !== vat;
+            });
+            this.save('customers',customers);
+            this.save('new-customers',new_customers);        
+        },
+        remove_updated_customer:function(vat){
+            var customers =  this.load('customers',{}); 
+            var updated_customers =  this.load('updated-customers',{});              
+            customers[vat] = _.extend(customers[vat],updated_customers[vat]);
+            
+            updated_customers = _.filter(updated_customers, function(customer){
+                return customer.vat !== vat;
+            });
+           
+            this.save('customers',customers);
+            this.save('updated-customers',updated_customers);        
         },
         search_customer: function(vat){
-            c = this.load('updated-customers',{})[vat] || null;
-            if (c==null)
-                c = this.load('new-customers',{})[vat] || null;
-            if (c == null)
-                c = this.load('customers',{})[vat] || null;
-            return c;
+            updated_customers = this.load('updated-customers',{});
+            new_customers = this.load('new-customers',{});
+            customers = this.load('customers',{})
+            return (updated_customers[vat] || new_customers[vat] || 
+                    customers[vat] || null);
         },
-        get_all_customers: function(){
+        get_customers: function(){
             list = [];
-            stored_customers = this.load('customers',{});
-            for (var i in stored_customers) {
-                list.push(stored_customers[i]);
+            customers = this.load('customers',{});
+            for (var i in customers) {
+                list.push(customers[i]);
             }
             return list;
         },
-        get_all_new_customers: function(){
+        get_new_customers: function(){
             list = [];
-            stored_customers = this.load('new-customers',{});
-            for (var i in stored_customers) {
-                list.push(stored_customers[i]);
+            new_customers = this.load('new-customers',{});
+            for (var i in new_customers) {
+                list.push(new_customers[i]);
+            }
+            return list;
+        },
+        get_updated_customers: function(){
+            list = [];
+            updated_customers = this.load('updated-customers',{});
+            for (var i in updated_customers) {
+                list.push(updated_customers[i]);
             }
             return list;
         },

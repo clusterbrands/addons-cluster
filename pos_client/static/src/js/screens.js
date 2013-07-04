@@ -228,16 +228,17 @@ function openerp_pos_screens_ex(instance,module){
                 this.selectCustomer();
         },
         createCustomer:function(){    
-            this.customer.set('vat',this.letter+this.customer.get('vat'));
+            this.customer.set('vat',this.letter+this.customer.get('vat'));            
             this.pos.create_customer(this.customer.toJSON()); 
             this.show_popup("Notification","Customer successfully created");
             this.onClickBtnCancel();
         },
         updateCustomer:function(){
             if (this.customer.hasChanged()){
-                customer = this.customer.changedAttributes();
-                customer.id = this.customer.get('id');
-                this.pos.update_customer(customer);
+                c = this.customer.changedAttributes();
+                c.id = this.customer.get('id');
+                c.vat = this.letter+this.customer.get('vat');;                 
+                this.pos.update_customer(c);
                 this.show_popup("Notification","Customer successfully update");
                 this.onClickBtnCancel(); 
             }
