@@ -79,7 +79,7 @@ function openerp_pos_screens_ex(instance,module){
             this.$("button[name='reject']").focus();            
         },
         onClickBtnConfirm:function(){
-            vat = this.parent.letter + this.parent.customer.get('vat');
+            vat = this.parent.customer.get('vat');
             this.parent.seniat_request(vat);
             this.parent.setOperation("Update");
             this.parent.$("input[name='street']").focus();
@@ -115,7 +115,6 @@ function openerp_pos_screens_ex(instance,module){
             this._super(parent, options);
             this.id = "customer-form";
             this.customer = new module.Customer();
-            this.letter = "V";
             this.operation="Create";
         }, 
         show: function(){
@@ -147,7 +146,6 @@ function openerp_pos_screens_ex(instance,module){
             this.renderElement();
         },
         clear:function(){
-            this.letter = "V";
             this.operation = "Create";
             this.customer.clear().set(this.customer.defaults);
             this.renderElement();
@@ -184,11 +182,12 @@ function openerp_pos_screens_ex(instance,module){
         load_data_seniat:function(c){
             this.customer.set("name",c.name)          
             this.customer.set("wh_iva_agent",c.wh_iva_agent)
-            if (this.letter != "V")
+            if (this.customer.getVatLetter())
                 this.customer.set("vat_subjected",c.vat_subjected);
             this.renderElement();
         },
         seniat_request:function(vat){
+            console.debug(vat);
             self = this
             this.seniat_url.call('check_rif',[vat]).then(function(customer){
                 if (customer != null){
@@ -228,7 +227,6 @@ function openerp_pos_screens_ex(instance,module){
                 this.selectCustomer();
         },
         createCustomer:function(){    
-            this.customer.set('vat',this.letter+this.customer.get('vat'));            
             this.pos.create_customer(this.customer.toJSON()); 
             this.show_popup("Notification","Customer successfully created");
             this.onClickBtnCancel();
@@ -237,7 +235,7 @@ function openerp_pos_screens_ex(instance,module){
             if (this.customer.hasChanged()){
                 c = this.customer.changedAttributes();
                 c.id = this.customer.get('id');
-                c.vat = this.letter+this.customer.get('vat');;                 
+                c.vat = this.customer.get('vat');;                 
                 this.pos.update_customer(c);
                 this.show_popup("Notification","Customer successfully update");
                 this.onClickBtnCancel(); 
@@ -272,7 +270,8 @@ function openerp_pos_screens_ex(instance,module){
                 this.saveCustomer();
         }, 
         onClickBtnSearch: function(){
-            vat = this.letter + this.customer.get('vat');
+            vat = this.customer.get('vat');
+            console.debug(vat);
             regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
             if (regex.test(vat)){
                 c = this.customer_search(vat)
@@ -295,8 +294,8 @@ function openerp_pos_screens_ex(instance,module){
             this.customer.set(name,value);
         },
         onChangeRadio:function(e){
-            this.letter = e.target.value;
-            this.$("input[name='vat']").focus();
+            this.customer.setVatLetter(e.target.value);
+            this.$("input[name='vat']").focus();;
         },
         onChangeVatSubjected:function(e){
             if (this.$(e.target).attr('checked'))
@@ -312,7 +311,7 @@ function openerp_pos_screens_ex(instance,module){
         },  
         onKeypressVat:function(e){
             if (e.which == '13'){
-                this.customer.set('vat',e.target.value);
+                this.customer.setVatNumbers(e.target.value);
                 this.$("button[name='search']").trigger('click');
                 e.preventDefault();
             }

@@ -87,6 +87,7 @@ function openerp_pos_models_ex(instance, module){
     
     module.Customer = Backbone.Model.extend({
         defaults:{
+            vat:"V",
             vat_subjected:false,
             wh_iva_agent:false,   
         },
@@ -96,6 +97,20 @@ function openerp_pos_models_ex(instance, module){
                 options.silent = true;
             }
             return Backbone.Model.prototype.set.call(this,key,value,options);
+        },
+        getVatLetter: function(){
+            return this.get('vat')[0];
+        },
+        getVatNumbers:function(){
+            return  _.rest(this.get('vat'),1).join('');
+        },
+        setVatLetter:function(value){
+            aux = value+_.rest(this.get('vat'),1).join('');
+            this.set('vat',aux);
+        },
+        setVatNumbers:function(value){
+            aux = this.getVatLetter()+value;
+            this.set('vat',aux);
         }
     });
 

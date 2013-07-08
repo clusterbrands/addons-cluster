@@ -66,20 +66,20 @@
                     </td>
                     <td>
                          <div id="choiceType">
-                            <input type="radio" id="opt_v" name="choiceType" value="V" t-att-checked="widget.letter=='V'?'checked':undefined"/>
+                            <input type="radio" id="opt_v" name="choiceType" value="V" t-att-checked="widget.customer.getVatLetter()=='V'?'checked':undefined"/>
                             <label for="opt_v">V</label>
-                            <input type="radio" id="opt_e" name="choiceType" value="E" t-att-checked="widget.letter=='E'?'checked':undefined" />
+                            <input type="radio" id="opt_e" name="choiceType" value="E" t-att-checked="widget.customer.getVatLetter()=='E'?'checked':undefined"/>
                             <label for="opt_e">E</label>
-                            <input type="radio" id="opt_j" name="choiceType" value="J" t-att-checked="widget.letter=='J'?'checked':undefined"/>
+                            <input type="radio" id="opt_j" name="choiceType" value="J" t-att-checked="widget.customer.getVatLetter()=='J'?'checked':undefined"/>
                             <label for="opt_j">J</label>
-                            <input type="radio" id="opt_g" name="choiceType" value="G" t-att-checked="widget.letter=='G'?'checked':undefined"/>
+                            <input type="radio" id="opt_g" name="choiceType" value="G" t-att-checked="widget.customer.getVatLetter()=='G'?'checked':undefined"/>
                             <label for="opt_g">G</label>
-                            <input type="radio" id="opt_p" name="choiceType" value="P" t-att-checked="widget.letter=='P'?'checked':undefined"/>
+                            <input type="radio" id="opt_p" name="choiceType" value="P" t-att-checked="widget.customer.getVatLetter()=='P'?'checked':undefined"/>
                             <label for="opt_p">P</label>
                         </div>                    
                     </td>
                     <td >
-                        <input name="vat" type="text" style="width:95%" t-att-value="widget.customer.get('vat')" onfocus="this.select()" placeholder="e.g 123456789"/>                                             
+                        <input name="vat" type="text" style="width:95%" t-att-value="widget.customer.getVatNumbers()" onfocus="this.select()" placeholder="e.g 123456789"/>                                             
                     </td>
                     <td>
                         <button name="search">Search</button> 
