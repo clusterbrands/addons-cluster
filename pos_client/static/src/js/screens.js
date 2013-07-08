@@ -125,7 +125,7 @@ function openerp_pos_screens_ex(instance,module){
             this.seniat_url = new instance.web.Model('seniat.url');
             this.build_ui();
             this.disable_controls();
-            $("#txtVat").focus();            
+            $("input[name='vat']").focus();            
     
         },        
         build_ui: function(){
@@ -243,7 +243,10 @@ function openerp_pos_screens_ex(instance,module){
                 this.onClickBtnCancel(); 
             }
         },
-        selectCustomer:function(){            
+        selectCustomer:function(){
+            this.pos.get('selectedOrder').set_client(this.customer.toJSON());
+            this.close();
+            this.hide(); 
         },
         show_popup: function(title,msg,el){
             customer_popup = new module.CustomerPopup(this, {});
