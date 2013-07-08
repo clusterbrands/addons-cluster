@@ -102,7 +102,7 @@ function openerp_pos_models_ex(instance, module){
             return this.get('vat')[0];
         },
         getVatNumbers:function(){
-            return  _.rest(this.get('vat'),1).join('');
+            return _.rest(this.get('vat'),1).join('');
         },
         setVatLetter:function(value){
             aux = value+_.rest(this.get('vat'),1).join('');

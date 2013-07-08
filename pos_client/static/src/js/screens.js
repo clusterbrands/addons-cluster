@@ -93,6 +93,25 @@ function openerp_pos_screens_ex(instance,module){
             this.parent.$("button[name='save']").focus()
         },
     });
+    
+    module.CustomerConfirmContinue = module.CustomerConfirm.extend({
+        show:function(parent,title,msg){
+            this.renderElement();            
+            this._super(parent,title,msg);
+            this.$("button[name='reject']").focus();            
+        },
+        onClickBtnConfirm:function(){
+            this.parent.enable_controls();
+            this.parent.$("input[name='name']").focus();
+            this.close();
+            this.hide();
+        },
+        onClickBtnReject:function(){
+            this.close();
+            this.hide();
+            this.parent.$("input[name='vat']").focus();
+        },
+    });
         
     module.CustomerForm = module.CustomerBasePopup.extend({
         template:'CustomerForm',
@@ -180,21 +199,29 @@ function openerp_pos_screens_ex(instance,module){
             this.renderElement();
         },
         load_data_seniat:function(c){
-            this.customer.set("name",c.name)          
-            this.customer.set("wh_iva_agent",c.wh_iva_agent)
-            if (this.customer.getVatLetter())
+            this.customer.set("seniat_updated",true);
+            this.customer.set("name",c.name);          
+            this.customer.set("wh_iva_agent",c.wh_iva_agent);
+            if (this.customer.getVatLetter() != "V")
                 this.customer.set("vat_subjected",c.vat_subjected);
             this.renderElement();
         },
+        not_found_seniat:function(){
+            ccc = new module.CustomerConfirmContinue(this, {});
+            ccc.appendTo($('.point-of-sale'));
+            ccc.show(this,"Question","This vat number is not found in SENIAT. Do you want to continue?");          
+        },
         seniat_request:function(vat){
-            console.debug(vat);
             self = this
             this.seniat_url.call('check_rif',[vat]).then(function(customer){
-                if (customer != null){
+                console.debug(customer)
+                if (customer){
                     self.load_data_seniat(customer);
                     self.enable_controls();
                     self.$("input[name='street']").focus();
-                }
+                }else{
+                    self.not_found_seniat();
+                }                    
             }).fail(function(obj, event){ 
                 alert("algo fallo");             
             })
@@ -229,20 +256,22 @@ function openerp_pos_screens_ex(instance,module){
         createCustomer:function(){    
             this.pos.create_customer(this.customer.toJSON()); 
             this.show_popup("Notification","Customer successfully created");
-            this.onClickBtnCancel();
+            this.selectCustomer();
         },
         updateCustomer:function(){
             if (this.customer.hasChanged()){
                 c = this.customer.changedAttributes();
                 c.id = this.customer.get('id');
-                c.vat = this.customer.get('vat');;                 
+                c.vat = this.customer.get('vat');
+                console.debug(c);                 
                 this.pos.update_customer(c);
-                this.show_popup("Notification","Customer successfully update");
-                this.onClickBtnCancel(); 
+                this.show_popup("Notification","Customer successfully update");           
             }
+            this.selectCustomer();
         },
         selectCustomer:function(){
             this.pos.get('selectedOrder').set_client(this.customer.toJSON());
+            this.onClickBtnCancel()
             this.close();
             this.hide(); 
         },
@@ -291,7 +320,10 @@ function openerp_pos_screens_ex(instance,module){
         onChangeTextbox:function(e){
             name = e.target.name;
             value = e.target.value;
-            this.customer.set(name,value);
+            if (name != "vat")
+                this.customer.set(name,value);
+            else
+                this.customer.setVatNumbers(value);
         },
         onChangeRadio:function(e){
             this.customer.setVatLetter(e.target.value);
@@ -301,7 +333,7 @@ function openerp_pos_screens_ex(instance,module){
             if (this.$(e.target).attr('checked'))
                 this.customer.set('vat_subjected',true);
             else
-                this.customer.set('wh_iva_agent',false);
+                this.customer.set('vat_subjected',false);
         },  
         onChangeWhIvaAgent:function(e){
             if (this.$(e.target).attr('checked'))
