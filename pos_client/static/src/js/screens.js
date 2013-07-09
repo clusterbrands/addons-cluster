@@ -103,6 +103,7 @@ function openerp_pos_screens_ex(instance,module){
         onClickBtnConfirm:function(){
             this.parent.enable_controls();
             this.parent.$("input[name='name']").focus();
+            this.parent.customer.set('seniat_updated',false);
             this.close();
             this.hide();
         },
@@ -219,11 +220,20 @@ function openerp_pos_screens_ex(instance,module){
                     self.load_data_seniat(customer);
                     self.enable_controls();
                     self.$("input[name='street']").focus();
-                }else{
-                    self.not_found_seniat();
-                }                    
+                }                
             }).fail(function(obj, event){ 
-                alert("algo fallo");             
+                patt=/Could not connect/g;
+                if (obj.code != 200){
+                    event.preventDefault();
+                    ccc = new module.CustomerConfirmContinue(this, {});
+                    ccc.appendTo($('.point-of-sale'));
+                    ccc.show(self,"Server connection error","Could not connect to SENIAT. Do you want to continue?"); 
+                }else if (patt.test(obj.data.fault_code)){
+                    event.preventDefault();
+                    ccc = new module.CustomerConfirmContinue(this, {});
+                    ccc.appendTo($('.point-of-sale'));
+                    ccc.show(self,"Connection error","Could not connect to SENIAT. Do you want to continue?"); 
+                }
             })
         },
         validateFields:function(){
@@ -300,8 +310,7 @@ function openerp_pos_screens_ex(instance,module){
         }, 
         onClickBtnSearch: function(){
             vat = this.customer.get('vat');
-            console.debug(vat);
-            regex = new RegExp(/^[VEGJP]?([0-9]){1,9}(-[0-9])?$/);
+            regex = new RegExp(/^[VE]?([0-9]){1,9}$|^[JGP]?([0-9]){9}$/);
             if (regex.test(vat)){
                 c = this.customer_search(vat)
                 if (c != null)

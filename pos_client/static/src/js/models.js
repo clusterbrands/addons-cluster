@@ -30,11 +30,16 @@ function openerp_pos_models_ex(instance, module){
         },
         create_customer:function(customer){
             this.db.add_customer(customer);
-            this._flush_new_customers(0);
+            this.flush();
         },        
         update_customer:function(customer){
             this.db.update_customer(customer);
+            this.flush();
+        },
+        flush:function(){
+            this._flush_new_customers(0);
             this._flush_updated_customers(0);
+            _super.prototype.flush.call(this);
         },
         _flush_new_customers: function(index){
             var self = this;
