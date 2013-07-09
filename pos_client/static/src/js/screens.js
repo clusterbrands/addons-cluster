@@ -307,6 +307,7 @@ function openerp_pos_screens_ex(instance,module){
         },
         selectCustomer:function(){
             this.pos.get('selectedOrder').set_client(this.customer.toJSON());
+            this.pos.set('client',this.customer.toJSON());
             this.onClickBtnCancel()
             this.close();
             this.hide(); 
