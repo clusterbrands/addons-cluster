@@ -1,5 +1,19 @@
 function openerp_pos_screens_ex(instance,module){
     
+    module.PaymentScreenWidget.include({
+        validateCurrentOrder : function(){
+            currentOrder = this.pos.get('selectedOrder');
+            if(currentOrder.get_client()!= null)
+                this._super()
+            else{
+                popup = new module.CustomerAlert(this, {});
+                popup.appendTo($('.point-of-sale'));
+                popup.show("Error","Please select a customer    ");
+                popup.set_position("center",".point-of-sale");
+                
+            }                
+        }        
+    })
     
     module.CustomerBasePopup = module.PopUpWidget.extend({
         template:"CustomerBasePopup",
@@ -22,7 +36,7 @@ function openerp_pos_screens_ex(instance,module){
         },
         init: function(parent, options){
             this.id="customer-confirm";
-            this._super();            
+            this._super(parent, options);            
         },
         show: function(parent,title,msg){
             this.parent = parent;
@@ -49,7 +63,7 @@ function openerp_pos_screens_ex(instance,module){
         },
         init: function(parent, options){
             this.id="customer-alert";
-            this._super();            
+            this._super(parent, options);            
         },        
         show: function(title,msg,el){
             self = this;
@@ -65,12 +79,24 @@ function openerp_pos_screens_ex(instance,module){
             this.$(".popup").draggable();
             this.$("button").focus();
         },
+        set_position:function(position,parent){
+            this.$("#customer-alert").position({my:position,of:parent});
+        },
         onClickBtn: function(e){
             $(this.elem).focus();
             this.close();
             this.hide();   
         }
     });
+    
+    module.CustomerAlert = module.CustomerPopup.extend({
+        onClickBtn: function(e){
+            console.debug(this)
+            this.pos_widget.screen_selector.show_popup('customer-form');
+            this.close();
+            this.hide();             
+        }
+    })
     
     module.CustomerConfirmUpdate = module.CustomerConfirm.extend({
         show:function(parent,title,msg){
