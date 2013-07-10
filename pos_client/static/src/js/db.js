@@ -10,7 +10,6 @@ function openerp_pos_db_ex(instance, module){
             }
             for(var i = 0, len = customers.length; i < len; i++){
                 var c = customers[i];
-                c.vat = _.rest(c.vat,2).join('')
                 stored_customers[c.vat] = c;
             }
             this.save('customers',stored_customers);

@@ -17,12 +17,18 @@ function openerp_pos_models_ex(instance, module){
                         'pos.config',['country_id'],
                         [['id','=', self.get('pos_session').config_id[0]]]);
                 }).then(function(config){
-                     country_id = config[0].country_id[0];
-                     self.set({'country_id':country_id})
+                    return self.fetch(
+                        'res.country',['id','code'],
+                        [['id','=', config[0].country_id[0]]]);
+                }).then(function(country){
+                     //pos_config = self.get("pos_config");
+                     module.country_id = country[0].id
+                     module.country_code = country[0].code
+                     //self.set({'pos_config':pos_config})
                      return self.fetch('res.partner', ['name','vat','email',
                         'phone','mobile','street','street2','city','vat_subjected',
                         'wh_iva_agent','seniat_updated'],[['customer', '=', true],
-                        ['vat','!=',''],['country_id','=',country_id]]);
+                        ['vat','!=',''],['country_id','=',country[0].id ]]);
                 }).then(function(customers){
                     self.db.add_customers(customers);
                 })
@@ -51,7 +57,7 @@ function openerp_pos_models_ex(instance, module){
             }
             //try to push an order to the server
             // shadow : true is to prevent a spinner to appear in case of timeout
-            (new instance.web.Model('pos.client')).call('create_from_ui',[customer,self.get('country_id')],undefined,{ shadow:true })
+            (new instance.web.Model('pos.client')).call('create_from_ui',[customer],undefined,{ shadow:true })
                 .fail(function(unused, event){
                     //don't show error popup if it fails 
                     event.preventDefault();
@@ -75,7 +81,7 @@ function openerp_pos_models_ex(instance, module){
             }            
             //try to push an order to the server
             // shadow : true is to prevent a spinner to appear in case of timeout
-            (new instance.web.Model('pos.client')).call('update_from_ui',[customer,self.get('country_id')],undefined,{ shadow:true })
+            (new instance.web.Model('pos.client')).call('update_from_ui',[customer],undefined,{ shadow:true })
                 .fail(function(unused, event){
                     //don't show error popup if it fails 
                     event.preventDefault();
@@ -100,8 +106,12 @@ function openerp_pos_models_ex(instance, module){
     })
         
     module.Customer = Backbone.Model.extend({
+        
+        initialize:function(options){
+            this.set("vat",module.country_code);
+            this.set("country_id",module.country_id);
+        },        
         defaults:{
-            vat:"V",
             vat_subjected:false,
             wh_iva_agent:false,   
         },
@@ -113,17 +123,18 @@ function openerp_pos_models_ex(instance, module){
             return Backbone.Model.prototype.set.call(this,key,value,options);
         },
         getVatLetter: function(){
-            return this.get('vat')[0];
+            return this.get('vat')[2] || null;
         },
         getVatNumbers:function(){
-            return _.rest(this.get('vat'),1).join('');
+            return _.rest(this.get('vat'),3).join('');
         },
-        setVatLetter:function(value){
-            aux = value+_.rest(this.get('vat'),1).join('');
-            this.set('vat',aux);
+        setVatLetter:function(letter){
+            aux = this.get('vat').split('')
+            aux[2] = letter
+            this.set('vat',aux.join(''));
         },
         setVatNumbers:function(value){
-            aux = this.getVatLetter()+value;
+            aux = _.first(this.get('vat'),3).join('')+value;
             this.set('vat',aux);
         }
     });

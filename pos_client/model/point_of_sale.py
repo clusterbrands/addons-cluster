@@ -22,17 +22,16 @@ class pos_order(osv.osv):
     _inherit = "pos.order"
     
     def create_from_ui(self, cr, uid, orders, context=None):
-        import pdb
-        pdb.set_trace()
         obj = self.pool.get("res.partner");
         for tmp_order in orders:
             order = tmp_order['data']      
             vat = order.get("partner_vat")
             partner_id = obj.search(cr,uid,[("vat","=",vat)],context=context)
             if (partner_id):
-                order_id = super(pos_order,self).create_from_ui(cr, uid, orders, context=None)
-                self.write(cr,uid,order_id,{"partner_id":partner_id})
+                order_id = super(pos_order,self).create_from_ui(cr, uid, orders, context=context)
+                self.write(cr,uid,order_id,{"partner_id":partner_id[0]},context=context)
             else:
-                return False
+                raise osv.except_osv(_('Failed to create order!'), _('Not partner found!'))
             
+        return True
         

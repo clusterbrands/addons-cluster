@@ -161,17 +161,16 @@ function openerp_pos_screens_ex(instance,module){
             this._super(parent, options);
             this.id = "customer-form";
             this.customer = new module.Customer();
-            this.operation="Create";
+            this.operation = "Create"; 
         }, 
         show: function(){
             self = this;
             this._super(); 
-            this.ready = $.Deferred();
             this.seniat_url = new instance.web.Model('seniat.url');
             this.build_ui();
             this.disable_controls();
-            $("input[name='vat']").focus();            
-    
+            this.initialize()
+            
         },        
         build_ui: function(){
             self = this;             
@@ -191,10 +190,12 @@ function openerp_pos_screens_ex(instance,module){
             this.operation = value;
             this.renderElement();
         },
-        clear:function(){
-            this.operation = "Create";
-            this.customer.clear().set(this.customer.defaults);
+        initialize:function(){
+            this.operation = "Create";                  
+            this.customer = new module.Customer();
+            this.customer.setVatLetter(this.$(":radio:first").val()); 
             this.renderElement();
+            this.$("input[name='vat']").focus()
         },
         customer_search: function(vat){
             var id = this.pos.db.search_customer(vat);
@@ -241,7 +242,6 @@ function openerp_pos_screens_ex(instance,module){
         seniat_request:function(vat){
             self = this
             this.seniat_url.call('check_rif',[vat]).then(function(customer){
-                console.debug(customer)
                 if (customer){
                     self.load_data_seniat(customer);
                     self.enable_controls();
@@ -337,7 +337,8 @@ function openerp_pos_screens_ex(instance,module){
         }, 
         onClickBtnSearch: function(){
             vat = this.customer.get('vat');
-            regex = new RegExp(/^[VE]?([0-9]){1,9}$|^[JGP]?([0-9]){9}$/);
+            console.log(vat)
+            regex = new RegExp(/^[A-Z]{2}[VE]?([0-9]){1,9}$|^[A-Z]{2}[JGP]?([0-9]){9}$/);
             if (regex.test(vat)){
                 c = this.customer_search(vat)
                 if (c != null)
@@ -349,9 +350,8 @@ function openerp_pos_screens_ex(instance,module){
             }           
         }, 
         onClickBtnCancel: function(){
-            this.clear();
+            this.initialize();
             this.disable_controls();
-            this.$("input[name='vat']").focus();
         },    
         onChangeTextbox:function(e){
             name = e.target.name;
