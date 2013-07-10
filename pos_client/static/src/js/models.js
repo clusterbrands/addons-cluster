@@ -88,30 +88,14 @@ function openerp_pos_models_ex(instance, module){
                     self._flush_updated_customers(index);
                 });
         },
-        _flush: function(index){
-            var self = this;
-            var orders = this.db.get_orders();
-            self.set('nbr_pending_operations',orders.length);
-
-            var order  = orders[index];
-            if(!order){
-                return;
-            }
-            console.debug(order)
-            //try to push an order to the server
-            // shadow : true is to prevent a spinner to appear in case of timeout
-            (new instance.web.Model('pos.order')).call('create_from_ui',[[order]],undefined,{ shadow:true })
-                .fail(function(unused, event){
-                    //don't show error popup if it fails 
-                    event.preventDefault();
-                    console.error('Failed to send order:',order);
-                    self._flush(index+1);
-                })
-                .done(function(){
-                    //remove from db if success
-                    self.db.remove_order(order.id);
-                    self._flush(index);
-                });
+    })
+    
+    _super2 = module.Order
+    module.Order = module.Order.extend({
+        exportAsJSON : function(){
+            order = _super2.prototype.exportAsJSON.call(this);
+            order['partner_vat'] = this.get('client') ? this.get('client').vat: undefined;
+            return order
         },
     })
         
