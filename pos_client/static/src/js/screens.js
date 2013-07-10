@@ -263,19 +263,19 @@ function openerp_pos_screens_ex(instance,module){
             })
         },
         validateFields:function(){
-            if (this.customer.get('vat') == ""){
+            if (this.customer.get('vat') == undefined){
                 this.show_popup("Error","The field 'vat' is required","input[name='vat']");
                 return false;
-            }else if (this.customer.get('name')==""){
+            }else if (this.customer.get('name')==undefined){
                 this.show_popup("Error","The field 'name' is required","input[name='name']");
                 return false;
-            }else if (this.customer.get('street')==""){
+            }else if (this.customer.get('street')==undefined){
                 this.show_popup("Error","The field 'street' is required","input[name='street']");
                 return false;
-            }else if (this.customer.get('city')==""){
+            }else if (this.customer.get('city')==undefined){
                 this.show_popup("Error","The field 'city' is required","input[name='city']");
                 return false;
-            }else if (this.customer.get('phone')==""){
+            }else if (this.customer.get('phone')==undefined){
                 this.show_popup("Error","The field 'phone' is required","input[name='phone']");
                 return false;
             }
