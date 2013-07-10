@@ -241,25 +241,20 @@ function openerp_pos_screens_ex(instance,module){
         },
         seniat_request:function(vat){
             self = this
+            this.disable_buttons();
             this.seniat_url.call('check_rif',[vat]).then(function(customer){
                 if (customer){
                     self.load_data_seniat(customer);
                     self.enable_controls();
                     self.$("input[name='street']").focus();
-                }                
+                } 
+                self.enable_buttons();               
             }).fail(function(obj, event){ 
-                patt=/Could not connect/g;
-                if (obj.code != 200){
-                    event.preventDefault();
-                    ccc = new module.CustomerConfirmContinue(this, {});
-                    ccc.appendTo($('.point-of-sale'));
-                    ccc.show(self,"Server connection error","Could not connect to SENIAT. Do you want to continue?"); 
-                }else if (patt.test(obj.data.fault_code)){
-                    event.preventDefault();
-                    ccc = new module.CustomerConfirmContinue(this, {});
-                    ccc.appendTo($('.point-of-sale'));
-                    ccc.show(self,"Connection error","Could not connect to SENIAT. Do you want to continue?"); 
-                }
+                event.preventDefault();
+                ccc = new module.CustomerConfirmContinue(this, {});
+                ccc.appendTo($('.point-of-sale'));
+                ccc.show(self,"Connection error","Could not connect to SENIAT. Do you want to continue?"); 
+                self.enable_buttons(); 
             })
         },
         validateFields:function(){
@@ -331,6 +326,12 @@ function openerp_pos_screens_ex(instance,module){
             this.$("button[name='search']").attr("disabled","disabled");
             this.$("#choiceType :radio").button("disable");         
         },
+        enable_buttons:function(){
+            this.$(":button").removeAttr("disabled");
+        },
+        disable_buttons:function(){
+            this.$(":button").attr("disabled","disabled");
+        },      
         onClickBtnSave:function(){
             if (this.validateFields())
                 this.saveCustomer();
