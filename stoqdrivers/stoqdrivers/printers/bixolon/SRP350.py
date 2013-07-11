@@ -74,8 +74,9 @@ CMD_ADD_DISCOUNT_OR_SURCHAGE_VALUE = "q"
 CMD_ADD_DISCOUNT_OR_SURCHAGE_PERCENT = "p"
 CMD_ADD_CREDIT_NOTE_ITEM = 'd' 
 CMD_ADD_PAYMENT = '2'
-CMD_REDUCE_Z = '10Z'
-CMD_REDUCE_X = '10X'
+CMD_REDUCE_Z = 'I0Z'
+CMD_REDUCE_X = 'I0X'
+CMD_GET_LAST_Z = 'U0Z'
 
 RETRIES_BEFORE_TIMEOUT = 3
 
@@ -106,8 +107,17 @@ s4_keys = [
 
 s5_keys = [
     'rif','serial','audit_memory_number','memory_size',
-    'memory_free_space','document_count',
+    'memory_free_space','document_count','reduced_tax_rate'
 
+]
+
+z_keys = [
+    'last_z_number','date','last_invoice_number','last_invoice_date',
+    'last_invoice_hour','exempt_sales','general_rate_sales','general_tax_rate_sales',
+    'reduced_rate_sales','reduced_tax_rate_sales','additional_rate_sales',
+    'additional_tax_rate_sales','exempt_refunds','general_rate_refunds',
+    'general_tax_rate_refunds','reduced_rate_refunds','reduced_tax_rate_refunds',
+    'additional_rate_refunds','additional_tax_rate_refunds' 
 ]
 
 class SRP350Status(object):
@@ -269,7 +279,7 @@ class SRP350(SerialBase):
         
         This command allows to extract information concerning the 
         status of the audit memory.
-        Note: Command-only model the Samsung Bixolon SRP-350, SRP-270J,
+        Note: Command-only model the Samsung Bixolon SRP-350, SRP-270J,CMD_REDUCE_Z
         OKI M1120, Custom Kube
         
         """
@@ -374,9 +384,7 @@ class SRP350(SerialBase):
         value = Decimal(value[:-2]+'.'+value[-2:])       
         return value
         
-    def _has_pending_reduce():
-        return False
-    
+        
     def add_cashier(self,id,password,name):
         self._send_command(CMD_ADD_CASHIER,id,password,name,response='c')        
        
@@ -632,7 +640,25 @@ class SRP350(SerialBase):
     def till_read_memory_by_reductions(self, start, end):
         # Leitura Memory Fiscal reducoes
         pass
-
+        
+    def has_pending_reduce():
+         """
+        Check if a z reduce is pending
+        """
+        s1 = self.read_status1()
+        z = _get_last_z()
+        return (z["last_invoice_number"] == s1["last_invoice_number"])
+        
+    # Till / Daily flow (Custom Methods)
+    def _get_last_z():
+        reply = self._send_command(CMD_GET_LAST_Z,response='188s')   
+        reply = reply[0][3:186]
+        reply = reply.split("\n")      
+        z = dict(zip(z_keys,reply))
+        return z
+        
+        
+        
     # Introspection
 
     def get_capabilities(self):
