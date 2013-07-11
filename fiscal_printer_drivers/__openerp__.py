@@ -23,7 +23,7 @@
 ################################################################################
 
 {
-    'name': "fiscal printer",
+    'name': "Fiscal Printer Drivers",
     'author': "Cluster Brands C.A",
     'category' : "Hidden",
     'version': "1.0",
