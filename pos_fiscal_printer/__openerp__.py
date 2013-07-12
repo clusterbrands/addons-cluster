@@ -24,7 +24,7 @@
     'name' : "Pos Fiscal Printer",
     'category' : "Test",
     'version' : "1.0",
-    'depends' : ['point_of_sale'],
+    'depends' : ['pos_client'],
     'author' : "Me",
     'description' : """Pos Fiscal Printer""",
     'init_xml': [

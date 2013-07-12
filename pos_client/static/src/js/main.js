@@ -4,4 +4,5 @@ openerp.pos_client = function(instance){
     openerp_pos_models_ex(instance,module);
     openerp_pos_screens_ex(instance,module);
     openerp_pos_widgets_ex(instance,module); 
+    instance.pos_client = module;
 }
