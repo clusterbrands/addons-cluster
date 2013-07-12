@@ -29,7 +29,7 @@
     'description' : """Pos Fiscal Printer""",
     'data' : [        
         'view/point_of_sale_view.xml',
-    ],
+    ],   
     'js':[   
         'static/src/js/models.js',
         'static/src/js/widgets.js',

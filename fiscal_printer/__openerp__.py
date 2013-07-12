@@ -24,7 +24,7 @@
     'name' : "Fiscal Printer",
     'category' : "Test",
     'version' : "1.0",
-    'depends' : ['account'],
+    'depends':['l10n_ve_fiscal_requirements'],
     'author' : "Me",
     'description' : """Fiscal Printer""",
     'init_xml': [
@@ -33,6 +33,5 @@
     'data' : [        
         'view/pos_fiscal_printer_view.xml',
         'view/pos_fiscal_printer_action_menu.xml',
-        'view/account_invoice_view.xml',
     ],
 }
