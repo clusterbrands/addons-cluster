@@ -1,6 +1,6 @@
-function openerp_pos_models_ex(instance, module){
+function pos_client_models(instance, module){
     
-    _super = module.PosModel
+    var _super = module.PosModel
     module.PosModel = module.PosModel.extend({
         initialize : function(session, attributes) {
             _super.prototype.initialize.call(this,session, attributes)
@@ -96,7 +96,7 @@ function openerp_pos_models_ex(instance, module){
         },
     })
     
-    _super2 = module.Order
+    var _super2 = module.Order
     module.Order = module.Order.extend({
         exportAsJSON : function(){
             order = _super2.prototype.exportAsJSON.call(this);

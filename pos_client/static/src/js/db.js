@@ -1,4 +1,4 @@
-function openerp_pos_db_ex(instance, module){
+function pos_client_db(instance, module){
     module.PosLS.include({
         init: function(options){
             this._super(options);           

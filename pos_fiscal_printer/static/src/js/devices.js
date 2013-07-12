@@ -21,7 +21,7 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function openerp_pos_devices_ex(instance,module){
+function pos_fiscal_printer_devices(instance,module){
     module.ProxyDevice.include({
         check_printer_status : function(printer){
             return this.message('check_printer_status',{printer:printer})

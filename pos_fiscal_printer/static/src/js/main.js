@@ -23,9 +23,9 @@
 
 openerp.pos_fiscal_printer = function(instance){
     var module = instance.pos_client;
-    openerp_pos_models_ex(instance,module);
-    openerp_pos_screens_ex(instance,module);
-    openerp_pos_widgets_ex(instance,module); 
-    openerp_pos_devices_ex(instance,module);
+    pos_fiscal_printer_models(instance,module);
+    pos_fiscal_printer_screens(instance,module);
+    pos_fiscal_printer_widgets(instance,module); 
+    pos_fiscal_printer_devices(instance,module);
     instance.pos_fiscal_printer = module;
 }

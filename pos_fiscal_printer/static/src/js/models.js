@@ -21,9 +21,9 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function openerp_pos_models_ex(instance, module){
+function pos_fiscal_printer_models(instance, module){
        
-    _super = module.PosModel
+    var _super = module.PosModel
     module.PosModel = module.PosModel.extend({
         load_server_data : function(){
             self = this
@@ -64,7 +64,7 @@ function openerp_pos_models_ex(instance, module){
         
     })
         
-    _super2 = module.Order
+    var _super2 = module.Order
     module.Order = module.Order.extend({
        
         set_printer_serial:function (printer_serial){
@@ -114,7 +114,7 @@ function openerp_pos_models_ex(instance, module){
         }
     })
     //Warning: this work just with one tax
-    _super3 = module.Orderline
+    var _super3 = module.Orderline
     module.Orderline = module.Orderline.extend({
         export_for_printing : function(){          
             product = this.get_product();
@@ -139,7 +139,7 @@ function openerp_pos_models_ex(instance, module){
         }
     })
     
-    _super4 = module.Paymentline
+    var _super4 = module.Paymentline
     module.Paymentline = module.Paymentline.extend({    
         initialize : function(attributes, options){
             _super4.prototype.initialize.call(this,attributes, options)

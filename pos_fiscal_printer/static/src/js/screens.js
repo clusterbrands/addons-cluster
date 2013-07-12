@@ -21,7 +21,7 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function openerp_pos_screens_ex(instance,module){
+function pos_fiscal_printer_screens(instance,module){
     
     module.PaymentScreenWidget.include({
                

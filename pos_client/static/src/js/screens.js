@@ -1,4 +1,4 @@
-function openerp_pos_screens_ex(instance,module){
+function pos_client_screens(instance,module){
     
     module.PaymentScreenWidget.include({
         validateCurrentOrder : function(){

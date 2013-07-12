@@ -1,4 +1,4 @@
-function openerp_pos_widgets_ex(instance, module){
+function pos_client_widgets(instance, module){
     module.PosWidget.include({
         build_widgets: function(){
             this._super();
