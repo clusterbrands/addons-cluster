@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
   <data noupdate="0">
-    <record id="http_helper_001" model="pos_fiscal_printer.http_helper">
+    <record id="http_helper_001" model="fiscal_printer.http_helper">
     <field name="connection_name">Local Proxy</field>
     <field name="proxy_url">http://localhost:8069/pos/</field>
     </record>

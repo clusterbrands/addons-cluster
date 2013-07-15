@@ -3,7 +3,7 @@
     <data>       
         <record model="ir.ui.view" id="printer_tree_view">
             <field name="name">printer.tree</field>
-            <field name="model">pos_fiscal_printer.printer</field>
+            <field name="model">fiscal_printer.printer</field>
             <field name="arch" type="xml">
                 <tree string="Printer Tree">
                     <field name="name" />
@@ -16,7 +16,7 @@
         
         <record model="ir.ui.view" id="printer_form_view">
             <field name="name">printer.form</field>
-            <field name="model">pos_fiscal_printer.printer</field>
+            <field name="model">fiscal_printer.printer</field>
             <field name="arch" type="xml">
                 <form string="Session Form" version="7.0">
                     <sheet>

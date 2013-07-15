@@ -32,30 +32,30 @@ import pdb
 
 
 
-class printer_brand(osv.Model):    
+class brand(osv.Model):    
    
-    _name = 'pos_fiscal_printer.printer_brand'
+    _name = 'fiscal_printer.brand'
     _rec_name = 'brand_name'
     _columns = {
         'brand_name': fields.char(size=50)
     }
 
-class printer_model(osv.Model):
+class model(osv.Model):
     
-    _name = 'pos_fiscal_printer.printer_model'
+    _name = 'fiscal_printer.model'
     _rec_name = 'model_name'
     _columns = {
         'model_name': fields.char(size=50),
-        'brand_id': fields.many2one('pos_fiscal_printer.printer_brand')        
+        'brand_id': fields.many2one('fiscal_printer.brand')        
     }
     
 class printer(osv.Model):
     
-    _name = 'pos_fiscal_printer.printer'  
+    _name = 'fiscal_printer.printer'  
    
     def read_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}    
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_payment_methods')
         
     def write_payment_methods(self, cr, uid, ids, context=None):
@@ -66,16 +66,16 @@ class printer(osv.Model):
             payment_methods.append({'code':str(pm.code),
                 'description':str(pm.description)})        
         params = {'payment_methods':payment_methods}
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'write_payment_methods',params) 
         
     def read_tax_rates(self, cr, uid, ids, context=None):
         context = context or {}
         tax_rates = {}   
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_tax_rates')        
         tax_rates = response.get('tax_rates')
-        obj = self.pool.get('pos_fiscal_printer.tax_rate')
+        obj = self.pool.get('fiscal_printer.tax_rate')
         for tr in tax_rates:
             tax_id = obj.search(cr,uid,[('code','=',tr.get('code'))],
                         context=context)
@@ -100,15 +100,15 @@ class printer(osv.Model):
             tax_rates.append({'code':tax.code,'value':tax.value})
         
         params = {'tax_rates':tax_rates}
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'write_tax_rates',params) 
 
     def read_headers(self, cr, uid, ids, context=None):
         context = context or {}
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_headers')
         headers = response.get('headers')
-        obj = self.pool.get('pos_fiscal_printer.header')
+        obj = self.pool.get('fiscal_printer.header')
         for header in headers:
             if header.strip() <> "":
                 header_id = obj.search(cr,uid,[('current_value','=',header.rstrip())],
@@ -134,21 +134,21 @@ class printer(osv.Model):
                 headers.append(header.value)
                 header_ids.append(header.id)
         params = {'headers':headers}
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'write_headers',params)
         if (response.get('exec')):
             for id in header_ids:
-                obj =self.pool.get('pos_fiscal_printer.header')
+                obj =self.pool.get('fiscal_printer.header')
                 brw = obj.browse(cr,uid,id)
                 obj.write(cr,uid,id,{'current_value':brw.value},context=context)
    
     
     def read_footers(self, cr, uid, ids, context=None):
         context = context or {} 
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_footers')
         footers = response.get('footers')
-        obj = self.pool.get('pos_fiscal_printer.footer')
+        obj = self.pool.get('fiscal_printer.footer')
         for footer in footers:
             if footer.strip() <> "":
                 footer_id = obj.search(cr,uid,[('current_value','=',footer.rstrip())],
@@ -171,18 +171,18 @@ class printer(osv.Model):
                 footers.append(footer.value)
                 footer_ids.append(footer.id)
         params = {'footers':footers}
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'write_footers',params)
         if (response.get('exec')):
             for id in footer_ids:
-                obj =self.pool.get('pos_fiscal_printer.footer')
+                obj =self.pool.get('fiscal_printer.footer')
                 brw = obj.browse(cr,uid,id)
                 obj.write(cr,uid,id,{'current_value':brw.value},context=context)
     
     
     def read_serial(self, cr, uid, ids, context=None):
         context = context or {}    
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')
+        http_helper = self.pool.get('fiscal_printer.http_helper')
         response = http_helper.send_command(cr, uid,ids,'read_printer_serial')   
         serial = response.get('serial')  
         self.write(cr,uid,ids,{'serial':serial},context=context)
@@ -190,15 +190,15 @@ class printer(osv.Model):
         
     def view_init(self,cr, uid, fields_list, context=None):
         context = context or {}  
-        http_helper = self.pool.get('pos_fiscal_printer.http_helper')       
+        http_helper = self.pool.get('fiscal_printer.http_helper')       
         try:
             response = http_helper.send_command(cr, uid,[],'get_supported_printers')
             printers = response
         except:
             return ""
         
-        pb_obj = self.pool.get('pos_fiscal_printer.printer_brand')
-        pm_obj = self.pool.get('pos_fiscal_printer.printer_model')
+        pb_obj = self.pool.get('fiscal_printer.brand')
+        pm_obj = self.pool.get('fiscal_printer.model')
         for brand in printers:
             brand_id = pb_obj.search(cr,uid,[('brand_name','=',brand)],
                             context=context)
@@ -215,30 +215,30 @@ class printer(osv.Model):
          
     _columns = {
         'name' : fields.char(string='Name', size=50, required=True),
-        'brand' : fields.many2one('pos_fiscal_printer.printer_brand',
+        'brand' : fields.many2one('fiscal_printer.brand',
             string='Brand',required=True),
-        'model' : fields.many2one('pos_fiscal_printer.printer_model',
+        'model' : fields.many2one('fiscal_printer.model',
             string='Model',required=True), 
         'port' : fields.char(string='Port', size=100, required=True),
         'type': fields.boolean('Ticket Printer'),
         'serial' : fields.char(string='Serial', size=50),
-        'payment_method_ids' : fields.one2many('pos_fiscal_printer.payment_method',
+        'payment_method_ids' : fields.one2many('fiscal_printer.payment_method',
             'printer_id',string="Payment Methods"), 
-        'tax_rate_ids' : fields.one2many('pos_fiscal_printer.tax_rate',
+        'tax_rate_ids' : fields.one2many('fiscal_printer.tax_rate',
             'printer_id',string="Tax Rates"),
-        'measure_unit_ids' : fields.one2many('pos_fiscal_printer.measure_unit',
+        'measure_unit_ids' : fields.one2many('fiscal_printer.measure_unit',
             'printer_id',string="Unit of Measure"),
-        'header_ids' : fields.one2many('pos_fiscal_printer.header',
+        'header_ids' : fields.one2many('fiscal_printer.header',
             'printer_id',string="Header"),
-        'footer_ids' : fields.one2many('pos_fiscal_printer.footer',
+        'footer_ids' : fields.one2many('fiscal_printer.footer',
             'printer_id',string="Footers"),
     }
     
 class payment_method(osv.Model):
     
-    _name = 'pos_fiscal_printer.payment_method'
+    _name = 'fiscal_printer.payment_method'
     _columns = {
-        'printer_id': fields.many2one('pos_fiscal_printer.printer'),   
+        'printer_id': fields.many2one('fiscal_printer.printer'),   
         'account_journal_id': fields.many2one('account.journal',
             string='Payment Method',domain=[('journal_user','=','True')]),
         'code': fields.char(string='Code',size=2),
@@ -252,9 +252,9 @@ class payment_method(osv.Model):
     
 class tax_rate(osv.Model):
 
-    _name = 'pos_fiscal_printer.tax_rate'
+    _name = 'fiscal_printer.tax_rate'
     _columns = {
-        'printer_id': fields.many2one('pos_fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer'),
         'account_tax_id': fields.many2one('account.tax',
             string='Tax',domain=[('type_tax_use','=','sale')]),
         'code': fields.char(string='Tax Code',size=4),
@@ -269,9 +269,9 @@ class tax_rate(osv.Model):
 
 class measure_unit (osv.Model):
     
-    _name = 'pos_fiscal_printer.measure_unit'
+    _name = 'fiscal_printer.measure_unit'
     _columns = {
-        'printer_id': fields.many2one('pos_fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer'),
         'product_uom_id': fields.many2one('product.uom',
             string='Tax',domain=[('active','=','True')]),
         'Name':fields.char(size=255,string='Name'),
@@ -281,9 +281,9 @@ class measure_unit (osv.Model):
     
 class header(osv.Model):
     
-    _name = 'pos_fiscal_printer.header'
+    _name = 'fiscal_printer.header'
     _columns = {
-        'printer_id': fields.many2one('pos_fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer'),
         'current_value':fields.char(size=255,string='Current Value'),
         'value':fields.char(size=255,string='Value')
     }
@@ -293,9 +293,9 @@ class header(osv.Model):
     }
 class footer(osv.Model):
     
-    _name = 'pos_fiscal_printer.footer'
+    _name = 'fiscal_printer.footer'
     _columns = {
-        'printer_id': fields.many2one('pos_fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer'),
         'current_value':fields.char(size=255,string='Current Value'),
         'value':fields.char(size=255,string='Value')
     }

@@ -33,7 +33,7 @@ import pdb
 
 class http_helper(osv.Model):
     
-    _name = 'pos_fiscal_printer.http_helper'
+    _name = 'fiscal_printer.http_helper'
     _columns = {
         'connection_name': fields.char('Connection Name',size=255,
             required=True),
@@ -49,7 +49,7 @@ class http_helper(osv.Model):
         
     def _get_printer(self,cr,uid,ids):
         if ids:
-            p_obj = self.pool.get('pos_fiscal_printer.printer')
+            p_obj = self.pool.get('fiscal_printer.printer')
             printer = p_obj.browse(cr,uid,ids)[0]            
             return {
                     'brand':printer.brand.brand_name,
