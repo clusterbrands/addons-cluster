@@ -30,7 +30,7 @@ import urllib2
 import json
 import pdb
 from socket import gethostname
-
+from urllib2 import URLError,HTTPError
 
 
 class brand(osv.Model):    
@@ -53,11 +53,55 @@ class model(osv.Model):
 class printer(osv.Model):
     
     _name = 'fiscal_printer.printer'  
-   
+         
+    def _get_printer(self,cr,uid,ids):
+        if ids:
+            p_obj = self.pool.get('fiscal_printer.printer')
+            printer = p_obj.browse(cr,uid,ids)[0]            
+            return {
+                    'brand':printer.brand.brand_name,
+                    'model':printer.model.model_name,
+                    'port':printer.port
+                    }
+        else:
+            return {}
+    
+    def _make_command(self, cr, uid,ids,name,params):    
+        
+        url = 'http://localhost:8069/fiscal_printer' 
+        params = params or {}       
+        printer = self._get_printer(cr,uid,ids)
+        req_params = {'command':name,'printer':printer,'params':params}
+        req_params_str = urllib.urlencode(req_params)
+        request = urllib2.Request(url,req_params_str)
+        return request
+    
+    def send_command(self, cr, uid,ids,name,params={}):       
+        
+        request = self._make_command(cr, uid,ids,name,params)
+        try:
+            response = urllib2.urlopen(request) 
+        except HTTPError as e:
+            self._print_error("HTTP ERROR !",
+                e.reason.decode('utf-8'))
+        except URLError as e:
+            self._print_error("URL ERROR !",
+                e.reason.strerror.decode('utf-8'))
+
+        response = json.loads(response.read())
+        if response['status'] == 'error':
+            self._print_error("COMMAND ERROR",response['error'])
+        return response['values']
+        
+        
+    def get_assigned_printer(self,cr,uid,ids,context):
+        response = self.send_command(cr, uid,ids,'read_workstation')
+        wrk = response.get('workstation') 
+        return self.search(cr,uid,[('workstation','=',wrk)])
+
     def read_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}    
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'read_payment_methods')
+        response = self.send_command(cr, uid,ids,'read_payment_methods')
         
     def write_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}
@@ -67,14 +111,12 @@ class printer(osv.Model):
             payment_methods.append({'code':str(pm.code),
                 'description':str(pm.description)})        
         params = {'payment_methods':payment_methods}
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'write_payment_methods',params) 
+        response = self.send_command(cr, uid,ids,'write_payment_methods',params) 
         
     def read_tax_rates(self, cr, uid, ids, context=None):
         context = context or {}
         tax_rates = {}   
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'read_tax_rates')        
+        response = self.send_command(cr, uid,ids,'read_tax_rates')        
         tax_rates = response.get('tax_rates')
         obj = self.pool.get('fiscal_printer.tax_rate')
         for tr in tax_rates:
@@ -101,13 +143,11 @@ class printer(osv.Model):
             tax_rates.append({'code':tax.code,'value':tax.value})
         
         params = {'tax_rates':tax_rates}
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'write_tax_rates',params) 
+        response = self.send_command(cr, uid,ids,'write_tax_rates',params) 
 
     def read_headers(self, cr, uid, ids, context=None):
         context = context or {}
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'read_headers')
+        response = self.send_command(cr, uid,ids,'read_headers')
         headers = response.get('headers')
         obj = self.pool.get('fiscal_printer.header')
         for header in headers:
@@ -135,8 +175,7 @@ class printer(osv.Model):
                 headers.append(header.value)
                 header_ids.append(header.id)
         params = {'headers':headers}
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'write_headers',params)
+        response = send_command(cr, uid,ids,'write_headers',params)
         if (response.get('exec')):
             for id in header_ids:
                 obj =self.pool.get('fiscal_printer.header')
@@ -146,8 +185,7 @@ class printer(osv.Model):
     
     def read_footers(self, cr, uid, ids, context=None):
         context = context or {} 
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'read_footers')
+        response = self.send_command(cr, uid,ids,'read_footers')
         footers = response.get('footers')
         obj = self.pool.get('fiscal_printer.footer')
         for footer in footers:
@@ -172,8 +210,7 @@ class printer(osv.Model):
                 footers.append(footer.value)
                 footer_ids.append(footer.id)
         params = {'footers':footers}
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'write_footers',params)
+        response = self.send_command(cr, uid,ids,'write_footers',params)
         if (response.get('exec')):
             for id in footer_ids:
                 obj =self.pool.get('fiscal_printer.footer')
@@ -182,18 +219,18 @@ class printer(osv.Model):
     
     
     def read_serial(self, cr, uid, ids, context=None):
-        context = context or {}    
-        http_helper = self.pool.get('fiscal_printer.http_helper')
-        response = http_helper.send_command(cr, uid,ids,'read_printer_serial')   
+        context = context or {} 
+        response = self.send_command(cr, uid,ids,'read_printer_serial')   
         serial = response.get('serial')  
         self.write(cr,uid,ids,{'serial':serial},context=context)
         return True
         
     def view_init(self,cr, uid, fields_list, context=None):
+        
         context = context or {}  
-        http_helper = self.pool.get('fiscal_printer.http_helper')       
+        self.get_assigned_printer(cr, uid, [], context=context)     
         try:
-            response = http_helper.send_command(cr, uid,[],'get_supported_printers')
+            response = self.send_command(cr, uid,[],'get_supported_printers')
             printers = response
         except:
             return ""

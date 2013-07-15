@@ -28,6 +28,7 @@ import os
 import openerp
 import pdb
 import json
+from socket import gethostname
 from fiscal import FiscalPrinterEx
 from stoqdrivers.printers import base
 from stoqdrivers.enum import PaymentMethodType, TaxType, UnitType
@@ -53,8 +54,11 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
     def _check_printer_status(self,printer):       
         driver = self._get_driver(printer)
         driver.check_printer_status()
-        self._check_printer_serial(printer,driver)     
-    
+        self._check_printer_serial(printer,driver)
+        
+    def read_workstation(self,request):
+        return{"workstation":gethostname()}
+        
     def read_printer_serial(self,request):
         printer = eval(request.get('printer'))
         serial =""
