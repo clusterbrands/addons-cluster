@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_pos_config_form_inherit">
-            <field name="name">pos.config.form.view.inherit</field>
-            <field name="model">pos.config</field>
-            <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
-            <field name="arch" type="xml">
-                <field name="journal_id" position="after">
-                    <field name="printer_id"/>
-                </field>
-            </field>
-        </record>
         <record model="ir.ui.view" id="view_pos_order_tree_inherit">
             <field name="name">Orders</field>
             <field name="model">pos.order</field>

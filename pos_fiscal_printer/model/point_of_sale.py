@@ -36,13 +36,7 @@ from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
 import openerp.addons.product.product
-
-class pos_config (osv.Model):
-    _inherit = 'pos.config' 
-    _columns = {
-        'printer_id': fields.many2one('pos_fiscal_printer.printer',string="Fiscal Printer"),
-    }
-    
+  
 class pos_order (osv.Model):
     _inherit = 'pos.order' 
     _columns = {
