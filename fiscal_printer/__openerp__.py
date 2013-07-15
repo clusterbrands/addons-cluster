@@ -31,7 +31,7 @@
         'data/http_helper_data.xml'
      ],
     'data' : [        
-        'view/pos_fiscal_printer_view.xml',
-        'view/pos_fiscal_printer_action_menu.xml',
+        'view/fiscal_printer_view.xml',
+        'view/fiscal_printer_action_menu.xml',
     ],
 }
