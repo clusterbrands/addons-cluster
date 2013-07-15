@@ -28,17 +28,15 @@ import os
 import openerp
 import pdb
 import json
-from point_of_sale.controllers.main import PointOfSaleController
 from fiscal import FiscalPrinterEx
 from stoqdrivers.printers import base
 from stoqdrivers.enum import PaymentMethodType, TaxType, UnitType
 from serial import SerialException
 from decimal import Decimal
 
-class CustomProxy(PointOfSaleController):
+class FiscalPrinterController(openerp.addons.web.http.Controller):
 
-    def __init__(self):
-        super(CustomProxy,self).__init__()    
+    _cp_path = '/fiscal_printer'
 
     def _get_driver(self,printer):        
         fiscal = FiscalPrinterEx(brand=printer.get('brand'),

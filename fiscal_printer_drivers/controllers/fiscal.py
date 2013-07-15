@@ -33,6 +33,13 @@ log = Logger('fiscalex')
 class FiscalPrinterEx(FiscalPrinter):
     
     def get_supported_printers(self):
+        printers = base.get_supported_printers()
+        for brand in printers:
+            for i in range(0,len(printers[brand])):
+                printers[brand][i] = str(printers[brand][i]).split(".")[3]
+        return printers
+    
+    def get_supported_printers(self):
         return base.get_supported_printers()
         
     def set_payment_methods(self,payment_methods):
