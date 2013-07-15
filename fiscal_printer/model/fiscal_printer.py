@@ -29,6 +29,7 @@ import urllib
 import urllib2
 import json
 import pdb
+from socket import gethostname
 
 
 
@@ -212,7 +213,7 @@ class printer(osv.Model):
                     pm_obj.create(cr,uid,{'brand_id':brand_id[0],
                         'model_name':model},context)
         return True
-         
+        
     _columns = {
         'name' : fields.char(string='Name', size=50, required=True),
         'brand' : fields.many2one('fiscal_printer.brand',
@@ -220,6 +221,7 @@ class printer(osv.Model):
         'model' : fields.many2one('fiscal_printer.model',
             string='Model',required=True), 
         'port' : fields.char(string='Port', size=100, required=True),
+        'workstation' : fields.char(string='Workstation', size=255, required=True,readonly=True),
         'type': fields.boolean('Ticket Printer'),
         'serial' : fields.char(string='Serial', size=50),
         'payment_method_ids' : fields.one2many('fiscal_printer.payment_method',
@@ -233,6 +235,10 @@ class printer(osv.Model):
         'footer_ids' : fields.one2many('fiscal_printer.footer',
             'printer_id',string="Footers"),
     }
+    
+    _defaults = {
+        'workstation': lambda *a : gethostname()    
+     }
     
 class payment_method(osv.Model):
     

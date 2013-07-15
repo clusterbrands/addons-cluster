@@ -10,6 +10,8 @@
                     <field name="brand" />
                     <field name="model" />
                     <field name="type" />
+                    <field name="serial" />
+                    <field name="workstation" />
                 </tree>
             </field>       
         </record>
@@ -31,7 +33,7 @@
                              placeholder="Model"/>
                             <field name="port" placeholder="Port"/>
                             <field name="type"/>
-                            <label for="serial" />
+                            <label for="serial" /> 
                             <div>
                                 <field name="serial"  maxlength ="5" class="oe_inline"
                                     placeholder="Serial"/>
@@ -40,7 +42,7 @@
                                     string="Read" colspan="1"
                                     type="object"/>
                             </div> 
-                            <!-- <field name="active"/> -->                           
+                            <field name="workstation"/>                           
                         </group> 
                         <notebook>
                             <page string="Payment Methods">
