@@ -32,6 +32,15 @@ import pdb
 from socket import gethostname
 from urllib2 import URLError,HTTPError
 
+class proxy (osv.Model):
+    
+    _name = 'fiscal_printer.proxy'
+    _columns = {
+        'connection_name': fields.char('Connection Name',size=255,
+            required=True),
+        'proxy_url': fields.char('Local Proxy Url',size=255,
+            required=True)
+    }
 
 class brand(osv.Model):    
    
@@ -53,6 +62,12 @@ class model(osv.Model):
 class printer(osv.Model):
     
     _name = 'fiscal_printer.printer'  
+    
+    def _print_error(self, error, msg):
+        '''
+        shows an error on the screen
+        '''
+        raise osv.except_osv(error, msg)
          
     def _get_printer(self,cr,uid,ids):
         if ids:
@@ -97,7 +112,7 @@ class printer(osv.Model):
     def get_assigned_printer(self,cr,uid,ids,context):
         response = self.send_command(cr, uid,ids,'read_workstation')
         wrk = response.get('workstation') 
-        return self.search(cr,uid,[('workstation','=',wrk)])
+        id = self.search(cr,uid,[('workstation','=',wrk)])
 
     def read_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}    
