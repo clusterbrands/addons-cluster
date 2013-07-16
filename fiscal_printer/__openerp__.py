@@ -28,7 +28,7 @@
     'author' : "Me",
     'description' : """Fiscal Printer""",
     'init_xml': [
-        'data/http_helper_data.xml'
+        'data/fiscal_printer_data.xml'
      ],
     'data' : [        
         'view/fiscal_printer_view.xml',

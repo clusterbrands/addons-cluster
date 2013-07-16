@@ -38,7 +38,7 @@ class proxy (osv.Model):
     _columns = {
         'connection_name': fields.char('Connection Name',size=255,
             required=True),
-        'proxy_url': fields.char('Local Proxy Url',size=255,
+        'url': fields.char('Local Proxy Url',size=255,
             required=True)
     }
 
@@ -83,8 +83,9 @@ class printer(osv.Model):
     
     def _make_command(self, cr, uid,ids,name,params):    
         
-        url = 'http://localhost:8069/fiscal_printer' 
-        params = params or {}       
+        params = params or {}   
+        obj = self.pool.get("fiscal_printer.proxy")
+        url = obj.browse(cr,uid,obj.search(cr, uid, []))[0].url            
         printer = self._get_printer(cr,uid,ids)
         req_params = {'command':name,'printer':printer,'params':params}
         req_params_str = urllib.urlencode(req_params)
