@@ -4,7 +4,7 @@
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved Credits
-######################################################
+#
 #    Coded by: Eduardo Ochoa    <eduardo.ochoa@clusterbrands.com.ve>
 #                               <elos3000@gmail.com>
 #
@@ -117,9 +117,12 @@ class printer(osv.Model):
     def get_assigned_printer(self, cr, uid, ids, context):
 
         wrk = self.read_workstation(cr, uid, ids, context=context)
-        printer_id = self.search(cr, uid, [('workstation', '=', wrk)])
+        printer_id = self.search(cr, uid, [('workstation', '=', wrk),
+                                 ('enabled', '=', True)])
         if printer_id:
-            self.browse(cr, uid, printer_id)
+            return self.browse(cr, uid, printer_id)[0]
+        else:
+            return []
 
     def read_workstation(self, cr, uid, ids, context=None):
         response = self.send_command(cr, uid, ids, 'read_workstation')
@@ -178,7 +181,7 @@ class printer(osv.Model):
         headers = response.get('headers')
         obj = self.pool.get('fiscal_printer.header')
         for header in headers:
-            if header.strip() <> "":
+            if header.strip() != "":
                 header_id = obj.search(
                     cr, uid, [('current_value', '=', header.rstrip())],
                     context=context)
@@ -196,7 +199,7 @@ class printer(osv.Model):
         header_ids = []
         printer = self.browse(cr, uid, ids)[0]
         for header in printer.header_ids:
-            if (header.value <> header.current_value):
+            if (header.value != header.current_value):
                 headers.append(header.value)
                 header_ids.append(header.id)
         params = {'headers': headers}
@@ -214,7 +217,7 @@ class printer(osv.Model):
         footers = response.get('footers')
         obj = self.pool.get('fiscal_printer.footer')
         for footer in footers:
-            if footer.strip() <> "":
+            if footer.strip() != "":
                 footer_id = obj.search(
                     cr, uid, [('current_value', '=', footer.rstrip())],
                     context=context)
@@ -232,7 +235,7 @@ class printer(osv.Model):
         footer_ids = []
         printer = self.browse(cr, uid, ids)[0]
         for footer in printer.footer_ids:
-            if (footer.value <> footer.current_value):
+            if (footer.value != footer.current_value):
                 footers.append(footer.value)
                 footer_ids.append(footer.id)
         params = {'footers': footers}
