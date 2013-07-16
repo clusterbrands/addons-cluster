@@ -94,6 +94,7 @@ class printer(osv.Model):
     
     def send_command(self, cr, uid,ids,name,params={}):       
         
+        response = {}
         request = self._make_command(cr, uid,ids,name,params)
         try:
             response = urllib2.urlopen(request) 
@@ -111,10 +112,14 @@ class printer(osv.Model):
         
         
     def get_assigned_printer(self,cr,uid,ids,context):
-        response = self.send_command(cr, uid,ids,'read_workstation')
-        wrk = response.get('workstation') 
+        wrk = self.read_workstation(cr,uid,ids,context=context)
         id = self.search(cr,uid,[('workstation','=',wrk)])
 
+    def read_workstation(self, cr, uid, ids, context=None):
+
+        response = self.send_command(cr, uid,ids,'read_workstation')
+        return response.get('workstation') or ""
+        
     def read_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}    
         response = self.send_command(cr, uid,ids,'read_payment_methods')
@@ -267,6 +272,12 @@ class printer(osv.Model):
                         'model_name':model},context)
         return True
         
+    def default_get(self,cr, uid, fields, context=None):
+        res = {}
+        wrk =self.read_workstation(cr,uid,[],context=context)
+        res.update({"workstation":wrk})
+        return res
+        
     _columns = {
         'name' : fields.char(string='Name', size=50, required=True),
         'brand' : fields.many2one('fiscal_printer.brand',
@@ -288,10 +299,6 @@ class printer(osv.Model):
         'footer_ids' : fields.one2many('fiscal_printer.footer',
             'printer_id',string="Footers"),
     }
-    
-    _defaults = {
-        'workstation': lambda *a : gethostname()    
-     }
     
 class payment_method(osv.Model):
     
