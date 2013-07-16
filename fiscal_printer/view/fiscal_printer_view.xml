@@ -9,8 +9,9 @@
                     <field name="name" />
                     <field name="brand" />
                     <field name="model" />
-                    <field name="type" />
                     <field name="serial" />
+                    <field name="type" /> 
+                    <field name="enabled" />                     
                     <field name="workstation" />
                 </tree>
             </field>       
@@ -32,7 +33,6 @@
                              domain="[('brand_id','=', brand)]" 
                              placeholder="Model"/>
                             <field name="port" placeholder="Port"/>
-                            <field name="type"/>
                             <label for="serial" /> 
                             <div>
                                 <field name="serial"  maxlength ="5" class="oe_inline"
@@ -41,8 +41,10 @@
                                     icon="STOCK_CONNECT"
                                     string="Read" colspan="1"
                                     type="object"/>
-                            </div> 
-                            <field name="workstation"/>                           
+                            </div>                            
+                            <field name="type"/>
+                            <field name="enabled"/>
+                            <field name="workstation"/>                         
                         </group> 
                         <notebook>
                             <page string="Payment Methods">

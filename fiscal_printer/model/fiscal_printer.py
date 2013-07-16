@@ -25,12 +25,13 @@
 
 from openerp.osv.orm import except_orm,BaseModel
 from openerp.osv import osv, fields
+from openerp.tools.translate import _
 import urllib
 import urllib2
+from urllib2 import URLError,HTTPError
 import json
 import pdb
-from socket import gethostname
-from urllib2 import URLError,HTTPError
+
 
 class proxy (osv.Model):
     
@@ -112,11 +113,13 @@ class printer(osv.Model):
         
         
     def get_assigned_printer(self,cr,uid,ids,context):
+
         wrk = self.read_workstation(cr,uid,ids,context=context)
-        id = self.search(cr,uid,[('workstation','=',wrk)])
+        printer_id = self.search(cr,uid,[('workstation','=',wrk)])
+        if printer_id:
+            self.browse(cr,uid,printer_id)
 
     def read_workstation(self, cr, uid, ids, context=None):
-
         response = self.send_command(cr, uid,ids,'read_workstation')
         return response.get('workstation') or ""
         
@@ -246,10 +249,15 @@ class printer(osv.Model):
         self.write(cr,uid,ids,{'serial':serial},context=context)
         return True
         
+    def _check_active_printer_uniqueness(self, cr, uid, ids, context=None):
+        brw = self.browse(cr,uid,ids)[0]
+        wrk = brw.workstation
+        ids = self.search(cr,uid,[('workstation','=',wrk),('enabled','=',True)])
+        return len(ids) <= 1
+        
     def view_init(self,cr, uid, fields_list, context=None):
         
-        context = context or {}  
-        self.get_assigned_printer(cr, uid, [], context=context)     
+        context = context or {}      
         try:
             response = self.send_command(cr, uid,[],'get_supported_printers')
             printers = response
@@ -263,7 +271,7 @@ class printer(osv.Model):
                             context=context)
             if not brand_id:
                 brand_id = [pb_obj.create(cr,uid,{'brand_name':brand},
-                            context)]
+                            context=context)]
             for model in printers[brand]:
                 m = pm_obj.search(cr,uid,[('model_name','=',model)],
                         context=context,count=True)
@@ -288,6 +296,7 @@ class printer(osv.Model):
         'workstation' : fields.char(string='Workstation', size=255, required=True,readonly=True),
         'type': fields.boolean('Ticket Printer'),
         'serial' : fields.char(string='Serial', size=50),
+        'enabled':fields.boolean(string="Active"),
         'payment_method_ids' : fields.one2many('fiscal_printer.payment_method',
             'printer_id',string="Payment Methods"), 
         'tax_rate_ids' : fields.one2many('fiscal_printer.tax_rate',
@@ -299,6 +308,12 @@ class printer(osv.Model):
         'footer_ids' : fields.one2many('fiscal_printer.footer',
             'printer_id',string="Footers"),
     }
+    
+    _constraints = [
+        (_check_active_printer_uniqueness,
+         _("Only one active printer allowed per workstation"),[])
+        
+    ]
     
 class payment_method(osv.Model):
     
