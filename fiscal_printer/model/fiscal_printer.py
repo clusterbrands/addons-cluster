@@ -86,7 +86,6 @@ class printer(osv.Model):
             return {}
 
     def _make_command(self, cr, uid, ids, name, params):
-
         params = params or {}
         obj = self.pool.get("fiscal_printer.proxy")
         url = obj.browse(cr, uid, obj.search(cr, uid, []))[0].url
@@ -97,7 +96,6 @@ class printer(osv.Model):
         return request
 
     def send_command(self, cr, uid, ids, name, params={}):
-
         response = {}
         request = self._make_command(cr, uid, ids, name, params)
         try:
@@ -114,15 +112,43 @@ class printer(osv.Model):
             self._print_error("COMMAND ERROR", response['error'])
         return response['values']
 
-    def get_assigned_printer(self, cr, uid, ids, context):
-
+    def get_assigned_printer(self, cr, uid, ids, context=None):
         wrk = self.read_workstation(cr, uid, ids, context=context)
         printer_id = self.search(cr, uid, [('workstation', '=', wrk),
                                  ('enabled', '=', True)])
         if printer_id:
             return self.browse(cr, uid, printer_id)[0]
         else:
-            return []
+            return {}
+
+    def get_assigned_printer_web(self, cr, uid, ids, context=None):
+        printer = {}
+        wrk = self.read_workstation(cr, uid, ids, context=context)
+        printer_id = self.search(cr, uid, [('workstation', '=', wrk),
+                                 ('enabled', '=', True)])
+        if printer_id:
+            data = self.browse(cr, uid, printer_id, context=context)[0]
+            taxes = [{"account_tax_id":tax.account_tax_id, 
+                      "code":tax.code} for tax in data.tax_rate_ids]
+
+            payments = [{"account_journal_id":payment.account_journal_id,
+                        "code":payment.code}
+                        for payment in data.payment_method_ids]
+
+            uoms = [{"product_uom_id":uom.product_uom_id,
+                    "code":uom.code} for uom in data.measure_unit_ids]
+
+            printer.update({
+                "name": data.name,
+                "brand": data.brand.brand_name,
+                "model": data.model.model_name,
+                "port": data.port,
+                "serial": data.serial,
+                "tax_rates": taxes,
+                "payment_methods": payments,
+                "meansure_units": uoms
+            })
+        return json.dumps(printer)
 
     def read_workstation(self, cr, uid, ids, context=None):
         response = self.send_command(cr, uid, ids, 'read_workstation')
@@ -261,8 +287,7 @@ class printer(osv.Model):
             cr, uid, [('workstation', '=', wrk), ('enabled', '=', True)])
         return len(ids) <= 1
 
-    def view_init(self, cr, uid, fields_list, context=None):
-
+    def default_get(self, cr, uid, fields, context=None):
         context = context or {}
         try:
             response = self.send_command(cr, uid, [], 'get_supported_printers')
@@ -284,9 +309,6 @@ class printer(osv.Model):
                 if (m == 0):
                     pm_obj.create(cr, uid, {'brand_id': brand_id[0],
                                             'model_name': model}, context)
-        return True
-
-    def default_get(self, cr, uid, fields, context=None):
         res = {}
         wrk = self.read_workstation(cr, uid, [], context=context)
         res.update({"workstation": wrk})

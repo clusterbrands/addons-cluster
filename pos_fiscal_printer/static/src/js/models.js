@@ -29,36 +29,12 @@ function pos_fiscal_printer_models(instance, module){
             self = this
             loaded = _super.prototype.load_server_data.call(this)
                 .then(function(){
-                    return self.fetch('pos.config',['printer_id'],
-                        [['id','=', self.get('pos_session').config_id[0]]])
-                }).then(function(config){
-                    return self.fetch('pos_fiscal_printer.printer',
-                        ['brand','name','port','serial','model',
-                        'payment_method_ids','tax_rate_ids',
-                        'measure_unit_ids'],
-                        [['id','=',config[0].printer_id[0]]])
-                }).then(function(printer){
-                    self.get('pos_config').printer = printer[0]
-                    if (printer[0]){
-                        return self.fetch('pos_fiscal_printer.tax_rate', 
-                            ['account_tax_id','code'],
-                            [['printer_id','=',self.get('pos_config').printer.id]]
-                        ).then(function(tax_rates){                
-                            self.get('pos_config').printer.tax_rates = tax_rates
-                            return self.fetch('pos_fiscal_printer.payment_method',
-                                ['account_journal_id','code'],
-                                [['printer_id','=',self.get('pos_config').printer.id]])
-                        }).then(function(payment_methods){
-                            self.get('pos_config').printer.payment_methods = payment_methods
-                            return self.fetch('pos_fiscal_printer.measure_unit',
-                                ['product_uom_id','code'],
-                                [['printer_id','=',self.get('pos_config').printer.id]])
-                        }).then(function(measure_units){
-                            self.get('pos_config').printer.measure_units = measure_units
-                        })
-                    }
+                    model = new instance.web.Model('fiscal_printer.printer')
+                    return model.call('get_assigned_printer_web',[[]])
                 })
-                
+                .then(function(printer){
+                    self.set('printer') = printer
+                })                
             return loaded
         }
         
