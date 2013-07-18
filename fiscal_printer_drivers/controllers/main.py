@@ -52,7 +52,6 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         return True
     
     def _check_printer_status(self,printer):
-        printer = eval(printer)
         driver = self._get_driver(printer)
         driver.check_printer_status()
         self._check_printer_serial(printer,driver)

@@ -35,7 +35,7 @@ function pos_fiscal_printer_widgets(instance, module){
         check_printer_status:function(){
             var self = this    
             printer = self.pos.get('printer')
-            if (printer == null)
+            if (_.isEmpty(printer))
                 self.screen_selector.show_popup('not-printer-error');
             else
                 self.pos.proxy.check_printer_status(printer).done(function(response){                    

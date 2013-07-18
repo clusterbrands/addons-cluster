@@ -148,7 +148,7 @@ class printer(osv.Model):
                 "payment_methods": payments,
                 "meansure_units": uoms
             })
-        return json.dumps(printer)
+        return printer
 
     def read_workstation(self, cr, uid, ids, context=None):
         response = self.send_command(cr, uid, ids, 'read_workstation')
