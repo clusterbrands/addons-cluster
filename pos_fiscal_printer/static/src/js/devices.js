@@ -32,7 +32,6 @@ function pos_fiscal_printer_devices(instance,module){
             }
 
             this.connection.rpc('/fiscal_printer/' + name, params || {}).done(function(result) {
-                console.debug(result)
                 ret.resolve(result);
             }).fail(function(error) {
                 ret.reject(error);

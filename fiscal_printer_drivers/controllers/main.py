@@ -223,4 +223,4 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         except Exception as e:
             response = {"status":'error',"error": str(e)}
             return json.dumps(response)
-        
+

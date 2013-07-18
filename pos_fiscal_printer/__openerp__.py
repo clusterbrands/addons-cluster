@@ -24,7 +24,7 @@
     'name' : "Pos Fiscal Printer",
     'category' : "Test",
     'version' : "1.0",
-    'depends' : ['pos_client'],
+    'depends' : ['pos_client','fiscal_printer'],
     'author' : "Me",
     'description' : """Pos Fiscal Printer""",
     'data' : [        
@@ -36,9 +36,6 @@
         'static/src/js/devices.js',         
         'static/src/js/screens.js',       
         'static/src/js/main.js',                   
-    ],
-    'css': [
-        'static/src/css/pos.css'
     ],
     'qweb': ['static/src/xml/pos.xml'],
 }

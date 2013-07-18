@@ -28,7 +28,7 @@
     z-index:1200;
 }
 
-.point-of-sale .popup .header{
+.point-of-sale .modal_dialog .popup .header{
     width:100%;
     height:35px;
     border-bottom: 1px solid #E0DDDD;
@@ -36,18 +36,19 @@
     cursor:move;
 }
 
-.point-of-sale .popup .footer{
+.point-of-sale .modal_dialog .popup .footer{
 
+    position: relative;
     background-color: #f5f5f5;
     border-top: 1px solid #ddd;
     width:100%;
 }
 
-.point-of-sale .popup .footer .buttonset{
+.point-of-sale .modal_dialog .popup .footer .buttonset{
     padding: 0.4em 0.2em;
 }
 
-.point-of-sale .popup .header .title{
+.point-of-sale .modal_dialog .popup .header .title{
     width: 95%;
     float: left;
     text-align: left;
@@ -55,20 +56,20 @@
     top: 50%;
 }
 
-.point-of-sale .popup .header .close{
+.point-of-sale .modal_dialog .popup .header .close{
     float: left;
     width: 5%;    
 }
 
-.point-of-sale .content{
+.point-of-sale .modal_dialog .content{
     padding:.5em 1em;
     font-size:15px;
 }
 
-.point-of-sale .content  table {
+.point-of-sale .modal_dialog .content  table {
    border-collapse:collapse;
 }
-.point-of-sale .content input[type=text] {
+.point-of-sale .modal_dialog .content input[type=text] {
     -webkit-border-radius: 3px;
     border: 1px solid #cccccc;
     border-radius: 3px;
@@ -78,26 +79,26 @@
     text-transform:uppercase;
 }
 
-.point-of-sale .content label {
+.point-of-sale .modal_dialog.content label {
     font-weight:bold;
     color:#404040;
 }
 
-.point-of-sale .content  input:disabled {
+.point-of-sale .modal_dialog .content  input:disabled {
     background-color: rgb(235, 235, 228);
 }
 
-.point-of-sale .content  td {
+.point-of-sale .modal_dialog .content  td {
     padding:2px 4px 2px;
     vertical-align: middle;
 }
 
-.point-of-sale .content td:first-child{
+.point-of-sale .modal_dialog .content td:first-child{
     border-right: 1px solid #dddddd;
     vertical-align:top;
 }
 
-.point-of-sale .popup button{
+.point-of-sale .modal_dialog .popup button{
     float:right;    
     text-align:center;
     margin:3px;
@@ -115,7 +116,7 @@
        -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
             box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
 }
-.point-of-sale .popup button:hover {
+.point-of-sale .modal_dialog .popup button:hover {
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -129,7 +130,7 @@
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .popup button:focus {
+.point-of-sale .modal_dialog .popup button:focus {
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
