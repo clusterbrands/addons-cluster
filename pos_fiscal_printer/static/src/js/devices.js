@@ -23,8 +23,28 @@
 
 function pos_fiscal_printer_devices(instance,module){
     module.ProxyDevice.include({
+        
+        message2 : function(name,params){
+            var ret = new $.Deferred();
+            var callbacks = this.notifications[name] || [];
+            for(var i = 0; i < callbacks.length; i++){
+                callbacks[i](params);
+            }
+
+            this.connection.rpc('/fiscal_printer/' + name, params || {}).done(function(result) {
+                console.debug(result)
+                ret.resolve(result);
+            }).fail(function(error) {
+                ret.reject(error);
+            });
+            return ret;
+        },
+        print_receipt: function(receipt){
+            return this.message2('print_receipt',{receipt: receipt});
+        },
         check_printer_status : function(printer){
-            return this.message('check_printer_status',{printer:printer})
+            console.debug(printer)
+            return this.message2('check_printer_status',{printer:printer})
         }
     })
 }

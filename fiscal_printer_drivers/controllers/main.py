@@ -51,7 +51,8 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
             raise Exception("The connected printer does not match with the configured for this POS")
         return True
     
-    def _check_printer_status(self,printer):       
+    def _check_printer_status(self,printer):
+        printer = eval(printer)
         driver = self._get_driver(printer)
         driver.check_printer_status()
         self._check_printer_serial(printer,driver)
@@ -209,6 +210,7 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
     @openerp.addons.web.http.jsonrequest
     def check_printer_status(self, request,printer):
         try:
+            pdb.set_trace()
             self._check_printer_status(printer)
             return {"status":"ok"}
         except Exception as e:

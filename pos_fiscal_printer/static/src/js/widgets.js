@@ -34,19 +34,11 @@ function pos_fiscal_printer_widgets(instance, module){
         },
         check_printer_status:function(){
             var self = this    
-            printer = self.pos.get('pos_config').printer
+            printer = self.pos.get('printer')
             if (printer == null)
                 self.screen_selector.show_popup('not-printer-error');
             else
-                self.pos.proxy.check_printer_status(
-                    {
-                        model:printer.model[1],
-                        brand:printer.brand[1],
-                        port:printer.port,
-                        serial:printer.serial,
-                    }
-                ).done(function(response){
-                    
+                self.pos.proxy.check_printer_status(printer).done(function(response){                    
                     if (response.status == "error"){
                         self.printer_error_popup.set_message(response.error)
                         self.screen_selector.show_popup('printer-error');

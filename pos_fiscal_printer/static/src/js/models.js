@@ -33,7 +33,7 @@ function pos_fiscal_printer_models(instance, module){
                     return model.call('get_assigned_printer_web',[[]])
                 })
                 .then(function(printer){
-                    self.set('printer') = printer
+                    self.set('printer',printer)
                 })                
             return loaded
         }
