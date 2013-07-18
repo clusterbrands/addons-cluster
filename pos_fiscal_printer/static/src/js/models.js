@@ -72,7 +72,7 @@ function pos_fiscal_printer_models(instance, module){
         export_for_printing : function(){
             order = _super2.prototype.export_for_printing.call(this);
             client  = this.get('client');
-            printer = this.pos.get('pos_config').printer;
+            printer = this.pos.get('printer');
             street =  client ? client.street:""
             street2 = client ? client.street2:""
             order['client'] = {
@@ -81,8 +81,8 @@ function pos_fiscal_printer_models(instance, module){
                 address : street + " " + street2,
             }
             order['printer'] = {
-                model : printer.model[1],
-                brand : printer.brand[1],
+                model : printer.model,
+                brand : printer.brand,
                 port : printer.port,
                 serial : printer.serial
             }
@@ -95,7 +95,7 @@ function pos_fiscal_printer_models(instance, module){
         export_for_printing : function(){          
             product = this.get_product();
             taxes_ids = product.get('taxes_id');        
-            tax_rates = this.pos.get('pos_config').printer.tax_rates;
+            tax_rates = this.pos.get('printer').tax_rates;
             tax = ""       
             _.each(taxes_ids,function(tax_id){
                 tax = _.detect(tax_rates,function(t){
@@ -103,7 +103,7 @@ function pos_fiscal_printer_models(instance, module){
                         }) 
             })
             uom_id = product.get('uom_id')[0]
-            measure_units = this.pos.get('pos_config').printer.measure_units;
+            measure_units = this.pos.get('printer').measure_units;
             
             unit = _.detect(measure_units,function(u){
                         return u.product_uom_id[0] == uom_id
@@ -123,7 +123,7 @@ function pos_fiscal_printer_models(instance, module){
         },
         export_for_printing : function(){
            account_journal_id = this.cashregister.get('journal_id')[0]
-           payment_methods = this.pos.get('pos_config').printer.payment_methods;
+           payment_methods = this.pos.get('printer').payment_methods;
            payment_method = _.detect(payment_methods,function(p){
                                 return p.account_journal_id[0] == account_journal_id
                             })  

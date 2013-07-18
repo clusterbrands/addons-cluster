@@ -168,10 +168,10 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
                 raise Exception("The product : '"+
                     product.get('product_name') +
                     "' does not have a tax rate configured for the current printer")
-            #~ if (product.get('unit_code') == ""):
-                  #~ raise Exception("The product : '"+
-                    #~ product.get('product_name') +
-                    #~ "' does not have a measure unit configured for the current printer")
+            if (product.get('unit_code') == ""):
+                  raise Exception("The product : '"+
+                    product.get('product_name') +
+                    "' does not have a measure unit configured for the current printer")
         for payment in payment_lines:
             if (payment.get('payment_method_code') == ""):
                 raise Exception("The payment method "+
@@ -209,7 +209,6 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
     @openerp.addons.web.http.jsonrequest
     def check_printer_status(self, request,printer):
         try:
-            pdb.set_trace()
             self._check_printer_status(printer)
             return {"status":"ok"}
         except Exception as e:
