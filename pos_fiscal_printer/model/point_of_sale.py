@@ -38,6 +38,7 @@ import openerp.addons.decimal_precision as dp
 import openerp.addons.product.product
   
 class pos_order (osv.Model):
+    
     _inherit = 'pos.order' 
     _columns = {
         'printer_serial':fields.char('Printer Serial',size=50,readonly=True),
@@ -45,52 +46,16 @@ class pos_order (osv.Model):
     }
     
     def create_from_ui(self, cr, uid, orders, context=None):
-        #_logger.info("orders: %r", orders)
-        order_ids = []
+        obj = self.pool.get("res.partner");
         for tmp_order in orders:
-            order = tmp_order['data']
-            order_id = self.create(cr, uid, {
-                'name': order['name'],
-                'user_id': order['user_id'] or False,
-                'session_id': order['pos_session_id'],
-                'lines': order['lines'],
-                'pos_reference':order['name'],
-                'partner_id':order.get('partner_id'),
-                'printer_receipt_number':order['printer_receipt_number'],
-                'printer_serial':order['printer_serial'],
-            }, context)
-
-            for payments in order['statement_ids']:
-                payment = payments[2]
-                self.add_payment(cr, uid, order_id, {
-                    'amount': payment['amount'] or 0.0,
-                    'payment_date': payment['name'],
-                    'statement_id': payment['statement_id'],
-                    'payment_name': payment.get('note', False),
-                    'journal': payment['journal_id']
-                }, context=context)
-
-            if order['amount_return']:
-                session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
-                cash_journal = session.cash_journal_id
-                cash_statement = False
-                if not cash_journal:
-                    cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
-                    if not len(cash_journal_ids):
-                        raise osv.except_osv( _('error!'),
-                            _("No cash statement found for this session. Unable to record returned cash."))
-                    cash_journal = cash_journal_ids[0].journal_id
-                self.add_payment(cr, uid, order_id, {
-                    'amount': -order['amount_return'],
-                    'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'payment_name': _('return'),
-                    'journal': cash_journal.id,
-                }, context=context)
-            order_ids.append(order_id)
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
-        return order_ids
-        
+            order = tmp_order['data']      
+            order_id = super(pos_order,self).create_from_ui(cr, uid, orders, context=context)
+            self.write(cr,uid,order_id,
+                       {"invoice_printer":order['invoice_printer'],
+                       "fiscal_printer":order['fiscal_printer']},
+                       context=context)
+        return True
+                
     def action_invoice(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
@@ -117,8 +82,8 @@ class pos_order (osv.Model):
                 'partner_id': order.partner_id.id,
                 'comment': order.note or '',
                 'currency_id': order.pricelist_id.currency_id.id, # considering partner's sale pricelist's currency
-                'printer_receipt_number':order.printer_receipt_number,
-                'printer_serial':order.printer_serial,
+                'invoice_printer':order.invoice_printer,
+                'fiscal_printer':order.fiscal_printer,
             }
             inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', order.partner_id.id)['value'])
             if not inv.get('account_id', None):
@@ -165,5 +130,43 @@ class pos_order (osv.Model):
             'nodestroy': True,
             'target': 'current',
             'res_id': inv_ids and inv_ids[0] or False,
-        }
+        } 
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        """Remove the fields invoice_printer and fiscal_priter for 
+        the view if _get_loc_req is True
+        """
+        context = context or {}
+        res = super(pos_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+        if view_type == 'tree':          
+            if  self._get_loc_req(cr,uid,context=context):
+                for node in doc.xpath("//field[@name='invoice_printer']"):
+                    doc.remove(node)
+                for node in doc.xpath("//field[@name='fiscal_printer']"):
+                    doc.remove(node)
+            res['arch'] = etree.tostring(doc)
+        return res
+    
+    def _get_loc_req(self, cr, uid, context=None):
+        """Get if a field is required or not by a Localization
+        @param uid: Integer value of the user
+        """
+        context = context or {}
+        res = True
+        ru_brw = self.pool.get('res.users').browse(cr,uid,uid,context=context)
+        rc_obj = self.pool.get('res.company')
+        rc_brw = rc_obj.browse(cr, uid, ru_brw.company_id.id, context=context)
+        
+        if rc_brw.country_id and rc_brw.country_id.code == 'VE' and rc_brw.printer_fiscal:
+            res = False
+        return res
+    
+    _columns = {
+        'invoice_printer' : fields.char('Fiscal Printer Invoice Number', size=64, required=False,help="Fiscal printer invoice number, is the number of the invoice on the fiscal printer"),
+        'fiscal_printer' : fields.char('Fiscal Printer Number', size=64, required=False,help="Fiscal printer number, generally is the id number of the printer."),
+        'loc_req':fields.boolean('Required by Localization', help='This fields is for technical use'),
+    }
+    _defaults ={
+        'loc_req': _get_loc_req
+    }

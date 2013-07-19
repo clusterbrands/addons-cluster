@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_pos_order_tree_inherit">
+        <record model="ir.ui.view" id="view_pos_order_tree_loc_ve">
             <field name="name">Orders</field>
             <field name="model">pos.order</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
             <field name="arch" type="xml">
-                <field name="session_id" position="after">
-                    <field name="printer_receipt_number"/>
-                    <field name="printer_serial"/>
+                <field name="session_id" position="after">  
+                    <field name="invoice_printer" />
+                    <field name="fiscal_printer" />                    
                 </field>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_pos_pos_form_inherit">
-            <field name="name">pos.order.inherit</field>
+        <record model="ir.ui.view" id="view_pos_pos_form_loc_ve">
+            <field name="name">pos.order.form.loc_ve</field>
             <field name="model">pos.order</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="printer_receipt_number"/>
-                    <field name="printer_serial"/>
-                </field>
+                <xpath expr="//page[@string='Extra Info']/group[@string='Accounting Information']" position="after">
+                    <group string="Fiscal Information">
+                        <field name="loc_req" invisible="1"/>
+                        <field name="invoice_printer" class="oe_inline" attrs="{'invisible':[('loc_req','=',True)]}"/>
+                        <field name="fiscal_printer" class="oe_inline" attrs="{'invisible':[('loc_req','=',True)]}"/>
+                    </group>
+                </xpath>
             </field>
         </record>
     </data>
