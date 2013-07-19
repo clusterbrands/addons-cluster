@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
             <field name="arch" type="xml">
                 <field name="session_id" position="after">  
-                    <field name="invoice_printer" />
-                    <field name="fiscal_printer" />                    
+                    <field name="invoice_printer" invisible="context.get('loc_req')" />
+                    <field name="fiscal_printer" invisible="context.get('loc_req')"/>                    
                 </field>
             </field>
         </record>

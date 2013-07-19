@@ -22,20 +22,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from decimal import Decimal
-import logging
-import pdb
-import time
-
-import openerp
 from openerp import netsvc, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-
-import openerp.addons.decimal_precision as dp
-import openerp.addons.product.product
+from lxml import etree
   
 class pos_order (osv.Model):
     
@@ -133,15 +123,8 @@ class pos_order (osv.Model):
         the view if _get_loc_req is True
         """
         context = context or {}
+        context.update({"loc_req":self._get_loc_req(cr,uid,context=context)})
         res = super(pos_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        doc = etree.XML(res['arch'])
-        if view_type == 'tree':          
-            if  self._get_loc_req(cr,uid,context=context):
-                for node in doc.xpath("//field[@name='invoice_printer']"):
-                    doc.remove(node)
-                for node in doc.xpath("//field[@name='fiscal_printer']"):
-                    doc.remove(node)
-            res['arch'] = etree.tostring(doc)
         return res
     
     def _get_loc_req(self, cr, uid, context=None):
