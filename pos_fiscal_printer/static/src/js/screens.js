@@ -32,9 +32,8 @@ function pos_fiscal_printer_screens(instance,module){
                 this.pos.proxy.print_receipt(currentOrder.export_for_printing())
                 .done(function(response){
                     if (response.status == "ok"){
-                        console.debug(response)
-                        currentOrder.set_printer_serial(response.serial)
-                        currentOrder.set_printer_receipt_number(response.receipt_id)
+                        currentOrder.set_invoice_printer(response.serial)
+                        currentOrder.set_fiscal_printer(response.receipt_id)
                         self.pos.push_order(currentOrder.exportAsJSON()) 
                         self.pos.get('selectedOrder').destroy();
                     }else{

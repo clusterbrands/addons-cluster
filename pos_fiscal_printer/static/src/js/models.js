@@ -43,16 +43,15 @@ function pos_fiscal_printer_models(instance, module){
     var _super2 = module.Order
     module.Order = module.Order.extend({
        
-        set_printer_serial:function (printer_serial){
-            this.printer_serial = printer_serial
+        set_fiscal_printer:function (fiscal_printer){
+            this.fiscal_printer = fiscal_printer
         },
         
-        set_printer_receipt_number: function(printer_receipt_number){
-            this.printer_receipt_number = printer_receipt_number
+        set_invoice_printer: function(invoice_printer){
+            this.invoice_printer = invoice_printer
         },
                 
         addPaymentLine: function(cashRegister) {
-            //console.debug(this.pos.get('pos_config'))
             var paymentLines = this.get('paymentLines');
             var newPaymentline = new module.Paymentline({},
                                     {cashRegister:cashRegister,pos:this.pos});
@@ -64,9 +63,8 @@ function pos_fiscal_printer_models(instance, module){
         exportAsJSON : function(){
             order = _super2.prototype.exportAsJSON.call(this);
             order['partner_id'] = this.get('client') ? this.get('client').id: undefined;
-            order['printer_serial'] = this.printer_serial;         
-            order['printer_receipt_number'] = this.printer_receipt_number;
-            console.debug(order);
+            order['fiscal_printer'] = this.fiscal_printer;         
+            order['invoice_printer'] = this.invoice_printer;
             return order
         },
         export_for_printing : function(){

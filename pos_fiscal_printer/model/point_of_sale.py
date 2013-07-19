@@ -40,11 +40,7 @@ import openerp.addons.product.product
 class pos_order (osv.Model):
     
     _inherit = 'pos.order' 
-    _columns = {
-        'printer_serial':fields.char('Printer Serial',size=50,readonly=True),
-        'printer_receipt_number':fields.char('Printer Receipt Ref',size=50,readonly=True)
-    }
-    
+        
     def create_from_ui(self, cr, uid, orders, context=None):
         obj = self.pool.get("res.partner");
         for tmp_order in orders:
