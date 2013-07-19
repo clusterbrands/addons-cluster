@@ -23,7 +23,7 @@
     'name' : "POS Client",
     'category' : "Test",
     'version' : "1.0",
-    'depends' : ['point_of_sale'],
+    'depends' : ['point_of_sale','l10n_ve_fiscal_requirements'],
     'author' : "Me",
     'description' : """Enables add clients in the POS module orders""",
     'init_xml': [
