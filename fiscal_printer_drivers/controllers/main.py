@@ -51,12 +51,12 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
             raise Exception("The connected printer does not match with the configured for this POS")
         return True
     
-    def _check_printer_status(self,printer):
+    def _check_printer_status(self,printer,params):
         driver = self._get_driver(printer)
         driver.check_printer_status()
         self._check_printer_serial(printer,driver)
         
-    def read_workstation(self,request):
+    def read_workstation(self,printer,params):
         return{"workstation":gethostname()}
         
     def read_printer_serial(self,printer,params):
@@ -65,68 +65,55 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         serial = driver.get_serial()
         return {"serial":serial}
         
-    def read_payment_methods(self,request):
-        printer = eval(request.get('printer'))
-        params = eval(request.get('params'))
+    def read_payment_methods(self,printer,params):
         payment_methods = params.get('payment_methods')
         driver = self._get_driver(printer)
         payment_methods = driver.get_payment_constants()
         return ""
         
-    def write_payment_methods(self,request):
-        printer = eval(request.get('printer'))
-        params = eval(request.get('params'))
+    def write_payment_methods(self,printer,params):
         payment_methods =params.get('payment_methods')
         driver = self._get_driver(printer)
         driver.set_payment_methods(payment_methods)
         return {"exec":True} 
         
-    def read_tax_rates(self,request):
-        printer = eval(request.get('printer'))
+    def read_tax_rates(self,printer,params):
         payment_methods =[]
         driver = self._get_driver(printer)
         tax_rates = driver.get_tax_constants()
         return {"tax_rates":tax_rates}
         
-    def write_tax_rates(self,request):
-        printer = eval(request.get('printer'))
-        params = eval(request.get('params'))
+    def write_tax_rates(self,printer,params):
         tax_rates = params.get('tax_rates')
         driver = self._get_driver(printer)
         pdb.set_trace()
         driver.set_tax_rates(tax_rates)
     
-    def read_headers(self,request):
-        printer = eval(request.get('printer'))
+    def read_headers(self,printer,params):
         headers =[]
         driver = self._get_driver(printer)
         headers = driver.get_coupon_headers()
         return {"headers":headers}
         
-    def write_headers(self,request):
-        printer = eval(request.get('printer'))
-        params = eval(request.get('params'))
+    def write_headers(self,printer,params):
         headers = params.get('headers')
         driver = self._get_driver(printer)
         driver.set_coupon_headers(headers)
         return {"exec":True}
         
-    def read_footers(self,request):
-        printer = eval(request.get('printer'))
+    def read_footers(self,printer,params):
         footers =[]
         driver = self._get_driver(printer)
         footers = driver.get_coupon_footers()
         return {"footers":footers}
         
-    def write_footers(self,request):
-        printer = eval(request.get('printer'))
-        params = eval(request.get('params'))
+    def write_footers(self,printer,params):
         footers = params.get('footers')
         driver = self._get_driver(printer)
         driver.set_coupon_footers(footers)
         return {"exec":True}
         
-    def get_supported_printers(self, request): 
+    def get_supported_printers(self, printer,params): 
         printers = base.get_supported_printers()
         for brand in printers:
             for i in range(0,len(printers[brand])):
