@@ -65,42 +65,17 @@ class printer(osv.Model):
     def _get_cpath(self, cr, uid, context=None):
         return "/fiscal_printer";
         
-    def get_assigned_printer(self, cr, uid, ids, context=None):
-        wrk = self.read_workstation(cr, uid, ids, context=context)
-        printer_id = self.search(cr, uid, [('workstation', '=', wrk),
-                                 ('enabled', '=', True)])
-        if printer_id:
-            return self.browse(cr, uid, printer_id)[0]
-        else:
-            return {}
-
-    def get_assigned_printer_web(self, cr, uid, ids, context=None):
+    def get_printer(self, cr, uid, json=False, context=None):
+        context = context or {}
         printer = {}
-        wrk = self.read_workstation(cr, uid, ids, context=context)
-        printer_id = self.search(cr, uid, [('workstation', '=', wrk),
+        wrk = self.read_workstation(cr, uid, [], context=context)
+        p_id = self.search(cr, uid, [('workstation', '=', wrk),
                                  ('enabled', '=', True)])
-        if printer_id:
-            data = self.browse(cr, uid, printer_id, context=context)[0]
-            taxes = [{"account_tax_id":tax.account_tax_id, 
-                      "code":tax.code} for tax in data.tax_rate_ids]
-
-            payments = [{"account_journal_id":payment.account_journal_id,
-                        "code":payment.code}
-                        for payment in data.payment_method_ids]
-
-            uoms = [{"product_uom_id":uom.product_uom_id,
-                    "code":uom.code} for uom in data.measure_unit_ids]
-
-            printer.update({
-                "name": data.name,
-                "brand": data.brand.brand_name,
-                "model": data.model.model_name,
-                "port": data.port,
-                "serial": data.serial,
-                "tax_rates": taxes,
-                "payment_methods": payments,
-                "meansure_units": uoms
-            })
+        if p_id:
+            if json:
+                printer = self._get_device(cr,uid,p_id,context=context)
+            else:
+                printer = self.browse(cr,uid,p_id,context=context)[0]
         return printer
 
     def read_workstation(self, cr, uid, ids, context=None):
@@ -252,7 +227,6 @@ class printer(osv.Model):
         return len(ids) <= 1
 
     def default_get(self, cr, uid, fields, context=None):
-        context = context or {}
         try:
             response = self.send_command(cr, uid, [],'get_supported_printers')
             printers = response
