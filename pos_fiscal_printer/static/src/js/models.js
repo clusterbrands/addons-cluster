@@ -30,7 +30,7 @@ function pos_fiscal_printer_models(instance, module){
             loaded = _super.prototype.load_server_data.call(this)
                 .then(function(){
                     model = new instance.web.Model('fiscal_printer.printer')
-                    return model.call('get_assigned_printer_web',[[]])
+                    return model.call('get_printer',[true,[]])
                 })
                 .then(function(printer){
                     self.set('printer',printer)
