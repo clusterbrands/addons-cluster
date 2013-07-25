@@ -1,6 +1,10 @@
 from openerp.osv.orm import except_orm
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+import urllib
+import urllib2
+from urllib2 import URLError, HTTPError
+import json
 
 
 class generic_device(osv.Model):
@@ -13,34 +17,40 @@ class generic_device(osv.Model):
         '''
         raise osv.except_osv(error, msg)
 
-    def _get_config(self, cr, uid, context=None):
-        self._print_error("Implementation error",
-                          _("The method _get_config() must be overriden"))
-
     def _get_cpath(self, cr, uid, context=None):
-        self._print_error("Implementation error",
+        self._print_error("NotImplementationError",
                           _("The method _get_cpath() must be overriden"))
+                          
+    def _get_device(self, cr, uid, ids,context=None):
+        if not ids:
+            return []
+        fields = self.read(cr,uid,ids,context=context)[0]
+        for field in fields:
+            value =  fields[field]
+            if isinstance(value,tuple):
+                fields[field] = self.resolve_2many_commands(cr,uid,field,[value[0]])[0]
+            elif isinstance(value,list):
+                fields[field] = self.resolve_2many_commands(cr,uid,field,value)
+        return fields
+        
 
-    def _make_command(self, cr, uid, command, params, config=True,
-                      context=None):
+    def _make_command(self, cr, uid, ids, command, params, context=None):
         context = context or {}
-        cfg = {}
-        url = "http://localhost:8069" + /
+        url = "http://localhost:8069" + \
             self._get_cpath(cr, uid, context=context)
-        if (config):
-            cfg = self._get_config(cr, uid, context=context)
+        device = self._get_device(cr, uid, ids, context=context)
         req_params = {
-            'command': command, 'params': params, 'config': cfg
+            'command': command, 'device': device, 'params': params,
         }
         req_params_str = urllib.urlencode(req_params)
         request = urllib2.Request(url, req_params_str)
         return request
 
-    def send_command(self, cr, uid, command, params={}, config=True,
-                     context=None):
+    def send_command(self, cr, uid, ids, command, params={}, context=None):
+
         context = context or {}
         response = {}
-        request = self._make_command(cr, uid, name, params, config,
+        request = self._make_command(cr, uid, ids, command, params, 
                                      context=context)
         try:
             response = urllib2.urlopen(request)

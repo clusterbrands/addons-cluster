@@ -39,9 +39,9 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
 
     _cp_path = '/fiscal_printer'
 
-    def _get_driver(self,printer):        
-        fiscal = FiscalPrinterEx(brand=printer.get('brand'),
-                    model=printer.get('model'),
+    def _get_driver(self,printer):      
+        fiscal = FiscalPrinterEx(brand=printer.get('brand').get("name"),
+                    model=printer.get('model').get("name"),
                     device=printer.get('port'))
         return fiscal
     
@@ -59,8 +59,7 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
     def read_workstation(self,request):
         return{"workstation":gethostname()}
         
-    def read_printer_serial(self,request):
-        printer = eval(request.get('printer'))
+    def read_printer_serial(self,printer,params):
         serial =""
         driver = self._get_driver(printer)
         serial = driver.get_serial()
@@ -215,9 +214,11 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
             return {"status":"error","error":str(e)}
         
     @openerp.addons.web.http.httprequest
-    def index(self, req, s_action=None, db=None, **kw):
+    def index(self, req, command,device,params):
         try:
-            values = getattr(self,kw['command'])(kw)
+            params = eval(params)
+            device = eval(device)
+            values = getattr(self,command)(device,params)
             response = {"status": 'ok',"values": values}
             return json.dumps(response)
         except Exception as e:

@@ -21,16 +21,10 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {
-    'name' : "Generic Device"
+    'name' : "Generic Device",
     'category' : "Test",
     'version' : "1.0",
     'author' : "Me",
     'description' : """Generic Device interface""",
-    #'init_xml': [
-    #    'data/fiscal_printer_data.xml'
-    # ],
-    #'data' : [        
-    #    'view/fiscal_printer_view.xml',
-    #    'view/fiscal_printer_action_menu.xml',
-    #],
+    'data' : [],
 }
