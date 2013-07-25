@@ -189,7 +189,7 @@ class printer(osv.Model):
                 headers.append(header.value)
                 header_ids.append(header.id)
         params = {'headers': headers}
-        response = send_command(cr, uid, ids, 'write_headers', params,
+        response = self.send_command(cr, uid, ids, 'write_headers', params,
                                 context=context)
         if (response.get('exec')):
             for id in header_ids:
