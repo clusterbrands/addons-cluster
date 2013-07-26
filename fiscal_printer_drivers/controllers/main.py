@@ -86,7 +86,6 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
     def write_tax_rates(self,printer,params):
         tax_rates = params.get('tax_rates')
         driver = self._get_driver(printer)
-        pdb.set_trace()
         driver.set_tax_rates(tax_rates)
     
     def read_headers(self,printer,params):
@@ -167,7 +166,7 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         client = receipt.get('client')
         order_lines = receipt.get('orderlines')
         payment_lines = receipt.get('paymentlines') 
-        printer_status = self.check_printer_status(printer)
+        printer_status = self.check_printer_status(printer,{})
         driver = self._get_driver(printer)
         driver.identify_customer(str(client.get('name')),
            str(client.get('address')), str(client.get('vat')))
@@ -190,8 +189,6 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
     @openerp.addons.web.http.jsonrequest
     def json(self, request,command,device,params):
         try:
-            import pdb
-            pdb.set_trace()
             values = getattr(self,command)(device,params)
             response = {"status": 'ok',"values": values}
             return response

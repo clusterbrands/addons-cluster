@@ -54,7 +54,6 @@ function pos_fiscal_printer_devices(instance,module){
             return ret;
         },
         print_receipt: function(receipt){
-            console.debug(receipt)
             return this.send_command('print_receipt',{receipt: receipt});
         },
         check_printer_status : function(){

@@ -21,10 +21,8 @@ function pos_client_models(instance, module){
                         'res.country',['id','code'],
                         [['id','=', config[0].country_id[0]]]);
                 }).then(function(country){
-                     //pos_config = self.get("pos_config");
                      module.country_id = country[0].id
                      module.country_code = country[0].code
-                     //self.set({'pos_config':pos_config})
                      return self.fetch('res.partner', ['name','vat','email',
                         'phone','mobile','street','street2','city','vat_subjected',
                         'wh_iva_agent','seniat_updated'],[['customer', '=', true],

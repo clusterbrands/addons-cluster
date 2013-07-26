@@ -33,7 +33,6 @@ function pos_fiscal_printer_models(instance, module){
                     return model.call('get_printer',[true,[]])
                 })
                 .then(function(printer){
-                    console.debug(self.proxy)
                     self.proxy.set_printer(printer)
                     self.set('printer',printer)
                 })                
@@ -89,7 +88,8 @@ function pos_fiscal_printer_models(instance, module){
             product = this.get_product();
             printer = this.pos.proxy.get_printer();
             taxes_ids = product.get('taxes_id');        
-            tax_rates = printer.tax_rates;
+            tax_rates = printer.tax_rate_ids;
+            console.debug(printer)
             tax = ""       
             _.each(taxes_ids,function(tax_id){
                 tax = _.detect(tax_rates,function(t){
@@ -97,7 +97,7 @@ function pos_fiscal_printer_models(instance, module){
                         }) 
             })
             uom_id = product.get('uom_id')[0]
-            measure_units = this.pos.get('printer').measure_units;
+            measure_units = printer.measure_unit_ids;
             
             unit = _.detect(measure_units,function(u){
                         return u.product_uom_id[0] == uom_id
@@ -118,7 +118,7 @@ function pos_fiscal_printer_models(instance, module){
         export_for_printing : function(){
             printer = this.pos.proxy.get_printer();
             account_journal_id = this.cashregister.get('journal_id')[0]
-            payment_methods = printer.payment_methods;
+            payment_methods = printer.payment_method_ids;
             payment_method = _.detect(payment_methods,function(p){
                                 return p.account_journal_id[0] == account_journal_id
                             })  

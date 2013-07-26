@@ -26,7 +26,6 @@ function pos_fiscal_printer_screens(instance,module){
     module.PaymentScreenWidget.include({
                
         validateCurrentOrder : function(){
-
             var self = this
             var currentOrder = this.pos.get('selectedOrder');           
             if(this.pos.iface_print_via_proxy){

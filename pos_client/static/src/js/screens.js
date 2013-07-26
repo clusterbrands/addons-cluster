@@ -18,7 +18,6 @@ function pos_client_screens(instance,module){
                 popup.appendTo($('.point-of-sale'));
                 popup.show("Error","Please select a customer    ");
                 popup.set_position("center",".point-of-sale");
-                
             }                
         }        
     })
