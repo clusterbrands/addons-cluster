@@ -24,14 +24,29 @@
 function pos_fiscal_printer_devices(instance,module){
     module.ProxyDevice.include({
         
-        message2 : function(name,params){
+        init: function(options){
+            this._super()
+            this.printer = {}
+        },   
+        set_printer:function(printer){
+            this.printer = printer;
+        }, 
+        get_printer:function(){
+            return this.printer;
+        },
+        send_command : function(command,params){
+            self = this
             var ret = new $.Deferred();
-            var callbacks = this.notifications[name] || [];
+            var callbacks = this.notifications[command] || [];
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
 
-            this.connection.rpc('/fiscal_printer/' + name, params || {}).done(function(result) {
+            this.connection.rpc('/fiscal_printer/json',{
+                command:command,
+                device:this.printer,
+                params: params || {},                            
+            }).done(function(result) {
                 ret.resolve(result);
             }).fail(function(error) {
                 ret.reject(error);
@@ -39,11 +54,11 @@ function pos_fiscal_printer_devices(instance,module){
             return ret;
         },
         print_receipt: function(receipt){
-            return this.message2('print_receipt',{receipt: receipt});
+            console.debug(receipt)
+            return this.send_command('print_receipt',{receipt: receipt});
         },
-        check_printer_status : function(printer){
-            console.debug(printer)
-            return this.message2('check_printer_status',{printer:printer})
+        check_printer_status : function(){
+            return this.send_command('check_printer_status')
         }
     })
 }

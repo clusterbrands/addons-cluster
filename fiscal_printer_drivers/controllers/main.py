@@ -51,7 +51,7 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
             raise Exception("The connected printer does not match with the configured for this POS")
         return True
     
-    def _check_printer_status(self,printer,params):
+    def check_printer_status(self,printer,params):
         driver = self._get_driver(printer)
         driver.check_printer_status()
         self._check_printer_serial(printer,driver)
@@ -163,12 +163,11 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
                 raise Exception("The payment method "+
                     payment.get("journal")+" is not configured for the current printer")
     
-    def _print_receipt(self,receipt):
-        printer = receipt.get('printer')
+    def _print_receipt(self,receipt,printer):
         client = receipt.get('client')
         order_lines = receipt.get('orderlines')
         payment_lines = receipt.get('paymentlines') 
-        printer_status = self._check_printer_status(printer)
+        printer_status = self.check_printer_status(printer)
         driver = self._get_driver(printer)
         driver.identify_customer(str(client.get('name')),
            str(client.get('address')), str(client.get('vat')))
@@ -183,22 +182,22 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
             driver.cancel()
             return {"status":"error","error":str(e)}            
        
-            
+    def print_receipt(self,printer,params):
+        receipt = params.get("receipt")
+        self._check_printer_params(receipt)
+        return self._print_receipt(receipt,printer) 
+        
     @openerp.addons.web.http.jsonrequest
-    def print_receipt(self, request, receipt):
+    def json(self, request,command,device,params):
         try:
-            self._check_printer_params(receipt)
-            return self._print_receipt(receipt) 
+            import pdb
+            pdb.set_trace()
+            values = getattr(self,command)(device,params)
+            response = {"status": 'ok',"values": values}
+            return response
         except Exception as e:
-            return {"status":"error","error":str(e)}
-    
-    @openerp.addons.web.http.jsonrequest
-    def check_printer_status(self, request,printer):
-        try:
-            self._check_printer_status(printer)
-            return {"status":"ok"}
-        except Exception as e:
-            return {"status":"error","error":str(e)}
+            response = {"status":'error',"error": str(e)}
+            return response
         
     @openerp.addons.web.http.httprequest
     def index(self, req, command,device,params):

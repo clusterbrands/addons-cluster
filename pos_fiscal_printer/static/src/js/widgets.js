@@ -29,16 +29,16 @@ function pos_fiscal_printer_widgets(instance, module){
             var self = this    
             pos = this._super()           
             return self.pos.ready.done(function() {
-                self.check_printer_status()
+                //self.check_printer_status()
             })
         },
         check_printer_status:function(){
-            var self = this    
-            printer = self.pos.get('printer')
+            var self = this   
+            printer = self.pos.proxy.get_printer()
             if (_.isEmpty(printer))
                 self.screen_selector.show_popup('not-printer-error');
             else
-                self.pos.proxy.check_printer_status(printer).done(function(response){                    
+                self.pos.proxy.check_printer_status().done(function(response){                    
                     if (response.status == "error"){
                         self.printer_error_popup.set_message(response.error)
                         self.screen_selector.show_popup('printer-error');
@@ -60,35 +60,10 @@ function pos_fiscal_printer_widgets(instance, module){
             
             this.print_error_popup = new module.PrintErrorPopupWidget(this,{})
             this.print_error_popup.appendTo($('.point-of-sale'));
-                    
-            this.screen_selector = new module.ScreenSelector({
-                pos: this.pos,
-                screen_set:{
-                    'products': this.product_screen,
-                    'payment' : this.payment_screen,
-                    'client_payment' : this.client_payment_screen,
-                    'scale_invite' : this.scale_invite_screen,
-                    'scale':    this.scale_screen,
-                    'receipt' : this.receipt_screen,
-                    'welcome' : this.welcome_screen,
-                },
-                popup_set:{
-                    'help': this.help_popup,
-                    'error': this.error_popup,
-                    'error-product': this.error_product_popup,
-                    'error-session': this.error_session_popup,
-                    'error-negative-price': this.error_negative_price_popup,
-                    'choose-receipt': this.choose_receipt_popup,
-                    'not-printer-error':this.not_printer_error_popup,
-                    'printer-error':this.printer_error_popup,
-                    'print-error':this.print_error_popup,
-                },
-                default_client_screen: 'welcome',
-                default_cashier_screen: 'products',
-                default_mode: this.pos.iface_self_checkout ?  'client' : 'cashier',
-            });
-
-          
+            
+            this.screen_selector.add_popup('not-printer-error',this.not_printer_error_popup)
+            this.screen_selector.add_popup('printer-error',this.printer_error_popup)
+            this.screen_selector.add_popup('print-error',this.print_error_popup)
         }
     })
       

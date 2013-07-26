@@ -33,6 +33,8 @@ function pos_fiscal_printer_models(instance, module){
                     return model.call('get_printer',[true,[]])
                 })
                 .then(function(printer){
+                    console.debug(self.proxy)
+                    self.proxy.set_printer(printer)
                     self.set('printer',printer)
                 })                
             return loaded
@@ -70,19 +72,12 @@ function pos_fiscal_printer_models(instance, module){
         export_for_printing : function(){
             order = _super2.prototype.export_for_printing.call(this);
             client  = this.get('client');
-            printer = this.pos.get('printer');
             street =  client ? client.street:""
             street2 = client ? client.street2:""
             order['client'] = {
                 vat: client ? client.vat:"",
                 name: order['client'],
                 address : street + " " + street2,
-            }
-            order['printer'] = {
-                model : printer.model,
-                brand : printer.brand,
-                port : printer.port,
-                serial : printer.serial
             }
             return order;
         }
@@ -92,8 +87,9 @@ function pos_fiscal_printer_models(instance, module){
     module.Orderline = module.Orderline.extend({
         export_for_printing : function(){          
             product = this.get_product();
+            printer = this.pos.proxy.get_printer();
             taxes_ids = product.get('taxes_id');        
-            tax_rates = this.pos.get('printer').tax_rates;
+            tax_rates = printer.tax_rates;
             tax = ""       
             _.each(taxes_ids,function(tax_id){
                 tax = _.detect(tax_rates,function(t){
@@ -120,14 +116,15 @@ function pos_fiscal_printer_models(instance, module){
             this.pos = options.pos
         },
         export_for_printing : function(){
-           account_journal_id = this.cashregister.get('journal_id')[0]
-           payment_methods = this.pos.get('printer').payment_methods;
-           payment_method = _.detect(payment_methods,function(p){
+            printer = this.pos.proxy.get_printer();
+            account_journal_id = this.cashregister.get('journal_id')[0]
+            payment_methods = printer.payment_methods;
+            payment_method = _.detect(payment_methods,function(p){
                                 return p.account_journal_id[0] == account_journal_id
                             })  
-           payment_line = _super4.prototype.export_for_printing.call(this)
-           payment_line.payment_method_code = payment_method ? payment_method.code:""
-           return payment_line
+            payment_line = _super4.prototype.export_for_printing.call(this)
+            payment_line.payment_method_code = payment_method ? payment_method.code:""
+            return payment_line
         }
     })
     

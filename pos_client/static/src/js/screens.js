@@ -1,5 +1,13 @@
 function pos_client_screens(instance,module){
     
+    module.ScreenSelector.include({
+        add_popup: function(popup_name, popup){
+            popup.hide();
+            this.popup_set[popup_name] = popup;
+            return this;
+        },
+    })    
+    
     module.PaymentScreenWidget.include({
         validateCurrentOrder : function(){
             currentOrder = this.pos.get('selectedOrder');
