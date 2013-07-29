@@ -29,7 +29,7 @@ function pos_fiscal_printer_widgets(instance, module){
             var self = this    
             pos = this._super()           
             return self.pos.ready.done(function() {
-                //self.check_printer_status()
+                self.check_printer_status()
             })
         },
         check_printer_status:function(){
