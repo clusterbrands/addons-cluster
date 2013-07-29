@@ -197,7 +197,7 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
             return response
         
     @openerp.addons.web.http.httprequest
-    def index(self, req, command,device,params):
+    def http(self, req, command,device,params):
         try:
             params = eval(params)
             device = eval(device)
