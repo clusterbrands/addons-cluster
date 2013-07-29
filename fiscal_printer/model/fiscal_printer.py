@@ -71,7 +71,10 @@ class printer(osv.Model):
         wrk = self.read_workstation(cr, uid, [], context=context)
         p_id = self.search(cr, uid, [('workstation', '=', wrk),
                                  ('enabled', '=', True)])
-        if p_id:
+        if not p_id:
+            self._print_error("Error",
+                              _("This POS does not have a configured fiscal printer"))
+        else:
             if json:
                 printer = self._get_device(cr,uid,p_id,context=context)
             else:

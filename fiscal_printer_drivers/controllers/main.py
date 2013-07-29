@@ -118,7 +118,12 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
             for i in range(0,len(printers[brand])):
                 printers[brand][i] = str(printers[brand][i]).split(".")[3]
         return printers
-    
+        
+    def has_pending_reduce(self, printer, params):
+        driver = self._get_driver(printer)
+        res = driver.has_pending_reduce()
+        return {"reduce":res}
+       
     
     def _add_items(self,driver,order_lines):
         for product in order_lines:
