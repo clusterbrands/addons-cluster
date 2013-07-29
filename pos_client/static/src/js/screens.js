@@ -9,15 +9,20 @@ function pos_client_screens(instance,module){
     })    
     
     module.PaymentScreenWidget.include({
+        
+        showCustomerPopup:function(){
+            popup = new module.CustomerAlert(this, {});
+            popup.appendTo($('.point-of-sale'));
+            popup.show("Error","Please select a customer    ");
+            popup.set_position("center",".point-of-sale");
+        },
+        
         validateCurrentOrder : function(){
             currentOrder = this.pos.get('selectedOrder');
             if(currentOrder.get_client()!= null)
-                this._super()
+                this._super();
             else{
-                popup = new module.CustomerAlert(this, {});
-                popup.appendTo($('.point-of-sale'));
-                popup.show("Error","Please select a customer    ");
-                popup.set_position("center",".point-of-sale");
+                this.showCustomerPopup();
             }                
         }        
     })

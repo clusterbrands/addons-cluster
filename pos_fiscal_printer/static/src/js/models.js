@@ -89,7 +89,6 @@ function pos_fiscal_printer_models(instance, module){
             printer = this.pos.proxy.get_printer();
             taxes_ids = product.get('taxes_id');        
             tax_rates = printer.tax_rate_ids;
-            console.debug(printer)
             tax = ""       
             _.each(taxes_ids,function(tax_id){
                 tax = _.detect(tax_rates,function(t){

@@ -27,23 +27,26 @@ function pos_fiscal_printer_screens(instance,module){
                
         validateCurrentOrder : function(){
             var self = this
-            var currentOrder = this.pos.get('selectedOrder');           
-            if(this.pos.iface_print_via_proxy){
-                this.pos.proxy.print_receipt(currentOrder.export_for_printing())
-                .done(function(response){
-                    if (response.status == "ok"){
-                        currentOrder.set_invoice_printer(response.serial)
-                        currentOrder.set_fiscal_printer(response.receipt_id)
-                        self.pos.push_order(currentOrder.exportAsJSON()) 
-                        self.pos.get('selectedOrder').destroy();
-                    }else{
-                        self.pos_widget.print_error_popup.set_message(response.error)
-                        self.pos_widget.screen_selector.show_popup('print-error');
-                    }
-                })
-            }else{
-                this.pos_widget.screen_selector.set_current_screen(this.next_screen);
-            } 
+            var currentOrder = this.pos.get('selectedOrder');
+            if (currentOrder.get_client()!= null){           
+                if(this.pos.iface_print_via_proxy){
+                    this.pos.proxy.print_receipt(currentOrder.export_for_printing())
+                    .done(function(response){
+                        if (response.status == "ok"){
+                            currentOrder.set_invoice_printer(response.serial)
+                            currentOrder.set_fiscal_printer(response.receipt_id)
+                            self.pos.push_order(currentOrder.exportAsJSON()) 
+                            self.pos.get('selectedOrder').destroy();
+                        }else{
+                            self.pos_widget.print_error_popup.set_message(response.error)
+                            self.pos_widget.screen_selector.show_popup('print-error');
+                        }
+                    })
+                }else{
+                    this.pos_widget.screen_selector.set_current_screen(this.next_screen);
+                } 
+            }else
+                this.showCustomerPopup();
         }
     })
 }
