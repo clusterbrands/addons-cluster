@@ -3,7 +3,7 @@
     <data>
         
        <record model="ir.actions.act_window" id="cashier_list_action">
-             <field name="name">Cashier</field>
+             <field name="name">Cashiers</field>
              <field name="res_model">pos.cashier.cashier</field>
              <field name="view_type">form</field>
              <field name="view_mode">tree,form</field>

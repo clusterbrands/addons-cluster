@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-<!--
-        <record model="ir.ui.view" id="view_employee_form_cashier">
-            <field name="name">view_employee_form.cashier</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
+        <record model="ir.ui.view" id="cashier_tree_view">
+            <field name="name">cashier.tree</field>
+            <field name="model">pos.cashier.cashier</field>
             <field name="arch" type="xml">
-                <field name="manager" position="after">
-                    <field name="country_id"/>
-                </field>
+                <tree string="cashier Tree">
+                    <field name="name" />
+                </tree>
+            </field>       
+        </record>
+        
+        <record model="ir.ui.view" id="cashier_form_view">
+            <field name="name">cashier.form</field>
+            <field name="model">pos.cashier.cashier</field>
+            <field name="arch" type="xml">
+                <form string="Cashier Form" version="7.0">
+                    <group>
+                        <field name="name"  placeholder="Name"/>
+                        <field name="password" password="True" placeholder="Password"/>
+                    </group>
+                </form>
             </field>
         </record>
--->
+
     </data>
 </openerp>
