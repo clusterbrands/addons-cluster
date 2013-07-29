@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+<!--
+        <record model="ir.ui.view" id="view_employee_form_cashier">
+            <field name="name">view_employee_form.cashier</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="manager" position="after">
+                    <field name="country_id"/>
+                </field>
+            </field>
+        </record>
+-->
+    </data>
+</openerp>
