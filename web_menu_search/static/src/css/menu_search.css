@@ -1,0 +1,13 @@
+.openerp .oe_menu_search {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  background-color: #414141;
+  background-color: #454343;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#646060), to(#262626));
+  background-image: -webkit-linear-gradient(top, #646060, #262626);
+  background-image: -moz-linear-gradient(top, #646060, #262626);
+  background-image: -ms-linear-gradient(top, #646060, #262626);
+  background-image: -o-linear-gradient(top, #646060, #262626);
+  background-image: linear-gradient(to bottom, #646060, #262626);
+}

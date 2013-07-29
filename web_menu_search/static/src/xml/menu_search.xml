@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="MenuSearch">
+    <span class="oe_menu_search">
+        <div class="oe_menu_search">
+            <input type="text" placeholder="Menu Search" id="menu_name" autocomplete="true"/>
+            <input type="hidden" id="menu_action"/>
+<!--            <span class="oe_m2o_drop_down_button">
+                <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' draggable="false"/>
+            </span>
+-->        </div>
+    </span>
+</t>
+</templates>
