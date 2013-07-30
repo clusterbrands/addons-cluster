@@ -24,7 +24,7 @@
     'name' : "Fiscal Printer",
     'category' : "Test",
     'version' : "1.0",
-    'depends':['l10n_ve_fiscal_requirements'],
+    'depends':['l10n_ve_fiscal_requirements','generic_device'],
     'author' : "Me",
     'description' : """Fiscal Printer""",
     'init_xml': [
