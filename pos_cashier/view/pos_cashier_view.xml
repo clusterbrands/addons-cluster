@@ -23,9 +23,5 @@
                 </form>
             </field>
         </record>
-        
-         <record model="ir.ui.view" id="cashier_login_form">
-            <field name="name">cashier.login.form</field>
-            <field name="model">pos.session.opening</field>
     </data>
 </openerp>

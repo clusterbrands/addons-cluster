@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>    
+        <record model="ir.ui.view" id="pos_cashier_session_opening">
+            <field name="name">pos.cashier.session.opening.wizard</field>
+            <field name="model">pos.cashier.session.opening</field>
+            <field name="arch" type="xml">
+                <form string="Open POS" version="7.0">  
+                    <p class="oe_grey">
+                        Please select your cashier and password
+                        to continue
+                    </p>
+                    <group>
+                        <field name="cashier_id" select="1" widget="selection" />
+                        <field name="password" password="True" />
+                    </group>
+                    <footer>
+                        <button name="open_session" type="object" string="Continue" class="oe_highlight"/> or 
+                        <button icon="gtk-stop" special="cancel"  string="Cancel" class="oe_link" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
+
+

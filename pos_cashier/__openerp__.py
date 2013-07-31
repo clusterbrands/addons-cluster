@@ -23,12 +23,13 @@
     'name' : "POS Cashier",
     'category' : "Test",
     'version' : "1.0",
-    'depends' : [],
+    'depends' : ["point_of_sale"],
     'author' : "Me",
     'description' : "",
     'data' : [
         'view/pos_cashier_view.xml',
         'view/pos_cashier_action_menu.xml',
+        'wizard/pos_cashier_session_opening.xml'
     ], 
     
 }
