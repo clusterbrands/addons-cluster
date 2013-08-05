@@ -29,7 +29,10 @@
     'data' : [
         'view/pos_cashier_view.xml',
         'view/pos_cashier_action_menu.xml',
-        'wizard/pos_cashier_session_opening.xml'
+        'view/point_of_sale_view.xml',
+        'wizard/pos_cashier_session_opening.xml',
+        'wizard/pos_session_opening.xml',
+        'workflow/point_of_sale_workflow.xml',
     ], 
     
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="pos_session_opening_cashier_form_view">
+            <field name="name">pos.session.opening.cashier.form.view</field>
+            <field name="model">pos.session.opening</field>
+            <field name="inherit_id" ref="point_of_sale.pos_session_opening_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='open_session_cb']" position="replace">
+                    <button name="open_session_cashier" type="object" string="New Session" 
+                        attrs="{'invisible' : ['|', ('pos_state', '!=', False),('pos_config_id','=',False)]}"
+                        class="oe_highlight" />
+                </xpath>
+                <xpath expr="//button[@name='open_ui']" position="replace">                    
+                    <button name="open_existing_session_cashier" type="object" string="Start Selling" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('opened',))]}" 
+                        class="oe_highlight" />
+                </xpath>                
+            </field>
+        </record>
+    </data>
+</openerp>
