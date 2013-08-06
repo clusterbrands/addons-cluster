@@ -33,17 +33,27 @@ class pos_cashier_session_opening(osv.osv_memory):
                                   
     def open_existing_session_cashier(self, cr, uid, ids, context=None):
         context = context or {}
+        wf_service = netsvc.LocalService("workflow")
         wizard = self.browse(cr, uid, ids[0], context=context)
         cashier = wizard.session_id.cashier_id
         if wizard.password == cashier.password:
             obj = self.pool.get("pos.session.opening")
             active_ids = context.get("active_ids")
-            res = self.pool.get("pos.session")
-            session = res.browse(cr, uid, wizard.session_id.id, context=context)
+            session_id = context.get("session_id")
+            session_obj = self.pool.get("pos.session");
+            session = session_obj.browse(cr, uid, session_id, context=context)
             if not context.get("close"):
                 return obj.open_ui(cr, uid, active_ids, context=context)
             else:
-                return obj.open_existing_session_cb_close(cr, uid, active_ids, context=context)
+                wf_service.trg_validate(uid, 'pos.session', session.id, 'close', cr)
+                return {
+                    'name': "Your Session",
+                    'type': 'ir.actions.act_window',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'pos.session.opening',
+                    'target':'inline',
+                }                    
         else:
             raise osv.except_osv("Error", 
                                   _("wrong cashier or password!"))   

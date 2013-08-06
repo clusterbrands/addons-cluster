@@ -15,7 +15,7 @@
                     <button name="open_existing_session_cashier" type="object" string="Start Selling" 
                         attrs="{'invisible' : [('pos_state', 'not in', ('opened',))]}" 
                         class="oe_highlight" />
-                </xpath>                
+                </xpath>
             </field>
         </record>
     </data>

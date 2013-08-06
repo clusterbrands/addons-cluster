@@ -32,7 +32,6 @@
         'view/point_of_sale_view.xml',
         'wizard/pos_cashier_session_opening.xml',
         'wizard/pos_session_opening.xml',
-        'workflow/point_of_sale_workflow.xml',
     ], 
     
 }
