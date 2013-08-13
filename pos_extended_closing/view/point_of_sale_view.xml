@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_pos_session_form_ex">
+            <field name="name">pos.session.form.view.ex</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree[@string='Statements']" position="replace">
+                    <tree string="Statements" editable="bottom" create="false" delete="false">
+                        <field name="name" />
+                        <field name="journal_id" />
+                        <field name="balance_start" readonly="1"/>
+                        <field name="total_entry_encoding" />
+                        <field name="balance_cash" />
+                        <field name="difference" />
+                        <field name="balance_end_real" readonly="1"/>                        
+                        <field name="currency" groups="base.group_multi_currency" />
+                        <field name="state" />
+                    </tree>
+                </xpath>                
+            </field>
+        </record>
+    </data>
+</openerp>
