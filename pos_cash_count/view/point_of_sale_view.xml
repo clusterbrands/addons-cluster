@@ -11,10 +11,10 @@
                         <field name="name" />
                         <field name="journal_id" />
                         <field name="balance_start" readonly="1"/>
-                        <field name="total_entry_encoding" />
-                        <field name="balance_cash" />
-                        <field name="difference" />
-                        <field name="balance_end_real" readonly="1"/>                        
+                        <field name="transactions_count" />              
+                        <field name="total_entry_encoding" />                        
+                        <field name="balance_end_real"/> 
+                        <field name="difference" />                       
                         <field name="currency" groups="base.group_multi_currency" />
                         <field name="state" />
                     </tree>
