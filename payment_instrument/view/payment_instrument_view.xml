@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="payment_instrument_form">
+            <field name="name">payment.instrument.form</field>
+            <field name="model">payment_instrument.instrument</field>
+            <field name="arch" type="xml">
+                <form string="form_string" version="7.0">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+                    <field name="rule_ids">
+                        <tree>
+                            <field name="name" class="oe_inline"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="payment_instrument_rule_form">
+            <field name="name">payment.instrument.rule.form</field>
+            <field name="model">payment_instrument.rule</field>
+            <field name="arch" type="xml">
+                <form string="form_string" version="7.0">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+                    <group cols="4">
+                        <separator colspan="4" string="Conditions"/>
+                        <field name="condition_select" />
+                        <field name="condition_range_min" attrs= "{'invisible':[('condition_select','not in',('range'))]}"/>
+                        <field name="condition_range_max" attrs= "{'invisible':[('condition_select','not in',('range'))]}"/>
+                        <separator colspan="4" string="Computation"/>
+                        <field name="amount_select" />
+                        <field name="amount_fix" attrs= "{'invisible':[('amount_select','not in',('fix'))]}"/>
+                        <field name="amount_percentage" attrs= "{'invisible':[('amount_select','not in',('percentage'))]}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
