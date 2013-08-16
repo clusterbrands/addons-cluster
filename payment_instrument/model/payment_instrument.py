@@ -16,7 +16,7 @@ class instrument(osv.Model):
     _columns = {
         'name': fields.char('Name', size=255, required=True),
         'journal_id': fields.many2one('account.journal', 'Journal'),
-        'rule_ids':fields.one2many('payment_instrument.rule', 'instrument_id', 'Rules'), 
+        'rule_ids': fields.one2many('payment_instrument.rule', 'instrument_id', 'Rules'), 
     }
 
 
@@ -30,8 +30,8 @@ class rule(osv.Model):
 
     _columns = {
         'name': fields.char('Name', size=255, required=True),
-        'instrument_id':fields.many2one('payment_instrument.instrument', 'Payment Instrument', required=True), 
-        'condition_select': fields.selection([('none', 'Always True'),('range','Range')], 'Condition Based on', select=True, required=True),
+        'instrument_id': fields.many2one('payment_instrument.instrument', 'Payment Instrument', required=True), 
+        'condition_select': fields.selection([('none', 'Always True'), ('range', 'Range')], 'Condition Based on', select=True, required=True),
         'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
         'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
         'amount_select': fields.selection([
