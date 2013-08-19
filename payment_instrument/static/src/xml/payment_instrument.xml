@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PaypadInstrumentButtonWidget">
+        <button class="paypad-button" >
+            <t t-esc="widget.instrument.type"/>
+        </button>
+        <br />
+    </t>
+</templates>

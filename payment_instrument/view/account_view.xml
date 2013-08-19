@@ -11,6 +11,7 @@
                         <field name="payment_instrument_ids">
                             <tree string="Payment Instruments">
                                 <field name="name" />
+                                <field name="type" />
                             </tree>
                         </field>
                     </page>
