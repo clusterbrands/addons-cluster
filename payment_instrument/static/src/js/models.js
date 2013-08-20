@@ -1,32 +1,19 @@
 function payment_instrument_models(instance, module) {
-   module.PosModel = module.PosModel.extend({        
-      load_server_data : function(){
-         var self = this;         
-         var loaded = this._super()
-            .then(function(){
-               instruments = new Array();
-               journals = self.get("journals");
-               _(journals).each(function(journal) {
-                  instruments.push(journal.payment_instrument_ids);
-               })
-               instrument_ids = _.flatten(instruments);
-               return self.fetch('payment_instrument.instrument', undefined, [['id','in', instrument_ids]]);
-            }).then(function(instruments){
-               self.set("payment_instruments",instruments);
-               console.debug(instruments);
-               // cash_registers = self.get("cashRegisters")
-               // cash_registers.each(function(register){
-               //    register.get("journal").payment_instrument_ids = new Array() 
-               //    _(instruments).each(function(instrument){
-               //       if (register.get("journal").id == instrument.journal_id[0]){
-               //          aux = [instrument.id,instrument.name];
-               //          register.get("journal").payment_instrument_ids.push(aux);
-               //       }
-               //    })
-               //    console.debug(register)
-               // })
-            })
-         return loaded;
-      }
-   })
+    module.PosModel = module.PosModel.extend({        
+        load_server_data : function(){
+            var self = this;         
+            var loaded = this._super()
+                .then(function(){
+                    instruments = new Array();
+                    journals = self.get("journals");
+                    _(journals).each(function(journal) {
+                        instruments.push(journal.payment_instrument_ids);
+                    })       
+                    return self.fetch('payment_instrument.instrument', undefined, [['id','in',_.flatten(instruments)]]);
+                }).then(function(instruments){
+                    self.set("payment_instruments",instruments);
+                })
+            return loaded;
+        }
+    })
 }

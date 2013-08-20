@@ -20,8 +20,7 @@ class instrument(osv.Model):
     def _get_type(self, cr, uid, ids, field_name, arg, context=None):
         result = dict.fromkeys(ids, "")
         for obj in self.browse(cr, uid, ids, context=context):
-            import pdb
-            pdb.set_trace()
+            result[obj.id] = dict(self.TYPES).get(obj.type)
         return result
 
     _columns = {

@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
+    <t t-name="BasePopup">
+        <div class="modal_dialog">
+            <div class="popup">
+                <div class="header">
+                    <span class="title"></span>
+                    <a href="#" class="close">
+                        <span class="ui-icon ui-icon-closethick">close</span>
+                    </a>
+                </div>
+                <div class="content">                     
+                </div>
+                <div class="footer">
+                    <div class="buttonset"></div>                                          
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="BankSelectorPopup" t-extend="BasePopup">
+        <t t-jquery="span.title" t-operation="inner">
+            Journal Selection
+        </t>
+        <t t-jquery="div.content" t-operation="inner">
+            <div style="min-width:400px;min-height:300px">              
+                <ul>
+                    <t t-foreach="widget.journals" t-as="journal">
+                        <li>
+                            <button style="min-width:135px;min-height:63px">
+                                <t t-esc="journal"></t>
+                            </button>
+                        </li>
+                    </t>
+                </ul>                             
+            </div>
+        </t>
+        <t t-jquery="div.buttonset" t-operation="append">
+            <button name="cancel" style="height:35px;width:110px">Cancel</button>
+        </t>
+    </t>
     <t t-name="PaypadInstrumentButtonWidget">
-        <button class="paypad-button" >
-            <t t-esc="widget.instrument.type"/>
+        <button class="label" >
+            <t t-esc="widget.instrument.type_desc"/>
         </button>
         <br />
     </t>

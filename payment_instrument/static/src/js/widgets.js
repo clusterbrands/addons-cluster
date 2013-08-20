@@ -1,5 +1,15 @@
 function payment_instrument_widgets(instance, module){
-    
+
+    module.PosWidget.include({
+        build_widgets: function(){
+            this._super();
+            var self = this;               
+            this.bank_selector = new module.BankSelectorPopup(this, {});
+            this.bank_selector.appendTo($('.point-of-sale'));            
+            this.screen_selector.add_popup('bank-selector',this.bank_selector)
+        }
+    });
+
     module.PaypadWidget.include({
         renderElement: function(){
             var self = this;
@@ -16,24 +26,33 @@ function payment_instrument_widgets(instance, module){
                 }
             });
             payment_instruments = this.pos.get('payment_instruments');
+            added = new Array()
             _(payment_instruments).each(function(instrument) {
-                console.debug(instrument)
-                var button = new module.PaypadInstrumentButtonWidget(self,{
-                    pos: self.pos,
-                    pos_widget : self.pos_widget,
-                    instrument: instrument,
-                });
-                button.appendTo(self.$el);  
-            })
+                if (_.indexOf(added,instrument.type) == -1){
+                    var button = new module.PaypadInstrumentButtonWidget(self,{
+                        pos: self.pos,
+                        pos_widget : self.pos_widget,
+                        instrument: instrument,
+                    });
+                    button.appendTo(self.$el);
+                    added.push(instrument.type);
+                }                
+            });
         }
     });
 
     module.PaypadInstrumentButtonWidget = module.PosBaseWidget.extend({
         template:'PaypadInstrumentButtonWidget',
+        events:{
+            "click":"onClick",
+        },
         init: function(parent, options){
-            this._super(parent, options);
+            this._super(parent, options);            
             this.instrument = options.instrument;
         },
-        template: 'PaypadInstrumentButtonWidget',
-    })
+        onClick: function(){
+            this.pos.set("instrument_type",this.instrument.type);
+            this.pos_widget.screen_selector.show_popup('bank-selector');
+        }
+    });
 }
