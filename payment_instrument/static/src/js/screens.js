@@ -97,7 +97,14 @@ function payment_instrument_screens(instance,module){
                     console.warn('TODO should not get there...?');
                     return;
             }
-            //falta
+            cash_registers = self.pos.get("cashRegisters");
+            cash_register = _(cash_registers.models).find(function(c) {
+                return c.get("journal").id == self.instrument.journal_id
+            })
+            journal = cash_register.get("journal")
+            journal.name = this.instrument.journal_name + " " + this.instrument.code ;
+            cash_register.set("journal",journal); 
+            self.pos.get('selectedOrder').addPaymentLine(cash_register);
             self.pos_widget.screen_selector.set_current_screen('payment');
         }       
     });
