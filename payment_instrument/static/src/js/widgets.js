@@ -6,7 +6,11 @@ function payment_instrument_widgets(instance, module){
             var self = this;               
             this.bank_selector = new module.BankSelectorPopup(this, {});
             this.bank_selector.appendTo($('.point-of-sale'));            
-            this.screen_selector.add_popup('bank-selector',this.bank_selector)
+            this.screen_selector.add_popup('bank-selector',this.bank_selector);
+
+            this.instrument_selector = new module.InstrumentSelectorPopup(this, {});
+            this.instrument_selector.appendTo($('.point-of-sale'));            
+            this.screen_selector.add_popup('instrument-selector',this.instrument_selector);
         }
     });
 

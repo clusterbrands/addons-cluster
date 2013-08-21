@@ -6,8 +6,13 @@
             <field name="model">payment_instrument.instrument</field>
             <field name="arch" type="xml">
                 <form string="form_string" version="7.0">
+                    <field name="image_small" widget="image" class="oe_avatar oe_left"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group cols="4">
-                        <field name="name"/>
+                        <field name="code" />
                         <field name="type" />
                     </group>
                     <field name="rule_ids">

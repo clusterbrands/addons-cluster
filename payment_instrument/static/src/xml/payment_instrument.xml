@@ -22,22 +22,41 @@
             Journal Selection
         </t>
         <t t-jquery="div.content" t-operation="inner">
-            <div style="min-width:400px;min-height:300px">              
-                <ul>
-                    <t t-foreach="widget.journals" t-as="journal">
-                        <li>
-                            <button style="min-width:135px;min-height:63px">
-                                <t t-esc="journal"></t>
-                            </button>
-                        </li>
-                    </t>
-                </ul>                             
+            <div class="button-bar">              
             </div>
         </t>
         <t t-jquery="div.buttonset" t-operation="append">
             <button name="cancel" style="height:35px;width:110px">Cancel</button>
         </t>
     </t>
+
+    <t t-name="BankActionButton">
+        <button style="width:140px;height:140px;float:left">
+            <img t-att-src='widget.instrument.journal_image' />
+            <div><t t-esc="widget.instrument.journal_name" /></div>
+        </button>
+    </t>
+
+    <t t-name="InstrumentSelectorPopup" t-extend="BasePopup">
+        <t t-jquery="span.title" t-operation="inner">
+            Instrument Selection
+        </t>
+        <t t-jquery="div.content" t-operation="inner">
+            <div class="button-bar">              
+            </div>
+        </t>
+        <t t-jquery="div.buttonset" t-operation="append">
+            <button name="cancel" style="height:35px;width:110px">Cancel</button>
+        </t>
+    </t>
+
+    <t t-name="InstrumentActionButton">
+        <button style="width:140px;height:140px;float:left">
+            <img t-att-src='widget.instrument.image' />
+            <div><t t-esc="widget.instrument.name" /></div>
+        </button>
+    </t>
+
     <t t-name="PaypadInstrumentButtonWidget">
         <button class="label" >
             <t t-esc="widget.instrument.type_desc"/>

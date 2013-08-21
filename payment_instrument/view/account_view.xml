@@ -6,6 +6,9 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_title']" position="before">
+                    <field name="image_small" widget="image" class="oe_avatar oe_left"/>   
+                </xpath>
                 <xpath expr="//page[last()]" position="after">
                     <page string="Payment Instruments">
                         <field name="payment_instrument_ids">
