@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+       <record model="ir.actions.act_window" id="cashier_list_action">
+             <field name="name">Cashiers</field>
+             <field name="res_model">cash.count.cashier</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+         
+        <menuitem 
+            name="Cashiers"
+            parent="point_of_sale.menu_point_config_product"
+            id="menu_point_config_cashier"
+            action="cashier_list_action" />
+        
+    </data>
+</openerp>

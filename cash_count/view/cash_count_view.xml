@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="cashier_tree_view">
+            <field name="name">cashier.tree</field>
+            <field name="model">cash.count.cashier</field>
+            <field name="arch" type="xml">
+                <tree string="cashier Tree">
+                    <field name="name" />
+                </tree>
+            </field>       
+        </record>
+        
+        <record model="ir.ui.view" id="cashier_form_view">
+            <field name="name">cashier.form</field>
+            <field name="model">cash.count.cashier</field>
+            <field name="arch" type="xml">
+                <form string="Cashier Form" version="7.0">
+                    <group>
+                        <field name="name"  placeholder="Name"/>
+                        <field name="password" password="True" placeholder="Password"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
