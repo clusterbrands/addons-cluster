@@ -101,9 +101,10 @@ function payment_instrument_screens(instance,module){
             cash_register = _(cash_registers.models).find(function(c) {
                 return c.get("journal").id == self.instrument.journal_id
             })
-            journal = cash_register.get("journal")
-            journal.name = this.instrument.journal_name + " " + this.instrument.code ;
-            cash_register.set("journal",journal); 
+            journal_id = cash_register.get("journal_id")
+            journal_id[1] = this.instrument.journal_name + " " + this.instrument.code ;
+            cash_register.set("journal_id",journal_id); 
+            cash_register.set("instrument_id",this.instrument.id);
             self.pos.get('selectedOrder').addPaymentLine(cash_register);
             self.pos_widget.screen_selector.set_current_screen('payment');
         }       

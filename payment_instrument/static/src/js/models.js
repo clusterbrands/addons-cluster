@@ -25,5 +25,21 @@ function payment_instrument_models(instance, module) {
                 })
             return loaded;
         }
+    });
+    
+    module.Paymentline = module.Paymentline.extend({
+        export_as_JSON: function(){
+            var self = this;
+            data = this._super();
+            _(data).extend({"instrument_id":self.cashregister.get("instrument_id")});
+            console.debug(data);
+            return data;
+        },
+        export_for_printing: function(){
+             var self = this;
+            data = this._super();
+            _(data).extend({"instrument_id":self.cashregister.get("instrument_id")});
+            return data;
+        },
     })
 }
