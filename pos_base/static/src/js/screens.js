@@ -12,7 +12,11 @@ function pos_base_screens(instance,module){
         template:"BasePopup",
         init: function(parent, options){
             this._super(parent, options);
-        },    
+            this.closeable = !(_(options).has('closeable'));
+        }, 
+        show: function(){
+            this.renderElement();
+        },   
         renderElement: function(){
             this._super();
             this.$("a.close").off('click').click(_.bind(this.closePopup,this));

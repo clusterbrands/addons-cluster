@@ -5,9 +5,11 @@
             <div class="popup">
                 <div class="header">
                     <span class="title"></span>
-                    <a href="#" class="close">
-                        <span class="ui-icon ui-icon-closethick">close</span>
-                    </a>
+                    <t t-if="widget.closeable">
+                        <a href="#" class="close">
+                            <span class="ui-icon ui-icon-closethick">close</span>
+                        </a>
+                    </t>
                 </div>
                 <div class="content">                     
                 </div>
