@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="BasePopup">
+        <div class="modal_dialog">
+            <div class="popup">
+                <div class="header">
+                    <span class="title"></span>
+                    <a href="#" class="close">
+                        <span class="ui-icon ui-icon-closethick">close</span>
+                    </a>
+                </div>
+                <div class="content">                     
+                </div>
+                <div class="footer">
+                    <div class="buttonset"></div>                                          
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
