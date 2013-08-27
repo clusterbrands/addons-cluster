@@ -24,7 +24,7 @@
     'name': "Cash Count",
     'category': "Generic Modules/Accounting",
     'version': "1.0",
-    'depends': ["point_of_sale"],
+    'depends': ['point_of_sale','pos_base'],
     'author': "Coorporacion ClusterBrands C.A",
     'description': """
 """,
@@ -35,11 +35,15 @@
     'js': [
         'static/src/js/backbone-super-min.js',
         'static/src/js/models.js',
-        'static/src/js/widgets.js',
+        'static/src/js/screens.js', 
+        'static/src/js/widgets.js',               
         'static/src/js/main.js',
     ],
-    'css': [
+    'css':[
+        'static/src/css/selectize.css',
         'static/src/css/pos.css',
     ],
-    'qweb': [],
+    'qweb': [
+        'static/src/xml/cash_count.xml',
+    ],
 }

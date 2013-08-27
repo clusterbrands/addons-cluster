@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    
+    <t t-name="LoginWidget" t-extend="BasePopup">
+        <t t-jquery="span.title" t-operation="inner">
+            Cashier Selection
+        </t>
+        <t t-jquery="div.content" t-operation="inner">
+            <div align="left" style="min-width:350px;">             
+                <ul>
+                    <li><label for="name">User</label></li>         
+                    <li><input  name="name" type="text" /></li>         
+                    <li><label for="password">Password</label></li>            
+                    <li><input name="password" type="password" /></li> 
+                </ul>
+            </div>
+        </t>
+        <t t-jquery="div.buttonset" t-operation="append">
+            <button name="validate" style="height:80px;width:90px">
+                <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
+                <div>Validate</div>
+            </button>
+            <button name="cancel" style="height:80px;width:90px">
+                <img src='/point_of_sale/static/src/img/icons/png48/system-log-out.png' />
+                <div>Cancel</div>
+            </button>     
+        </t>
+    </t>
+</templates>

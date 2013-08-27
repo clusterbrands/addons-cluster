@@ -11,4 +11,13 @@ function cash_count_models(instance, module){
             return loaded;
         },
     });
+
+
+    module.Session = Backbone.Model.extend({
+        defaults:{
+            "login_date": instance.web.datetime_to_str(new Date()),
+        },
+    });
+
+
 }
