@@ -31,14 +31,22 @@ function payment_instrument_models(instance, module) {
         export_as_JSON: function(){
             var self = this;
             data = this._super();
-            _(data).extend({"instrument_id":self.cashregister.get("instrument_id")});
-            console.debug(data);
+            instrument = self.cashregister.get("instrument");
+            if (instrument)
+                _(data).extend({
+                    "instrument_id": instrument.id,
+                });
             return data;
+
         },
         export_for_printing: function(){
-             var self = this;
+            var self = this;
             data = this._super();
-            _(data).extend({"instrument_id":self.cashregister.get("instrument_id")});
+            instrument = self.cashregister.get("instrument");
+            if (instrument)
+                _(data).extend({
+                    "journal": data.journal + ' ' + instrument.code,
+                });
             return data;
         },
     })

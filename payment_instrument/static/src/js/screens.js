@@ -89,7 +89,7 @@ function payment_instrument_screens(instance,module){
         },
         renderElement: function(){
             this._super();
-            this.$el.click(_.bind(this.onClickButton,this));
+            this.$el.off('click').click(_.bind(this.onClickButton,this));
         },
         onClickButton: function(){
             var self = this
@@ -101,11 +101,10 @@ function payment_instrument_screens(instance,module){
             cash_register = _(cash_registers.models).find(function(c) {
                 return c.get("journal").id == self.instrument.journal_id
             })
-            journal_id = cash_register.get("journal_id")
-            journal_id[1] = this.instrument.journal_name + " " + this.instrument.code ;
-            cash_register.set("journal_id",journal_id); 
-            cash_register.set("instrument_id",this.instrument.id);
-            self.pos.get('selectedOrder').addPaymentLine(cash_register);
+
+            cr = cash_register.clone();
+            cr.set("instrument",this.instrument);
+            self.pos.get('selectedOrder').addPaymentLine(cr);
             self.pos_widget.screen_selector.set_current_screen('payment');
         }       
     });

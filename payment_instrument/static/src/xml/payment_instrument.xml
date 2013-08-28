@@ -4,7 +4,7 @@
         <div class="modal_dialog">
             <div class="popup">
                 <div class="header">
-                    <span class="title"></span>
+                    <b><span class="title"></span></b>
                     <a href="#" class="close">
                         <span class="ui-icon ui-icon-closethick">close</span>
                     </a>
@@ -63,4 +63,29 @@
         </button>
         <br />
     </t>
+
+    <!-- Poin of sale overwritten templates -->
+    <t t-name="PaymentlineWidget" t-extend="PaymentlineWidget">
+        <t t-jquery="td.paymentline-type" t-operation="inner">
+            <t t-if="!widget.payment_line.get_cashregister().get('instrument')">
+                <t t-esc="widget.name"></t>
+            </t>
+            <t t-if="widget.payment_line.get_cashregister().get('instrument')">
+                <t t-esc="widget.name + ' '+ widget.payment_line.get_cashregister().get('instrument').code"></t>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="PosTicket" t-extend="PosTicket">
+        <t t-jquery="table:eq(2) tr td:eq(0)" t-operation="inner">
+           <t t-if="!pline.get_cashregister().get('instrument')">
+                <t t-esc="pline.get_cashregister().get('journal_id')[1]"/>
+           </t>
+           <t t-if="pline.get_cashregister().get('instrument')">
+                <t t-esc="pline.get_cashregister().get('journal_id')[1] + ' ' + pline.get_cashregister().get('instrument').code"/>
+           </t>
+        </t>
+    </t>
+
+
 </templates>
