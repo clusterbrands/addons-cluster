@@ -26,9 +26,9 @@ function cash_count_screens(instance, module){
         onClickBtnValidate:function(){
             var self = this;
             model = new instance.web.Model('cash.count.cashier');
-            model.call('validate',[this.name,this.password],null).done(function(id){
-                if (id){
-                    self.trigger('algo',true)
+            model.call('validate',[this.name,this.password],null).done(function(cashier){
+                if (!_.isEmpty(cashier)){
+                    self.trigger('auth',cashier)
                 }else{
                     self.$el.effect('shake',function(){
                         alert = new module.Alert(self,{draggable:false,title:'Error',msg:'Wrong user or password'});

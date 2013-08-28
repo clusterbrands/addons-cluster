@@ -7,9 +7,11 @@ class cashier(osv.Model):
 
     def validate(self, cr, uid, name, password, context=None):
         context = context or {}
-        res =  self.search(cr, uid, [('name','=',name),('password','=',password)], context=context)
-        return res and res[0] or False
-
+        ids =  self.search(cr, uid, [('name','=',name),('password','=',password)], context=context)
+        if ids:
+            return self.read(cr, uid, ids[0], ['name'], context=context)
+        else:
+            return {}
 
     _columns = {
         "name":fields.char(string="Name", size=50, required=True),
