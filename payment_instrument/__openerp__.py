@@ -24,7 +24,7 @@
     'name': "Payment Instrument",
     'category': "Generic Modules/Accounting",
     'version': "1.0",
-    'depends': ["point_of_sale"],
+    'depends': ['point_of_sale','pos_base'],
     'author': "Coorporacion ClusterBrands C.A",
     'description': """
 

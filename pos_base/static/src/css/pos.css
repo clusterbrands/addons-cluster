@@ -22,7 +22,7 @@
     text-align:center;
     font-size:20px;
     font-weight:bold;
-    background-color: white;
+    background-color: #F0EEEE;
     border-radius: 4px;
     box-shadow: 0px -1px white, 0px 1px white, 0px 4px #949494, 0px 10px 20px rgba(0, 0, 0, 0.3);
     z-index:1200;
@@ -37,11 +37,11 @@
 }
 
 .point-of-sale .modal_dialog .popup .footer{
-
     position: relative;
     background-color: #f5f5f5;
     border-top: 1px solid #ddd;
     width:100%;
+    height:100%;
 }
 
 .point-of-sale .modal_dialog .popup .footer .buttonset{
@@ -63,6 +63,7 @@
 
 .point-of-sale .modal_dialog .content{
     padding:.5em 1em;
+    overflow: hidden;
 }
 
 .point-of-sale .modal_dialog .popup .content input {
@@ -83,14 +84,13 @@
 .point-of-sale .modal_dialog .content label {
     font-weight:bold;
     color:#404040;
-}
+} 
 
 .point-of-sale .modal_dialog .content  input:disabled {
     background-color: rgb(235, 235, 228);
 }
 
 .point-of-sale .modal_dialog .popup button{
-    float:right;    
     text-align:center;
     margin:3px;
     font-size:   14px;
@@ -107,6 +107,7 @@
        -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
             box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
 }
+
 .point-of-sale .modal_dialog .popup button:hover {
     color: white;
     background: #7f82ac;
@@ -135,22 +136,6 @@
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .button-bar {
-    max-width:440px;
-    min-width: 300px;
-    min-height:160px;
+.point-of-sale .modal_dialog .popup button div{
+    margin-top: 5px;
 }
-
-
-
-
-
-    
-
-
-
-
-
-
-
-

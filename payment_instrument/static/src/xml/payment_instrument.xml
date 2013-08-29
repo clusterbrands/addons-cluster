@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="BasePopup">
-        <div class="modal_dialog">
-            <div class="popup">
-                <div class="header">
-                    <b><span class="title"></span></b>
-                    <a href="#" class="close">
-                        <span class="ui-icon ui-icon-closethick">close</span>
-                    </a>
-                </div>
-                <div class="content">                     
-                </div>
-                <div class="footer">
-                    <div class="buttonset"></div>                                          
-                </div>
-            </div>
-        </div>
-    </t>
     <t t-name="BankSelectorPopup" t-extend="BasePopup">
         <t t-jquery="span.title" t-operation="inner">
             Journal Selection
@@ -25,7 +8,7 @@
             <div class="button-bar">              
             </div>
         </t>
-        <t t-jquery="div.buttonset" t-operation="append">
+        <t t-jquery="div.buttonset" t-operation="inner">
             <button name="cancel" style="height:35px;width:110px">Cancel</button>
         </t>
     </t>
@@ -45,7 +28,7 @@
             <div class="button-bar">              
             </div>
         </t>
-        <t t-jquery="div.buttonset" t-operation="append">
+        <t t-jquery="div.buttonset" t-operation="inner">
             <button name="cancel" style="height:35px;width:110px">Cancel</button>
         </t>
     </t>
