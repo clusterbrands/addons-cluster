@@ -29,12 +29,10 @@ function cash_count_screens(instance, module){
             model.call('validate',[this.name,this.password],null).done(function(cashier){
                 if (!_.isEmpty(cashier)){
                     self.trigger('auth',cashier)
-                }else{
-                    self.$el.effect('shake',function(){
-                        alert = new module.Alert(self,{draggable:false,title:'Error',msg:'Wrong user or password'});
-                        alert.appendTo($('.point-of-sale'));
-                        alert.on('continue',self,self.onClickBtnCancel);
-                    });                    
+                }else{                   
+                    alert = new module.Alert(self,{draggable:false,title:'Error',msg:'Wrong user or password'});
+                    alert.appendTo($('.point-of-sale'));
+                    alert.on('continue',self,self.onClickBtnCancel);                                       
                 }
             });
         },
@@ -45,4 +43,40 @@ function cash_count_screens(instance, module){
             this.password = e.target.value;
         },
     });
+
+    module.CloseWidget =  module.BasePopup.extend({
+        template:"CloseWidget",
+        events:{
+            "click button[name='cancel']":"onClickBtnCancel",
+            "click button[name='reportx']":"onClickBtnReportX",
+        },
+        init: function(parent, options){
+            this._super(parent, options);
+        },
+        onClickBtnCancel: function(){
+            this.close();
+            this.hide();
+        },
+        onClickBtnReportX: function(){
+           this.pos_widget.screen_selector.show_popup('report-x')
+        },
+    });
+
+    module.ReportX =  module.BasePopup.extend({
+        template:"ReportX",
+        events:{
+            "click button[name='cancel']":"onClickBtnCancel",
+        },
+        init: function(parent, options){
+            this._super(parent, options);
+            console.debug(this.pos.get('payment_instruments'));
+        },
+        onClickBtnCancel: function(){
+            this.close();
+            this.hide();
+        },
+    });
+
+
+
 }

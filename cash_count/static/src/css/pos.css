@@ -1,2 +1,8 @@
+.button-center {
+    height:120px;
+    width:120px;
+}  
 
-
+.button-center div{
+    margin-top: 5px;
+}    

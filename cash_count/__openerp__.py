@@ -40,7 +40,6 @@
         'static/src/js/main.js',
     ],
     'css':[
-        'static/src/css/selectize.css',
         'static/src/css/pos.css',
     ],
     'qweb': [
