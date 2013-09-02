@@ -52,31 +52,25 @@ function cash_count_screens(instance, module){
         },
         init: function(parent, options){
             this._super(parent, options);
+
         },
         onClickBtnCancel: function(){
             this.close();
             this.hide();
         },
         onClickBtnReportX: function(){
-           this.pos_widget.screen_selector.show_popup('report-x')
+            this.pos_widget.screen_selector.set_current_screen('xreport');
         },
     });
 
-    module.ReportX =  module.BasePopup.extend({
-        template:"ReportX",
-        events:{
-            "click button[name='cancel']":"onClickBtnCancel",
-        },
+    module.XReportScreen = module.ScreenWidget.extend({
+        template:'XReportScreen',
         init: function(parent, options){
-            this._super(parent, options);
-            console.debug(this.pos.get('payment_instruments'));
+            this._super(parent, options);            
         },
-        onClickBtnCancel: function(){
-            this.close();
-            this.hide();
-        },
+        show: function(){
+            this._super();
+            this.pos_widget.set_cashier_controls_visible(false);
+        }
     });
-
-
-
 }

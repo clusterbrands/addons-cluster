@@ -17,7 +17,12 @@ function cash_count_widgets(instance, module){
             });                
         },
         build_widgets: function(){
-            this._super();         
+            this._super();  
+
+            this.x_report_screen = new module.XReportScreen(this,{});
+            this.x_report_screen.appendTo($('#rightpane'));
+            this.screen_selector.add_screen('xreport',this.x_report_screen);
+
             this.login_widget = new module.LoginWidget(this, {closeable:false});
             this.login_widget.appendTo($('.point-of-sale'));            
             this.screen_selector.add_popup('login-widget',this.login_widget);
@@ -26,16 +31,11 @@ function cash_count_widgets(instance, module){
             this.close_widget.appendTo($('.point-of-sale'));            
             this.screen_selector.add_popup('close-widget',this.close_widget);
 
-            this.report_x = new module.ReportX(this, {closeable:false,draggable:false});
-            this.report_x.appendTo($('.point-of-sale'));            
-            this.screen_selector.add_popup('report-x',this.report_x);
-
-
             _(this.close_button).extend({action:this.onClickBtnClose});
         },
         onClickBtnClose: function(){
             this.pos_widget.screen_selector.show_popup('close-widget');
-        }
+        },
     });
 
     module.UsernameWidget.include({
@@ -44,6 +44,5 @@ function cash_count_widgets(instance, module){
             return name + " - " + this.pos.get('active_cashier').name
         },
     });
-
         
 }

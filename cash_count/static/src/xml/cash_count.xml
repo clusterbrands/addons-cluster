@@ -53,26 +53,13 @@
             </button>     
         </t>
     </t>
-
-    <t t-name="ReportX" t-extend="BasePopup">
-        <t t-jquery="span.title" t-operation="inner">
-            Report X
+    <t t-name="XReportScreen" t-extend="PaymentScreenWidget"> 
+        <t t-jquery="header" t-operation="inner">
+            <h2>Report X</h2>
         </t>
-        <t t-jquery="div.content" t-operation="inner">
-            <div style="min-width:600px;min-height:300px;">
-                <div class="instrument-list">
-                </div>
-            </div>
-        </t>
-        <t t-jquery="div.buttonset" t-operation="inner">
-            <button name="save" style="height:80px;width:90px">
-                <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
-                <div>Save</div>
-            </button>
-            <button name="cancel" style="height:80px;width:90px">
-                <img src='/point_of_sale/static/src/img/icons/png48/system-log-out.png' />
-                <div>Cancel</div>
-            </button>     
-        </t>
+        <t t-jquery="div.footer" t-operation="replace">
+            <div></div>
+        </t>       
     </t>
+
 </templates>
