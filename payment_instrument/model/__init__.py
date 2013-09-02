@@ -1,2 +1,3 @@
 import account
 import payment_instrument
+import account_bank_statement

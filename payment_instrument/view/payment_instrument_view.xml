@@ -37,6 +37,7 @@
                         <field name="condition_range_min" attrs= "{'invisible':[('condition_select','not in',('range'))]}"/>
                         <field name="condition_range_max" attrs= "{'invisible':[('condition_select','not in',('range'))]}"/>
                         <separator colspan="4" string="Computation"/>
+                        <field name="condition_account_id" />
                         <field name="amount_select" />
                         <field name="amount_fix" attrs= "{'invisible':[('amount_select','not in',('fix'))]}"/>
                         <field name="amount_percentage" attrs= "{'invisible':[('amount_select','not in',('percentage'))]}"/>
