@@ -11,3 +11,4 @@ class account_bank_statement(osv.Model):
             'instrument_id':fields.many2one('payment_instrument.instrument',
                 'Payment Instrument', help="""Payment Instrument linked to Statement"""),
     }
+    _order = 'journal_id, instrument_id'
