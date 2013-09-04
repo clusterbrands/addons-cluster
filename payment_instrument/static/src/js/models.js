@@ -12,6 +12,18 @@ function payment_instrument_models(instance, module) {
                     return self.fetch('payment_instrument.instrument', undefined, [['id','in',_.flatten(instruments)]]);
                 }).then(function(instruments){
                     journals = self.get("journals");
+                    //if exist a cash journal add cash instrument to list
+                    cash_journal = _(journals).find(function(j){return j.type == "cash";});
+                    if (cash_journal){
+                        instruments.push({
+                            id : -1,
+                            name : 'Cash',
+                            type : 'cash',
+                            type_desc: 'Cash',
+                            code : 'CSH',
+                            journal_id : [cash_journal.id,cash_journal.name],
+                        });
+                    }
                     _(instruments).each(function(instrument){
                         journal = _(journals).find(function(j) {
                             return j.id == instrument.journal_id[0]
