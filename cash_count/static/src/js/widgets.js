@@ -43,6 +43,5 @@ function cash_count_widgets(instance, module){
             name = this._super();
             return name + " - " + this.pos.get('active_cashier').name
         },
-    });
-        
+    });      
 }

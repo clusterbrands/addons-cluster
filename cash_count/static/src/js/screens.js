@@ -65,12 +65,40 @@ function cash_count_screens(instance, module){
 
     module.XReportScreen = module.ScreenWidget.extend({
         template:'XReportScreen',
+        back_screen: 'products',
         init: function(parent, options){
-            this._super(parent, options);            
+            this._super(parent, options);          
         },
         show: function(){
+            var self = this;
             this._super();
             this.pos_widget.set_cashier_controls_visible(false);
-        }
+            this.paypad = new module.PaypadWidgetXReport(this, {});
+            this.paypad.replace($('#paypad'));
+            this.add_action_button({
+                label: _t('Back'),
+                icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
+                click: function(){  
+                     self.pos_widget.screen_selector.set_current_screen(self.back_screen);
+                     self.close();
+                }
+            });
+        },
+        close: function(){
+            this._super();
+            this.paypad = new module.PaypadWidget(this, {});
+            this.paypad.replace($('#paypad'));
+        },
     });
+
+    module.PaypadWidgetXReport = module.PaypadWidget.extend({
+        onInstrumentCashSelected: function(instrument){
+            
+        },
+        onInstrumentOtherSelected: function(instrument){
+            
+        },
+    })
+
+
 }
