@@ -1,121 +1,76 @@
 function payment_instrument_screens(instance,module){
     
-    module.BankActionButton = module.PosBaseWidget.extend({
-        template:"BankActionButton",
-        init: function(parent, options){
-            this._super(parent, options);
-            this.instrument = options.instrument;            
-        },
-        renderElement: function(){
-            this._super();
-            this.$el.click(_.bind(this.onClickButton,this));
-        },
-        onClickButton: function(){
-            this.pos.set("instrument_journal",this.instrument.journal_id);
-            this.pos_widget.screen_selector.show_popup('instrument-selector');
-        }       
-    });
-
     module.BankSelectorPopup = module.BasePopup.extend({
         template:"BankSelectorPopup",
         events:{
+            "click button[name!='cancel']":"onClickBtnJournal",
             "click button[name='cancel']":"onClickBtnCancel",
         },
         init: function(parent, options){
             this._super(parent, options);
-            this.journals = new Array();            
+            this.type = options.type || ""; 
+            this.instrument_journals = new Array();         
         },
-        show: function(){
-            this._super();
-            this.renderElement();
-            this.load_data();
-        },
-        load_data: function(){     
+        show: function(){     
             self = this;       
-            current_type = this.pos.get("instrument_type");
             payment_instruments = this.pos.get("payment_instruments");
-            var journals = new Array()
-            var keys = new Array()
-            _(payment_instruments).each(function(i){
-                if (i.type == current_type)
-                    if (_(keys).indexOf(i.journal_id)){
-                        var button = new module.BankActionButton(self,{
-                            pos: self.pos,
-                            pos_widget : self.pos_widget,
-                            instrument : i,
-                        });
-                        button.appendTo(self.$(".button-bar"));
-                        keys.push(i.journal_id);
-                    }
+            current_instruments = _(payment_instruments).filter(function(i) {
+                return i.type == self.type;
+            })
+            this.instrument_journals= _.uniq(current_instruments,false,function(i){
+                return i.journal_id;
             }); 
+            this.renderElement();
+        },
+        onClickBtnJournal: function(e){
+            var journal = this.$(e.currentTarget).attr('journal');
+            instrument_selector = new module.InstrumentSelectorPopup(this,{type:this.type,journal:journal});
+            instrument_selector.appendTo($('.point-of-sale'));
+            instrument_selector.show();
+            instrument_selector.on('done',this,this.InstrumentSelected);
         },
         onClickBtnCancel: function(){
             this.close();
             this.hide();
         },
-    });
-
-    module.InstrumentActionButton = module.PosBaseWidget.extend({
-        template:"InstrumentActionButton",
-        init: function(parent, options){
-            this._super(parent, options);
-            this.instrument = options.instrument;            
-        },
-        renderElement: function(){
-            this._super();
-            this.$el.off('click').click(_.bind(this.onClickButton,this));
-        },
-        onClickButton: function(){
-            var self = this
-            if (self.pos.get('selectedOrder').get('screen') === 'receipt'){  //TODO Why ?
-                    console.warn('TODO should not get there...?');
-                    return;
-            }
-            cash_registers = self.pos.get("cashRegisters");
-            cash_register = _(cash_registers.models).find(function(c) {
-                return c.get("journal").id == self.instrument.journal_id
-            })
-
-            cr = cash_register.clone();
-            cr.set("instrument",this.instrument);
-            self.pos.get('selectedOrder').addPaymentLine(cr);
-            self.pos_widget.screen_selector.set_current_screen('payment');
-        }       
+        InstrumentSelected:function(instrument){
+            this.trigger('done',instrument);
+            this.onClickBtnCancel();
+        }
     });
 
     module.InstrumentSelectorPopup = module.BasePopup.extend({
         template:"InstrumentSelectorPopup",
         events:{
+            "click button[name!='cancel']":"onClickBtnInstrument",
             "click button[name='cancel']":"onClickBtnCancel",
         },
         init: function(parent, options){
             this._super(parent, options);
-            this.journals = new Array();            
+            this.type = options.type || "";
+            this.journal = options.journal || "";
+            this.instruments = new Array();           
         },
         show: function(){
+            var self = this;
             this._super();
-            this.renderElement();
-            this.load_data();
-        },
-        load_data: function(){     
-            self = this;
-            current_type = this.pos.get("instrument_type");
-            current_journal = this.pos.get("instrument_journal");
             payment_instruments = this.pos.get("payment_instruments");
-            _(payment_instruments).each(function(i){
-                if (i.type == current_type){
-                    if (i.journal_id == current_journal){
-                        var button = new module.InstrumentActionButton(self,{
-                            pos: self.pos,
-                            pos_widget : self.pos_widget,
-                            instrument : i,
-                        });
-                        button.appendTo(self.$(".button-bar"));
-                    }
-                }     
-            });     
+            this.instruments = _(payment_instruments).filter(function(i) {
+                return (i.type == self.type && i.journal_id == self.journal);
+            });
+            this.renderElement();
+        },
+        onClickBtnInstrument: function(e){
+            var instrument_id = this.$(e.currentTarget).attr('instrument');
+            payment_instruments = this.pos.get("payment_instruments");
+            instrument = _(payment_instruments).find(function(i) {
+                return i.id == instrument_id;
+            })
+            this.trigger('done',instrument);
+            this.onClickBtnCancel();           
         },
         onClickBtnCancel: function(){
+         
             this.close();
             this.hide();
         },
