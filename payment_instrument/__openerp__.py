@@ -48,6 +48,7 @@ for the journals
         'view/account_view.xml',
         'view/payment_instrument_view.xml',
         'view/point_of_sale_view.xml',
+        'view/account_view.xml',
     ],
     'js': [
         'static/src/js/backbone-super-min.js',

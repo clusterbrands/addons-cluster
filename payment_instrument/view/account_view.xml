@@ -1,23 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_account_journal_payment_instrument_form">
-            <field name="name">account.journal.payment.instrument.form</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_journal_form"/>
+
+        <record model="ir.ui.view" id="view_bank_statement_inherit_tree">
+            <field name="name">Bank Statements</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@class='oe_title']" position="before">
-                    <field name="image_small" widget="image" class="oe_avatar oe_left"/>   
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="instrument_id" />
                 </xpath>
-                <xpath expr="//page[last()]" position="after">
-                    <page string="Payment Instruments">
-                        <field name="payment_instrument_ids">
-                            <tree string="Payment Instruments">
-                                <field name="name" />
-                                <field name="type" />
-                            </tree>
-                        </field>
-                    </page>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_bank_statement_inherit_form">
+            <field name="name">Bank Statements</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="instrument_id" />
                 </xpath>
             </field>
         </record>
