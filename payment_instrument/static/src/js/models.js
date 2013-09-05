@@ -34,7 +34,9 @@ function payment_instrument_models(instance, module) {
                                     ['pos_session_id', '=', self.get('pos_session').id], 
                                     ['instrument_id','=',instrument.id]]
                         ).then(function(stm){
-                           instrument.statement_id = stm[0].id;
+                           if (stm.length > 0) {
+                                instrument.statement_id = stm[0].id;
+                           }
                         });
                         instrument.journal_name = journal.name;
                         instrument.journal_id = journal.id;
