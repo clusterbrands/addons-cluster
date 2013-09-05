@@ -10,7 +10,7 @@ function cash_count_widgets(instance, module){
                 login_widget = new module.LoginWidget(this, {closeable:false,draggable:false});
                 login_widget.appendTo($('.point-of-sale'));
                 login_widget.on('auth',this,function(cashier){
-                    self.pos.set('active_cashier',cashier)
+                    self.pos.set('current_cashier',cashier)
                     instance.web.blockUI();
                     _start.call(self);
                 });    
@@ -41,7 +41,7 @@ function cash_count_widgets(instance, module){
     module.UsernameWidget.include({
         get_name: function(){
             name = this._super();
-            return name + " - " + this.pos.get('active_cashier').name
+            return name + " - " + this.pos.get('current_cashier').name
         },
     });      
 }

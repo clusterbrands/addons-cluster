@@ -53,6 +53,7 @@
             </button>     
         </t>
     </t>
+
     <t t-name="XReportScreen" t-extend="PaymentScreenWidget"> 
         <t t-jquery="header" t-operation="inner">
             <h2>Report X</h2>
@@ -60,5 +61,48 @@
         <t t-jquery="div.footer" t-operation="replace">
             <div></div>
         </t>       
+    </t>
+
+    <t t-name="OrderWidgetXReport" t-extend="OrderWidget"> 
+        <t t-jquery="ul.orderlines" t-operation="replace">
+            <li class="orderline empty title">
+                <span>Report Details</span>
+            </li>
+            <li class="orderline">
+                <span class="column-name">Cashier:</span>
+                <span><t t-esc="widget.getCashierName()"></t></span>
+            </li>
+            <li class="orderline">
+                <span class="column-name">User:</span>
+                <span><t t-esc="widget.getUserName()"></t></span>
+            </li>
+            <li class="orderline">
+                <span class="column-name">POS:</span>
+                <span><t t-esc="widget.getPosName()"></t></span>
+            </li>
+            <li class="orderline">
+                <span class="column-name">Date:</span>
+                <span><t t-esc="widget.getDate()"></t></span>
+            </li>
+             <li class="orderline">
+                <span class="column-name">Time:</span>
+                <span><t t-esc="widget.getTime()"></t></span>
+            </li>
+        </t>
+         <t t-jquery="div.summary" t-operation="replace">
+            <div></div>
+        </t>
+    </t>
+
+    <t t-name="XReportLineWidget">
+        <tr class="paymentline">
+            <td class="paymentline-type">
+                <t t-esc="widget.line.get_instrument()"/>
+            </td>
+            <td class="paymentline-amount pos-right-align">
+                <input type="text" t-att-value="widget.line.get_amount().toFixed(2)" />
+                <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
+            </td>
+        </tr>
     </t>
 </templates>

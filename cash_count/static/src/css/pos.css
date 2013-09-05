@@ -10,3 +10,17 @@
     font-size:13px;
 }
 
+.point-of-sale .order .title {
+    margin-bottom: 16px;
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: underline;
+    color: #555555;
+}
+
+.point-of-sale .order .orderline .column-name {
+    display:inline-block;
+    width:50%;
+    font-weight: bold;
+}
+
