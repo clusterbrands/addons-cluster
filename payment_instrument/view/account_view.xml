@@ -38,7 +38,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='journal_id']" position="after">
-                    <field name="instrument_id" />
+                    <field name="instrument_id" readonly="1" />
                 </xpath>
             </field>
         </record>
