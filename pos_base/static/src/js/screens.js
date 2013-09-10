@@ -21,9 +21,14 @@ function pos_base_screens(instance,module){
         renderElement: function(){
             this._super();
             this.$("a.close").off('click').click(_.bind(this.closePopup,this));
-            this.$('.popup').position({my:"center",of:".point-of-sale"});
+            $(window).unbind();
+            $(window).bind('resize',this.set_position);
+            this.set_position();
             if (this.draggable)
                 this.$('.popup').draggable();
+        },
+        set_position: function(){
+            this.$('.popup').position({my:"center",of:".point-of-sale"});
         },
         closePopup:function(e){
             this.close();
