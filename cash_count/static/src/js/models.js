@@ -28,6 +28,11 @@ function cash_count_models(instance, module){
         get_amount: function(){
             return this.get('amount');
         },
+        set_amount: function(newAmount){
+            var amount = parseFloat(newAmount);
+            if (amount >= 0)
+                this.set('amount',amount); 
+        },
         get_instrument: function(){
             instrument = this.get('instrument');
             return instrument.journal_name + ' - ' + instrument.code;
@@ -50,12 +55,25 @@ function cash_count_models(instance, module){
                 'printer_number':null,
                 'lines': new module.XReportLineCollection(),
             })
+            this.selectedLine = null;
             return this;
         },
         addLine: function(instrument){
-            line = new module.XReportLine({pos:this.pos});
-            line.set('instrument',instrument);
-            this.get('lines').add(line);
+            lines = this.get('lines');
+            l = lines.where({instrument:instrument});
+            if (l.length == 0){
+                line = new module.XReportLine({});
+                line.set('instrument',instrument);
+                lines.add(line);
+            }else{
+                l[0].trigger('focus');
+            }
+        },
+        selectLine: function(line){
+            this.selectedLine = line;
+        },
+        getSelectedLine: function(){
+            return this.selectedLine;
         },
         getTotal: function(){
             return (this.get('lines')).reduce((function(sum, line){

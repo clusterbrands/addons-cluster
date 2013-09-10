@@ -54,19 +54,38 @@
         </t>
     </t>
 
-    <t t-name="XReportScreen" t-extend="PaymentScreenWidget"> 
-        <t t-jquery="header" t-operation="inner">
-            <h2>Report X</h2>
-        </t>
-        <t t-jquery="div.footer" t-operation="replace">
-            <div></div>
-        </t>       
+    <t t-name="XReportScreen"> 
+        <div id="payment-screen" class="screen">
+            <div class="XReportInstrumentWidget-placeholder"></div>
+        </div>
+    </t>
+
+    <t t-name="XReportInstrumentWidget">
+        <div class="instrument-container">
+            <div class="instrument-scroller">
+                <div class="pos-step-container">
+                    <div class="pos-payment-container">
+                        <br />
+                        <div class="header">
+                            <span class="left-block">
+                                Total:
+                            </span>
+                            <span class='right-block' id="payment-due-total"></span>
+                        </div>
+                        <table id="paymentlines">
+                        </table>
+                    </div>
+                    <br/>
+                </div>
+                <div class="placeholder-ScrollbarWidget"></div>
+            </div>
+        </div>
     </t>
 
     <t t-name="OrderWidgetXReport" t-extend="OrderWidget"> 
         <t t-jquery="ul.orderlines" t-operation="replace">
             <li class="orderline empty title">
-                <span>Report Details</span>
+                <span>Report X</span>
             </li>
             <li class="orderline">
                 <span class="column-name">Cashier:</span>
@@ -94,7 +113,7 @@
         </t>
     </t>
 
-    <t t-name="XReportLineWidget">
+    <t t-name="XReportInstrumentLineWidget">
         <tr class="paymentline">
             <td class="paymentline-type">
                 <t t-esc="widget.line.get_instrument()"/>
