@@ -39,5 +39,5 @@ Main features
     'js': [],
     'css': [],
     'qweb': [],
-    'auto_install': True
+    'auto_install': True,
 }

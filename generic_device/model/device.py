@@ -36,8 +36,9 @@ class generic_device(osv.Model):
 
     def _make_command(self, cr, uid, ids, command, params, context=None):
         context = context or {}
-        url = "http://localhost:8069" + \
-            self._get_cpath(cr, uid, context=context)
+        remote_address = context.get('remote_addr') or '127.0.0.1';
+        url = "http://"+remote_address+":8069"
+        url+=  self._get_cpath(cr, uid, context=context)           
         device = self._get_device(cr, uid, ids, context=context)
         req_params = {
             'command': command, 'device': device, 'params': params,

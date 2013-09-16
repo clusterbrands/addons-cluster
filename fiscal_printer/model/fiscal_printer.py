@@ -230,11 +230,9 @@ class printer(osv.Model):
         return len(ids) <= 1
 
     def default_get(self, cr, uid, fields, context=None):
-        try:
-            response = self.send_command(cr, uid, [],'get_supported_printers')
-            printers = response
-        except:
-            return ""
+        context = context or {}
+        response = self.send_command(cr, uid, [],'get_supported_printers',context=context)
+        printers = response
 
         pb_obj = self.pool.get('fiscal_printer.brand')
         pm_obj = self.pool.get('fiscal_printer.model')
