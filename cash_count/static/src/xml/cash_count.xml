@@ -20,9 +20,9 @@
                 <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
                 <div>Validate</div>
             </button>
-            <button name="cancel" style="height:80px;width:90px">
-                <img src='/point_of_sale/static/src/img/icons/png48/system-log-out.png' />
-                <div>Cancel</div>
+            <button name="clear" style="height:80px;width:90px">
+                <img src='/cash_count/static/src/img/clear.png' />
+                <div>Clear</div>
             </button>     
         </t>
     </t>
@@ -64,6 +64,7 @@
         <div class="screen">
         </div>
     </t>
+
 
     <t t-name="XReportInstrumentWidget">
         <div class="instrument-container">

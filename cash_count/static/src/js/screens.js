@@ -3,7 +3,7 @@ function cash_count_screens(instance, module){
     module.LoginWidget = module.BasePopup.extend({
         template:"LoginWidget",
         events:{
-            "click button[name='cancel']":"onClickBtnCancel",
+            "click button[name='clear']":"onClickBtnCancel",
             "click button[name='validate']":"onClickBtnValidate",
             "change input[name='name']": "onChangeTxtName",
             "change input[name='password']":"onChangeTxtPassword",
@@ -56,8 +56,19 @@ function cash_count_screens(instance, module){
         show: function(){
             this._super();
             this.pos_widget.set_cashier_controls_visible(false);
-            login_widget = new module.LoginWidget(this, {closeable:false,draggable:false});
+
+            login_widget = new module.LoginWidget(this, {modal:false,closeable:false,draggable:false});
             login_widget.appendTo($('.point-of-sale'));
+
+            this.add_action_button({
+                label: _t('Close'),
+                icon: '/point_of_sale/static/src/img/icons/png48/system-log-out.png',
+                click: function(){  
+                     self.pos_widget.screen_selector.set_current_screen(self.back_screen);
+                     self.close();
+                }
+            });
+
         },
     });
 
