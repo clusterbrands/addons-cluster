@@ -10,6 +10,10 @@ function cash_count_widgets(instance, module){
             this.loging_screen.appendTo($('#rightpane'));
             this.screen_selector.add_screen('login-screen',this.loging_screen);
 
+            this.opening_screen = new module.OpeningScreen(this,{});
+            this.opening_screen.appendTo($('#rightpane'));
+            this.screen_selector.add_screen('opening_screen',this.opening_screen);
+
             this.x_report_screen = new module.XReportScreen(this,{});
             this.x_report_screen.appendTo($('#rightpane'));
             this.screen_selector.add_screen('xreport',this.x_report_screen);
@@ -36,6 +40,53 @@ function cash_count_widgets(instance, module){
             cashier = this.pos.get('current_cashier')
             if (cashier)
                 return name + " - " + cashier.name
+        },
+    });
+
+    module.OpeningWidget = module.BasePopup.extend({
+        template:"OpeningWidget",
+        events:{
+            "click button[name='validate']":"onClickBtnValidate",
+            "click button[name='clear']":"onClickBtnClear",
+        },
+        init: function(parent, options){
+            this._super(parent, options);
+            this.cashier = this.pos.get('current_cashier').name;
+            this.pos_config = this.pos.get('pos_config').name;
+            this.amount = 0
+            this._watch = setInterval(this.proxy('updateTime'), 500);
+        },
+        renderElement: function(){
+            this._super();
+            this.$("input[name=amount]").focus();
+        },
+        destroy: function(){
+            if (this._watch) {
+                clearInterval(this._watch);
+            }
+            this._super();
+        },
+        onClickBtnValidate: function(){
+            var self = this
+            var msg = "Are you sure to start this POS with the initial amount ";
+            msg+= this.amount.toFixed(2) + " ?"
+            confirm = new module.Confirm(this,{title:"Confirm",msg:msg});
+            confirm.appendTo($('.point-of-sale'));
+            confirm.on('no',this,this.renderElement);
+            confirm.on('yes',this,this.validate)
+        },
+        onClickBtnClear: function(){
+            this.amount = 0
+            this.renderElement();
+        },
+        validate: function(){
+            this.hide();
+            this.close();
+            this.pos_widget.screen_selector.set_current_screen('products');
+        },
+        updateTime: function(){
+            current_time = instance.web.time_to_str(new Date());
+            this.$("input[name='time']").val(current_time)
         },
     });      
 

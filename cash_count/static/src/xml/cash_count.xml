@@ -27,6 +27,46 @@
         </t>
     </t>
 
+    <t t-name="OpeningWidget" t-extend="BasePopup">
+        <t t-jquery="span.title" t-operation="inner">
+            Starting Balance
+        </t>
+        <t t-jquery="div.content" t-operation="inner">
+            <div style="min-width:350px;">             
+                <table>
+                    <tr>
+                        <td>Cashier:</td>
+                        <td><input  name="cashier" type="text" t-att-value="widget.cashier" /></td>
+                    </tr>
+                    <tr>
+                        <td>POS:</td>
+                        <td><input  name="pos" type="text" t-att-value="widget.pos_config"/></td>
+                    </tr>
+                    <tr>
+                        <td>Time:</td>
+                        <td><input  name="time" type="text"  /></td>
+                    </tr>
+                    <tr>
+                        <td>Amount:</td>
+                        <td><input  name="amount" type="text" t-att-value="widget.amount.toFixed(2)" /></td>
+                    </tr>
+                </table>
+            </div>
+        </t>
+        <t t-jquery="div.buttonset" t-operation="append">
+            <button name="validate" style="height:80px;width:90px">
+                <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
+                <div>Validate</div>
+            </button>
+            <button name="clear" style="height:80px;width:90px">
+                <img src='/cash_count/static/src/img/clear.png' />
+                <div>Clear</div>
+            </button>     
+        </t>
+    </t>
+
+
+
     <t t-name="CloseWidget" t-extend="BasePopup">
         <t t-jquery="span.title" t-operation="inner">
             Select an option
@@ -62,9 +102,15 @@
 
     <t t-name="LoginScreen"> 
         <div class="screen">
+            <header><h2>Login Screen</h2></header>
         </div>
     </t>
 
+    <t t-name="OpeningScreen"> 
+        <div class="screen">
+            <header><h2>Cash Control</h2></header>
+        </div>
+    </t>
 
     <t t-name="XReportInstrumentWidget">
         <div class="instrument-container">
