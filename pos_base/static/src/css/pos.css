@@ -5,10 +5,10 @@
     width: 100%;
     height:100%;
     background-color: rgba(0,0,0,0.5);
-    z-index:1000;
+    z-index:1200;
 }
 
-.point-of-sale .modal_dialog .popup{
+.point-of-sale .popup{
     position: absolute;
     left:50%;
     top:50%;
@@ -25,10 +25,10 @@
     background-color: #F0EEEE;
     border-radius: 4px;
     box-shadow: 0px -1px white, 0px 1px white, 0px 4px #949494, 0px 10px 20px rgba(0, 0, 0, 0.3);
-    z-index:1200;
+    z-index:1000;
 }
 
-.point-of-sale .modal_dialog .popup .header{
+.point-of-sale  .popup .header{
     width:100%;
     height:35px;
     border-bottom: 1px solid #E0DDDD;
@@ -36,7 +36,7 @@
     cursor:move;
 }
 
-.point-of-sale .modal_dialog .popup .footer{
+.point-of-sale  .popup .footer{
     position: relative;
     background-color: #f5f5f5;
     border-top: 1px solid #ddd;
@@ -44,11 +44,11 @@
     height:100%;
 }
 
-.point-of-sale .modal_dialog .popup .footer .buttonset{
+.point-of-sale  .popup .footer .buttonset{
     padding: 0.4em 0.2em;
 }
 
-.point-of-sale .modal_dialog .popup .header .title{
+.point-of-sale  .popup .header .title{
     width: 95%;
     float: left;
     text-align: left;
@@ -56,17 +56,17 @@
     top: 50%;
 }
 
-.point-of-sale .modal_dialog .popup .header .close{
+.point-of-sale  .popup .header .close{
     float: left;
     width: 5%;    
 }
 
-.point-of-sale .modal_dialog .content{
+.point-of-sale  .content{
     padding:.5em 1em;
     overflow: hidden;
 }
 
-.point-of-sale .modal_dialog .popup .content input {
+.point-of-sale .popup .content input {
     -webkit-border-radius: 3px;
     border: 1px solid #cccccc;
     border-radius: 3px;
@@ -77,20 +77,20 @@
     height:35px;
 }
 
-.point-of-sale .modal_dialog .popup li {
+.point-of-sale .popup li {
     margin-top: 3px;
 }
 
-.point-of-sale .modal_dialog .content label {
+.point-of-sale .content label {
     font-weight:bold;
     color:#404040;
 } 
 
-.point-of-sale .modal_dialog .content  input:disabled {
+.point-of-sale .content  input:disabled {
     background-color: rgb(235, 235, 228);
 }
 
-.point-of-sale .modal_dialog .popup button{
+.point-of-sale .popup button{
     text-align:center;
     margin:3px;
     font-size:   14px;
@@ -108,7 +108,7 @@
             box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
 }
 
-.point-of-sale .modal_dialog .popup button:hover {
+.point-of-sale .popup button:hover {
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -122,7 +122,7 @@
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .modal_dialog .popup button:focus {
+.point-of-sale .popup button:focus {
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -136,6 +136,15 @@
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .modal_dialog .popup button div{
+.point-of-sale .popup button div{
     margin-top: 5px;
+}
+
+.point-of-sale .popup  td {
+    padding:2px 4px 2px;
+    vertical-align: middle;
+}
+
+.point-of-sale .popup td:first-child{
+    border-right: 1px solid #dddddd;
 }

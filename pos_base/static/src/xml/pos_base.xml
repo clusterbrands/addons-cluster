@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="BasePopup">
-        <div class="modal_dialog">
+        <div>
             <div class="popup">
                 <div class="header">
                     <span class="title"></span>
@@ -33,6 +33,24 @@
         </t>
         <t t-jquery="div.buttonset" t-operation="append">
             <button name="continue" style="height:35px;width:110px">Continue</button>
+        </t>
+    </t>
+
+    <t t-name="Confirm" t-extend="BasePopup">
+        <t t-jquery="span.title" t-operation="inner">
+            <t t-esc="widget.title"/>
+        </t>
+        <t t-jquery="div.content" t-operation="append">
+            <p>
+                <img src='/pos_base/static/src/img/alert.png' />
+                <span style="font-weight:bold;font-size:16px">
+                    <t t-esc="widget.msg"/>
+                </span>   
+            </p>
+        </t>
+        <t t-jquery="div.buttonset" t-operation="append">
+            <button name="yes" style="height:35px;width:110px">Yes</button>
+            <button name="no" style="height:35px;width:110px">No</button>
         </t>
     </t>
 </templates>

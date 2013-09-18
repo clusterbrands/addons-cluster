@@ -30,7 +30,8 @@
     'data' : [        
         'view/point_of_sale_view.xml',
     ],   
-    'js':[   
+    'js':[
+        'static/src/js/backbone-super-min.js', 
         'static/src/js/models.js',
         'static/src/js/widgets.js',
         'static/src/js/devices.js',         
