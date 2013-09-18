@@ -28,7 +28,10 @@ function cash_count_screens(instance, module){
             model = new instance.web.Model('cash.count.cashier');
             model.call('validate',[this.name,this.password],null).done(function(cashier){
                 if (!_.isEmpty(cashier)){
-                    self.trigger('auth',cashier)
+                    self.pos.set('current_cashier',cashier)
+                    self.pos_widget.screen_selector.set_current_screen('products');
+                    self.hide();
+                    self.close();
                 }else{                   
                     alert = new module.Alert(self,{draggable:false,title:'Error',msg:'Wrong user or password'});
                     alert.appendTo($('.point-of-sale'));
@@ -41,6 +44,20 @@ function cash_count_screens(instance, module){
         },
         onChangeTxtPassword: function(e){
             this.password = e.target.value;
+        },
+    });
+
+    module.LoginScreen = module.ScreenWidget.extend({
+        template: 'LoginScreen',
+        next_screen: 'products',
+        show_numpad:     false,
+        show_leftpane:   false,
+
+        show: function(){
+            this._super();
+            this.pos_widget.set_cashier_controls_visible(false);
+            login_widget = new module.LoginWidget(this, {closeable:false,draggable:false});
+            login_widget.appendTo($('.point-of-sale'));
         },
     });
 

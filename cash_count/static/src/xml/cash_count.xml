@@ -60,6 +60,11 @@
         </div>
     </t>
 
+    <t t-name="LoginScreen"> 
+        <div class="screen">
+        </div>
+    </t>
+
     <t t-name="XReportInstrumentWidget">
         <div class="instrument-container">
             <div class="instrument-scroller">
