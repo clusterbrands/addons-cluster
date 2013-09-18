@@ -72,6 +72,8 @@ class rule(osv.Model):
                                           ('fix', 'Fixed Amount')],
                                           'Amount Type', required=True,
                                           help="The computation method for the rule amount."),
+        'condition_account_id':fields.many2one('account.account', """Imputing Condition Account""",
+                                         help="""Account to imputing computation of condition"""), 
         'amount_fix': fields.float('Fixed Amount'),
         'amount_percentage': fields.float('Percentage (%)'),
     }

@@ -28,6 +28,16 @@ function payment_instrument_models(instance, module) {
                         journal = _(journals).find(function(j) {
                             return j.id == instrument.journal_id[0]
                         })
+                        self.fetch(                                                              
+                            'account.bank.statement',                                                   
+                            ['id'], [['state','=','open'], ['journal_id','=',journal.id], 
+                                    ['pos_session_id', '=', self.get('pos_session').id], 
+                                    ['instrument_id','=',instrument.id]]
+                        ).then(function(stm){
+                           if (stm.length > 0) {
+                                instrument.statement_id = stm[0].id;
+                           }
+                        });
                         instrument.journal_name = journal.name;
                         instrument.journal_id = journal.id;
                         instrument.journal_image = instance.session.url('/web/binary/image', {model: 'account.journal', field: 'image_small', id: journal.id});
@@ -47,6 +57,7 @@ function payment_instrument_models(instance, module) {
             if (instrument)
                 _(data).extend({
                     "instrument_id": instrument.id,
+                    "statement_id": instrument.statement_id,
                 });
             return data;
 
