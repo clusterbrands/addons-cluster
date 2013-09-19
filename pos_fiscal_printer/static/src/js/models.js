@@ -23,11 +23,10 @@
 
 function pos_fiscal_printer_models(instance, module){
        
-    var _super = module.PosModel
     module.PosModel = module.PosModel.extend({
         load_server_data : function(){
             self = this
-            loaded = _super.prototype.load_server_data.call(this)
+            loaded = this._super()
                 .then(function(){
                     model = new instance.web.Model('fiscal_printer.printer')
                     return model.call('get_printer',[true,[]])
@@ -41,7 +40,7 @@ function pos_fiscal_printer_models(instance, module){
         
     })
         
-    var _super2 = module.Order
+    
     module.Order = module.Order.extend({
        
         set_fiscal_printer:function (fiscal_printer){
@@ -62,14 +61,14 @@ function pos_fiscal_printer_models(instance, module){
             paymentLines.add(newPaymentline);
         },
         exportAsJSON : function(){
-            order = _super2.prototype.exportAsJSON.call(this);
+            order = this._super();
             order['partner_id'] = this.get('client') ? this.get('client').id: undefined;
             order['fiscal_printer'] = this.fiscal_printer;         
             order['invoice_printer'] = this.invoice_printer;
             return order
         },
         export_for_printing : function(){
-            order = _super2.prototype.export_for_printing.call(this);
+            order = this._super();
             client  = this.get('client');
             street =  client ? client.street:""
             street2 = client ? client.street2:""
@@ -82,7 +81,6 @@ function pos_fiscal_printer_models(instance, module){
         }
     })
     //Warning: this work just with one tax
-    var _super3 = module.Orderline
     module.Orderline = module.Orderline.extend({
         export_for_printing : function(){          
             product = this.get_product();
@@ -101,17 +99,16 @@ function pos_fiscal_printer_models(instance, module){
             unit = _.detect(measure_units,function(u){
                         return u.product_uom_id[0] == uom_id
                     })            
-            order_line = _super3.prototype.export_for_printing.call(this);    
+            order_line = this._super();    
             order_line.tax_code = tax != "" ? tax.code:tax
             order_line.unit_code = unit ? unit.code:""
             return order_line
         }
     })
     
-    var _super4 = module.Paymentline
     module.Paymentline = module.Paymentline.extend({    
         initialize : function(attributes, options){
-            _super4.prototype.initialize.call(this,attributes, options)
+            this._super(attributes, options);
             this.pos = options.pos
         },
         export_for_printing : function(){
@@ -121,7 +118,7 @@ function pos_fiscal_printer_models(instance, module){
             payment_method = _.detect(payment_methods,function(p){
                                 return p.account_journal_id[0] == account_journal_id
                             })  
-            payment_line = _super4.prototype.export_for_printing.call(this)
+            payment_line = this._super();
             payment_line.payment_method_code = payment_method ? payment_method.code:""
             return payment_line
         }
