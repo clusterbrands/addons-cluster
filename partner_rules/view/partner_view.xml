@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record model="ir.ui.view" id="inherited_res_partner_account_herrera">
+            <field name="name">res.partner.account.form.inherit.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form" />
+            <field name="arch" type="xml">
+                <xpath expr='//page[last()]' position='after'>
+                    <page string="Companies"/>
+                       <field name='company_ids' nolabel="1"/> 
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>
