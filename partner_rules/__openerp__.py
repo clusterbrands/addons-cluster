@@ -36,6 +36,8 @@
         'sale',
     ],                                                                
     'data': [                                                                      
+        'data/access_rule_data.xml',
+        'view/partner_view.xml',
     ],                                                                                 
     'js': [                                                                        
     ],                                                                                 
