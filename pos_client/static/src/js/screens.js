@@ -1,12 +1,12 @@
 function pos_client_screens(instance,module){
     
-    module.ScreenSelector.include({
-        add_popup: function(popup_name, popup){
-            popup.hide();
-            this.popup_set[popup_name] = popup;
-            return this;
-        },
-    })    
+    // module.ScreenSelector.include({
+    //     add_popup: function(popup_name, popup){
+    //         popup.hide();
+    //         this.popup_set[popup_name] = popup;
+    //         return this;
+    //     },
+    // })    
     
     module.PaymentScreenWidget.include({
         
@@ -152,7 +152,7 @@ function pos_client_screens(instance,module){
         },
     });
         
-    module.CustomerForm = module.CustomerBasePopup.extend({
+    module.CustomerForm = module.BasePopup.extend({
         template:'CustomerForm',
         events:{
             "click button[name='save']":"onClickBtnSave",
