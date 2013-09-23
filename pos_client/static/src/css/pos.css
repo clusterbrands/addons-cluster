@@ -12,6 +12,10 @@
     height:auto;
 }
 
+.point-of-sale #rightheader .header-button:last-child {
+    border-right: none;
+}
+
 
 
 
