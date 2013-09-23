@@ -116,7 +116,7 @@ function pos_client_models(instance, module){
             if (!('silent' in options)) {
                 options.silent = true;
             }
-            return Backbone.Model.prototype.set.call(this,key,value,options);
+            return this._super(key,value,options);
         },
         getVatLetter: function(){
             return this.get('vat')[2] || null;

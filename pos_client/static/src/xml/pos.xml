@@ -67,16 +67,21 @@
                         </td>
                         <td style="width:225px">
                             <div style="margin-left:5px;margin-top:3px" align="center">
-                            <input type="radio" id="radio1" name="radios" value="all" />
-                            <label for="radio1">V</label>
-                            <input type="radio" id="radio2" name="radios" value="false" />
-                            <label for="radio2">E</label>
-                            <input type="radio" id="radio3" name="radios" value="true" />
-                            <label for="radio3">J </label>
-                            <input type="radio" id="radio4" name="radios" value="true" />
-                            <label for="radio4">G </label>
-                            <input type="radio" id="radio5" name="radios" value="true" />
-                            <label for="radio5">P </label>
+                                <input type="radio" id="opt_v" name="choiceType" value="V" 
+                                t-att-checked="widget.customer.getVatLetter()=='V'?'checked':undefined"/>
+                                <label for="opt_v">V</label>
+                                <input type="radio" id="opt_e" name="choiceType" value="E" 
+                                t-att-checked="widget.customer.getVatLetter()=='E'?'checked':undefined" />
+                                <label for="opt_e">E</label>
+                                <input type="radio" id="opt_j" name="choiceType" value="J" 
+                                t-att-checked="widget.customer.getVatLetter()=='J'?'checked':undefined"/>
+                                <label for="opt_j">J</label>
+                                <input type="radio" id="opt_g" name="choiceType" value="G" 
+                                t-att-checked="widget.customer.getVatLetter()=='G'?'checked':undefined" />
+                                <label for="opt_g">G</label>
+                                <input type="radio" id="opt_p" name="choiceType" value="P" 
+                                t-att-checked="widget.customer.getVatLetter()=='P'?'checked':undefined"/>
+                                <label for="opt_p">P</label>
                             </div>
                         </td>
                         <td style="width:200px">
@@ -99,7 +104,7 @@
                         <td colspan="2">
                             <label>Wh. Agent</label>
                             <input type="checkbox" name="wh_iva_agent" id="wh_iva_agent" t-att-checked="widget.customer.get('wh_iva_agent') == true ? 'checked':undefined"/> 
-                            <label for="vat_subjected" />            
+                            <label for="wh_iva_agent" />            
                         </td>                    
                     </tr>
                     <tr>
@@ -140,8 +145,8 @@
             </div>
         </t>
          <t t-jquery="div.buttonset" t-operation="append">
-            <button name="cancel" style="height:35px;width:110px">Cancel</button>
             <button name="save" style="height:35px;width:110px"><t t-esc="widget.operation"></t></button>
+            <button name="cancel" style="height:35px;width:110px">Cancel</button>
         </t>
     </t>     
 </templates>

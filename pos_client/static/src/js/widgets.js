@@ -4,7 +4,7 @@ function pos_client_widgets(instance, module){
             this._super();
             var self = this;   
             
-            this.customer_form = new module.CustomerForm(this, {});
+            this.customer_form = new module.CustomerForm(this, {draggable:false});
             this.customer_form.appendTo($('.point-of-sale'));
             
             this.select_customer_button = new module.HeaderButtonWidget(this,{

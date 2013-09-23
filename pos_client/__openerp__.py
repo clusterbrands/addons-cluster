@@ -40,7 +40,7 @@
         'static/src/js/main.js',
     ],
     'css': [
-        'static/src/css/pos.css'
+        'static/src/css/pos.css',
     ],
     'qweb': ['static/src/xml/pos.xml'],
 }
