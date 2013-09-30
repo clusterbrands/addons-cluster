@@ -5,12 +5,12 @@
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
 ###############Credits######################################################
-#    Coded by: Eduardo Ochoa    <eduardo.ochoa@clusterbrands.com.ve>
-#                               <elos3000@gmail.com>
+#    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
+#                    
 #############################################################################
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -25,6 +25,16 @@
     'category' : "Test",
     'version' : "1.0",
     'author' : "Me",
-    'description' : """Generic Device interface""",
+    'description': """
+
+This module provides a generic interface for the implementation 
+of hardware devices
+
+Main features
+-------------
+
+* Generic methods to send a receive commands and error handling
+
+""",
     'data' : [],
 }

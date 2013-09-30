@@ -28,12 +28,14 @@
     'author': "Coorporacion ClusterBrands C.A",
     'description': """
 
-This module contains a set of generic models and views to be used as a 
+This module contains a set of generic widgets to be used as a 
 basis for the development of new modules for the POS
 
 Main features
 -------------
-
+    * BasePopup widget with the optional params (draggable, closeable, modal).
+    * Alert widget to show warning messages.
+    * Confirm widget to emulate javascripts prompt messages.
 """,
     'data': [],
     'js': [

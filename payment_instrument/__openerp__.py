@@ -1,15 +1,17 @@
 
+#!/usr/bin/python
 # -*- encoding: utf-8 -*-
-#
+###########################################################################
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
-# Credits######################################################
-#    Coded by: Coorporacion ClusterBrands C.A
-#
+###############Credits######################################################
+#    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
+#                    
+#############################################################################
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -19,7 +21,6 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 {
     'name': "Payment Instrument",
     'category': "Generic Modules/Accounting",
@@ -28,21 +29,22 @@
     'author': "Coorporacion ClusterBrands C.A",
     'description': """
 
-This module allows the cash count for each payment method
-in the POS
+This module allows you to add multiple POS payment instruments. 
+For example, credit cards, debits cards, feed tickets.
 
 Main features
 -------------
 
-* The POS only can be closed by a manager if the final balance differs from the theoretical
-* The difference is automatically adjusted to the appropriate account
-* Show the number of transactions for each payment method
+* You can define five instrument types (card, ticket, coupon and giftcard)
+* Each payment instrument is associated with a journal.
+* A payment instrument is defined by one or more rules.
+* A rule has a criterion of application and type of calculation
 
 Note:
 -----
+ -Each payment instrument must be defined in a bank type journal
+ -A payment instrument must contain at least one rule
 
-You need to configure "Profit Account" and "Los Account"
-for the journals
 """,
     'data': [
         'view/account_view.xml',
