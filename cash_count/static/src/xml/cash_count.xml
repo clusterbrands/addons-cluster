@@ -8,8 +8,8 @@
         <t t-jquery="div.content" t-operation="inner">
             <div align="left" style="min-width:350px;">             
                 <ul>
-                    <li><label for="name">User</label></li>         
-                    <li><input  name="name" type="text" /></li>         
+                    <li><label for="user">User</label></li>         
+                    <li><input  name="user" type="text" /></li>         
                     <li><label for="password">Password</label></li>            
                     <li><input name="password" type="password" /></li> 
                 </ul>

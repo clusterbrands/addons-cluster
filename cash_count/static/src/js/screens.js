@@ -5,28 +5,28 @@ function cash_count_screens(instance, module){
         events:{
             "click button[name='clear']":"onClickBtnCancel",
             "click button[name='validate']":"onClickBtnValidate",
-            "change input[name='name']": "onChangeTxtName",
+            "change input[name='user']": "onChangeTxtName",
             "change input[name='password']":"onChangeTxtPassword",
         },
         init: function(parent, options){
             this._super(parent, options);
-            this.name = "";
+            this.user = "";
             this.password = "";
         },
         start: function(){
             this._super();
-            this.$("input[name='name']").focus();
+            this.$("input[name='user']").focus();
         },
         onClickBtnCancel: function(){
-            this.name = "";
+            this.user = "";
             this.password = "";
             this.renderElement();
-            this.$("input[name='name']").focus();
+            this.$("input[name='user']").focus();
         },
         onClickBtnValidate:function(){
             var self = this;
-            model = new instance.web.Model('cash.count.cashier');
-            model.call('validate',[this.name,this.password],null).done(function(cashier){
+            model = new instance.web.Model('hr.employee');
+            model.call('login',[this.user,this.password],null).done(function(cashier){
                 if (!_.isEmpty(cashier)){
                     self.pos.set('current_cashier',cashier)
                     self.pos_widget.screen_selector.set_current_screen('opening_screen');
@@ -40,7 +40,7 @@ function cash_count_screens(instance, module){
             });
         },
         onChangeTxtName: function(e){
-            this.name = e.target.value;
+            this.user = e.target.value;
         },
         onChangeTxtPassword: function(e){
             this.password = e.target.value;

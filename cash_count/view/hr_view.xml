@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    <record model="ir.ui.view" id="view_employee_cashier_form_">
+        <field name="name">hr.employee.cashier.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="cashier"/>
+            </xpath>   
+            <xpath expr="//page[last()]" position="after">
+                <page string="Point of Sale" attrs="{'invisible': [('cashier','!=',True),]}" >
+                    <group>
+                        <group string="Cashier Settings">
+                            <field name="user" attrs="{'required': [('cashier','=',True),('active','=',True)]}" />
+                            <field name="password" attrs="{'required': [('cashier','=',True),('active','=',True)]}" password="True" />
+                            <field name="ean13" />
+                        </group>
+                        <group string="Active">
+                            <field name="active" />
+                        </group>
+                    </group> 
+                </page>
+            </xpath>          
+        </field>
+    </record>
+    </data>
+</openerp>
