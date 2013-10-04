@@ -20,9 +20,9 @@
                 <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
                 <div>Validate</div>
             </button>
-            <button name="clear" style="height:80px;width:90px">
-                <img src='/cash_count/static/src/img/clear.png' />
-                <div>Clear</div>
+            <button name="cancel" style="height:80px;width:90px">
+                <img src='/cash_count/static/src/img/cancel.png' />
+                <div>Cancel</div>
             </button>     
         </t>
     </t>
@@ -58,9 +58,9 @@
                 <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
                 <div>Validate</div>
             </button>
-            <button name="clear" style="height:80px;width:90px">
-                <img src='/cash_count/static/src/img/clear.png' />
-                <div>Clear</div>
+            <button name="cancel" style="height:80px;width:90px">
+                <img src='/cash_count/static/src/img/cancel.png' />
+                <div>Cancel</div>
             </button>     
         </t>
     </t>

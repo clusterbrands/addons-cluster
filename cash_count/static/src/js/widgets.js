@@ -47,7 +47,7 @@ function cash_count_widgets(instance, module){
         template:"OpeningWidget",
         events:{
             "click button[name='validate']":"onClickBtnValidate",
-            "click button[name='clear']":"onClickBtnClear",
+            "click button[name='cancel']":"onClickBtnCancel",
             "change input[name=amount]": "onChangeAmount", 
         },
         init: function(parent, options){
@@ -83,13 +83,20 @@ function cash_count_widgets(instance, module){
             confirm.on('no',this,this.renderElement);
             confirm.on('yes',this,this.validate)
         },
-        onClickBtnClear: function(){
+        onClickBtnCancel: function(){
             this.amount = 0
             this.renderElement();
         },
         validate: function(){
             this.hide();
             this.close();
+            bank_statements = this.pos.get('bank_statements')
+            cash_register = _(bank_statements).find(function(item) {
+                return item.journal.type == 'cash';
+            });
+            model = new instance.web.Model('account.bank.statement');
+            console.debug(cash_register)
+            model.call('write',[[cash_register.id],{balance_start:500}],null);
             this.pos.set('opening_balance',this.amount);
             this.pos_widget.screen_selector.set_current_screen('products');
         },

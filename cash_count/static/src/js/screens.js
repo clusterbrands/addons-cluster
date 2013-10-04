@@ -3,7 +3,7 @@ function cash_count_screens(instance, module){
     module.LoginWidget = module.BasePopup.extend({
         template:"LoginWidget",
         events:{
-            "click button[name='clear']":"onClickBtnCancel",
+            "click button[name='cancel']":"onClickBtnCancel",
             "click button[name='validate']":"onClickBtnValidate",
             "change input[name='user']": "onChangeTxtName",
             "change input[name='password']":"onChangeTxtPassword",
