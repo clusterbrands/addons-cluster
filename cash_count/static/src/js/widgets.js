@@ -48,6 +48,7 @@ function cash_count_widgets(instance, module){
         events:{
             "click button[name='validate']":"onClickBtnValidate",
             "click button[name='clear']":"onClickBtnClear",
+            "change input[name=amount]": "onChangeAmount", 
         },
         init: function(parent, options){
             this._super(parent, options);
@@ -66,10 +67,17 @@ function cash_count_widgets(instance, module){
             }
             this._super();
         },
+        onChangeAmount: function(e){
+            var newAmount = e.currentTarget.value;
+            var amount = parseFloat(newAmount);
+            if(!isNaN(amount)){
+                this.amount = amount.toFixed(2);
+            }
+        },
         onClickBtnValidate: function(){
             var self = this
             var msg = "Are you sure to start this POS with the initial amount ";
-            msg+= this.amount.toFixed(2) + " ?"
+            msg+= this.amount + " ?"
             confirm = new module.Confirm(this,{title:"Confirm",msg:msg});
             confirm.appendTo($('.point-of-sale'));
             confirm.on('no',this,this.renderElement);
@@ -82,6 +90,7 @@ function cash_count_widgets(instance, module){
         validate: function(){
             this.hide();
             this.close();
+            this.pos.set('opening_balance',this.amount);
             this.pos_widget.screen_selector.set_current_screen('products');
         },
         updateTime: function(){
@@ -165,7 +174,7 @@ function cash_count_widgets(instance, module){
             this.$('#payment-due-total').html(this.format_currency(total));
         },
         bindInstrumentLineEvents: function(){
-            this.currentXReportLines =  this.pos.get('currentXReport').get('lines');
+            this.currentXReportLines =  (this.pos.get('currentXReport')).get('lines');
             this.currentXReportLines.bind('add',this.addLine,this);
             this.currentXReportLines.bind('all',this.updateTotal,this);
         },        
@@ -195,6 +204,7 @@ function cash_count_widgets(instance, module){
                 instrument_line.set_amount(val);
         },
         close: function(){
+            console.debug('unbind');
             this.currentXReportLines.unbind();
         },
     });

@@ -77,10 +77,6 @@
                     <img src='/cash_count/static/src/img/reporte_x.png' />
                     <div>Report X</div>
                 </button>
-                <button name="reporty" class="button-center">
-                    <img src='/cash_count/static/src/img/reporte_z.png' />
-                    <div>Report Z</div>
-                </button> 
                 <button name="lock" class="button-center">
                     <img src='/cash_count/static/src/img/lock.png' />
                     <div>Lock Session</div>

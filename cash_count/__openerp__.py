@@ -51,6 +51,7 @@ Note:
     ],
     'js': [
         'static/src/js/backbone-super-min.js',
+        'static/src/js/db.js',
         'static/src/js/models.js',
         'static/src/js/devices.js',
         'static/src/js/screens.js', 

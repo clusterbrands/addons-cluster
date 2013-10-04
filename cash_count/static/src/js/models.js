@@ -5,15 +5,20 @@ function cash_count_models(instance, module){
             this._super(session,attributes);
             this.set({
                 'currentXReport':null,
-                'XReports': new module.XReportCollection(),
-            })
+            });
         },
         new_x_report: function(){
             var XReport = new module.XReport({});
             XReport.set('cashier',this.get('current_cashier'));
             XReport.set('user',this.get('user'));
             XReport.set('pos_config',this.get('pos_config'));
+            XReport.set('opening_balance',this.get('opening_balance'));
+            XReport.set('date',instance.web.date_to_str(new Date()));
             this.set('currentXReport',XReport);
+        },
+        save_x_report: function(){
+            report = this.get('currentXReport')
+            console.debug(report.exportAsJSON());                    
         },
     })
 
@@ -37,6 +42,12 @@ function cash_count_models(instance, module){
             instrument = this.get('instrument');
             return instrument.journal_name + ' - ' + instrument.code;
         },
+        exportAsJSON: function(){
+            return {
+                'instrument_id':this.get('instrument').id,
+                'amount': this.get('amount'),
+            }
+        }
     });
 
     module.XReportLineCollection = Backbone.Collection.extend({
@@ -50,9 +61,11 @@ function cash_count_models(instance, module){
                 'cashier': null,
                 'user':null,
                 'pos_config':null,
+                'opening_balance':null,
                 'date':null,
                 'time':null,
-                'printer_number':null,
+                'printer_serial':null,
+                'report_number':null,
                 'lines': new module.XReportLineCollection(),
             })
             this.selectedLine = null;
@@ -79,7 +92,25 @@ function cash_count_models(instance, module){
             return (this.get('lines')).reduce((function(sum, line){
                 return sum + line.get_amount();
             }), 0);
-        }
+        },
+        exportAsJSON : function(){
+            var lines = []
+            this.get('lines').each(_.bind(function(line){
+                return lines.push(line.exportAsJSON());
+            },this));
+            return {
+                'cashier_id': this.get('cashier').id,
+                'user_id': this.get('user').id,
+                'pos_config': this.get('pos_config').id,
+                'opening_balance': this.get('opening_balance'),
+                'date': this.get('date'),
+                'time': this.get('time'),
+                'printer_serial': this.get('printer_serial'),
+                'report_number': this.get('report_number'),
+                'payment_instruments' : lines, 
+            }
+        }   
+
     });
 
     module.XReportCollection = Backbone.Collection.extend({

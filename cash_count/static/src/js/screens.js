@@ -137,10 +137,19 @@ function cash_count_screens(instance, module){
             this.add_action_button({
                 label: _t('Validate'),
                 icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
-                click: self.validate,
+                click: function(){
+                    self.validate();
+                },
             });            
         },
         validate:function(){
+            //need insert printer command here
+            printer_serial = '1234';
+            report_number = '001';
+            this.pos.get('currentXReport').set('printer_serial',printer_serial);
+            this.pos.get('currentXReport').set('report_number',report_number);
+            this.pos.save_x_report();
+         
         },
         close: function(){
             this._super();
@@ -148,6 +157,8 @@ function cash_count_screens(instance, module){
             this.paypad.replace($('#paypad'));
             this.order_widget = new module.OrderWidget(this, {});
             this.order_widget.replace($('.order-container'));
+            this.instrument_widget.close();
+
         },
     });
 }
