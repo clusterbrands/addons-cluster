@@ -1,22 +1,11 @@
 function pos_client_screens(instance,module){
-    
-    module.ScreenSelector.include({
-        add_popup: function(popup_name, popup){
-            popup.hide();
-            this.popup_set[popup_name] = popup;
-            return this;
-        },
-    })    
-    
+       
     module.PaymentScreenWidget.include({
         
         showCustomerPopup:function(){
-            popup = new module.CustomerAlert(this, {});
+            popup = new module.Alert(this, {title:"Error",msg:"Please select a customer"});
             popup.appendTo($('.point-of-sale'));
-            popup.show("Error","Please select a customer    ");
-            popup.set_position("center",".point-of-sale");
-        },
-        
+        },        
         validateCurrentOrder : function(){
             currentOrder = this.pos.get('selectedOrder');
             if(currentOrder.get_client()!= null)
@@ -36,123 +25,10 @@ function pos_client_screens(instance,module){
         closePopup:function(e){
             this.close();
             this.hide();
-        },       
-        
-    });
-    
-    module.CustomerConfirm = module.CustomerBasePopup.extend({
-        template:'CustomerConfirm',
-        events:{
-            "click button[name='confirm']":"onClickBtnConfirm",
-            "click button[name='reject']":"onClickBtnReject",            
-        },
-        init: function(parent, options){
-            this.id="customer-confirm";
-            this._super(parent, options);            
-        },
-        show: function(parent,title,msg){
-            this.parent = parent;
-            this.title = title;
-            this.msg = msg;
-            this._super();
-            this.renderElement();
-            this.build_ui();
-        },
-        build_ui:function(){
-            this.$("#customer-confirm").position({my:"center",of:"#customer-form"});
-            this.$(".popup").draggable();
-        },
-        onClickBtnConfirm:function(){
-        },
-        onClickBtnReject:function(){
-        },
-    })
-    
-    module.CustomerPopup = module.CustomerBasePopup.extend({
-        template:'CustomerAlert',
-        events:{
-            "click button":"onClickBtn",
-        },
-        init: function(parent, options){
-            this.id="customer-alert";
-            this._super(parent, options);            
         },        
-        show: function(title,msg,el){
-            self = this;
-            this.title = title;
-            this.msg = msg;
-            this.elem = el;
-            this._super();            
-            this.renderElement();
-            this.build_ui();           
-        },
-        build_ui:function(){
-            this.$("#customer-alert").position({my:"center",of:"#customer-form"});
-            this.$(".popup").draggable();
-            this.$("button").focus();
-        },
-        set_position:function(position,parent){
-            this.$("#customer-alert").position({my:position,of:parent});
-        },
-        onClickBtn: function(e){
-            $(this.elem).focus();
-            this.close();
-            this.hide();   
-        }
-    });
-    
-    module.CustomerAlert = module.CustomerPopup.extend({
-        onClickBtn: function(e){
-            console.debug(this)
-            this.pos_widget.screen_selector.show_popup('customer-form');
-            this.close();
-            this.hide();             
-        }
-    })
-    
-    module.CustomerConfirmUpdate = module.CustomerConfirm.extend({
-        show:function(parent,title,msg){
-            this.renderElement();            
-            this._super(parent,title,msg);
-            this.$("button[name='reject']").focus();            
-        },
-        onClickBtnConfirm:function(){
-            vat = this.parent.customer.get('vat');
-            this.parent.seniat_request(vat);
-            this.parent.setOperation("Update");
-            this.parent.$("input[name='street']").focus();
-            this.close();
-            this.hide();
-        },
-        onClickBtnReject:function(){
-            this.close();
-            this.hide();
-            this.parent.setOperation("Select");
-            this.parent.$("button[name='save']").focus()
-        },
-    });
-    
-    module.CustomerConfirmContinue = module.CustomerConfirm.extend({
-        show:function(parent,title,msg){
-            this.renderElement();            
-            this._super(parent,title,msg);
-            this.$("button[name='reject']").focus();            
-        },
-        onClickBtnConfirm:function(){
-            this.parent.enable_controls();
-            this.parent.$("input[name='name']").focus();
-            this.parent.customer.set('seniat_updated',false);
-            this.close();
-            this.hide();
-        },
-        onClickBtnReject:function(){
-            this.close();
-            this.hide();
-            this.parent.$("input[name='vat']").focus();
-        },
-    });
-        
-    module.CustomerForm = module.CustomerBasePopup.extend({
+    });   
+            
+    module.CustomerForm = module.BasePopup.extend({
         template:'CustomerForm',
         events:{
             "click button[name='save']":"onClickBtnSave",
@@ -181,8 +57,7 @@ function pos_client_screens(instance,module){
             this.seniat_url = new instance.web.Model('seniat.url');
             this.build_ui();
             this.disable_controls();
-            this.initialize()
-            
+            this.initialize(); 
         },        
         build_ui: function(){
             self = this;             
@@ -214,14 +89,23 @@ function pos_client_screens(instance,module){
             return id;
         },
         ask_for_update:function(){
-            ccu = new module.CustomerConfirmUpdate(this, {});
-            ccu.appendTo($('.point-of-sale'));
-            ccu.show(this,"Question","This customer already exists. Do you want to upgrade it?");          
+            var self = this
+            c = new module.Confirm(this, {title:"Question",msg:"This customer already exists. Do you want to upgrade it?"});
+            c.appendTo($('.point-of-sale'));
+            c.on('yes',this,function(){
+                vat = self.customer.get('vat');
+                self.seniat_request(vat);
+                self.setOperation("Update");
+                self.$("input[name='street']").focus();
+            });
+            c.on('no',this,function(){
+                self.setOperation("Select");
+                self.$("button[name='save']").focus()
+            });  
         },
         load_customer:function(c){
             this.load_data(c);
-            this.ask_for_update();
-            
+            this.ask_for_update();            
         },
         load_data:function(c){          
             this.customer.set({
@@ -246,10 +130,20 @@ function pos_client_screens(instance,module){
                 this.customer.set("vat_subjected",c.vat_subjected);
             this.renderElement();
         },
-        not_found_seniat:function(){
-            ccc = new module.CustomerConfirmContinue(this, {});
-            ccc.appendTo($('.point-of-sale'));
-            ccc.show(this,"Question","This vat number is not found in SENIAT. Do you want to continue?");          
+        not_found_seniat:function(title,mesg){
+            var self = this
+            var msg = _.rest(mesg,10).join('') + ". Do you want to continue?";
+            c = new module.Confirm(this, {title:title,msg:msg});
+            c.appendTo($('.point-of-sale'));
+            c.on('yes',this,function(){
+                self.enable_controls();
+                self.$("input[name='name']").focus();
+                self.customer.set('seniat_updated',false);
+            });
+            c.on('no',this,function(){
+                self.$("input[name='vat']").focus();
+                self.disable_controls();
+            }); 
         },
         seniat_request:function(vat){
             self = this
@@ -261,13 +155,12 @@ function pos_client_screens(instance,module){
                     self.$("input[name='street']").focus();
                 } 
                 self.enable_buttons();               
-            }).fail(function(obj, event){ 
+            }).fail(function(obj, event){
                 event.preventDefault();
-                ccc = new module.CustomerConfirmContinue(this, {});
-                ccc.appendTo($('.point-of-sale'));
-                ccc.show(self,"Connection error","Could not connect to SENIAT. Do you want to continue?"); 
-                self.enable_buttons(); 
+                self.not_found_seniat(obj.message,obj.data.fault_code);
+                self.enable_buttons();
             })
+                
         },
         validateFields:function(){
             if (this.customer.get('vat') == undefined){
@@ -320,23 +213,22 @@ function pos_client_screens(instance,module){
             this.hide(); 
         },
         show_popup: function(title,msg,el){
-            customer_popup = new module.CustomerPopup(this, {});
-            customer_popup.appendTo($('.point-of-sale'));
-            customer_popup.show(title,msg,el);
+            alert = new module.Alert(this, {title:title,msg:msg});
+            alert.appendTo($('.point-of-sale'));
         },    
         disable_controls : function(){              
             this.$("input[type=text]").attr("disabled","disabled");
             this.$(":checkbox").attr("disabled","disabled");
             this.$("input[name='vat']").removeAttr("disabled");
             this.$("button[name='search']").removeAttr("disabled","disabled"); 
-            this.$("#choiceType :radio").button("enable");                             
+            this.$(":radio").removeAttr("disabled");                             
         },
         enable_controls : function(){          
             this.$("input[type=text]").removeAttr("disabled");
             this.$(":checkbox").removeAttr("disabled");
+            this.$(":radio").attr("disabled","disabled");   
             this.$("input[name='vat']").attr("disabled","disabled");
-            this.$("button[name='search']").attr("disabled","disabled");
-            this.$("#choiceType :radio").button("disable");         
+            this.$("button[name='search']").attr("disabled","disabled");                 
         },
         enable_buttons:function(){
             this.$(":button").removeAttr("disabled");
@@ -350,7 +242,6 @@ function pos_client_screens(instance,module){
         }, 
         onClickBtnSearch: function(){
             vat = this.customer.get('vat');
-            console.log(vat)
             regex = new RegExp(/^[A-Z]{2}[VE]?([0-9]){1,9}$|^[A-Z]{2}[JGP]?([0-9]){9}$/);
             if (regex.test(vat)){
                 c = this.customer_search(vat)

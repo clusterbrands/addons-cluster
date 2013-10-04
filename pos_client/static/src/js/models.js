@@ -1,9 +1,8 @@
 function pos_client_models(instance, module){
     
-    var _super = module.PosModel
     module.PosModel = module.PosModel.extend({
         initialize : function(session, attributes) {
-            _super.prototype.initialize.call(this,session, attributes)
+            this._super(session, attributes);
             this.db.clear('products','categories','customers','new-customers','updated-customer');
             this.set({'customers':new module.CustomerCollection()});
             this.set({'new-customers':new module.CustomerCollection()});
@@ -11,7 +10,7 @@ function pos_client_models(instance, module){
         },
         load_server_data : function(){
             self = this
-            loaded = _super.prototype.load_server_data.call(this)
+            loaded = this._super()
                 .then(function(){
                     return self.fetch(
                         'pos.config',['country_id'],
@@ -43,7 +42,7 @@ function pos_client_models(instance, module){
         flush:function(){
             this._flush_new_customers(0);
             this._flush_updated_customers(0);
-            _super.prototype.flush.call(this,0);
+            this._super();
         },
         _flush_new_customers: function(index){
             var self = this;
@@ -94,10 +93,9 @@ function pos_client_models(instance, module){
         },
     })
     
-    var _super2 = module.Order
     module.Order = module.Order.extend({
         exportAsJSON : function(){
-            order = _super2.prototype.exportAsJSON.call(this);
+            order = this._super();
             order['partner_vat'] = this.get('client') ? this.get('client').vat: undefined;
             return order
         },
@@ -118,7 +116,7 @@ function pos_client_models(instance, module){
             if (!('silent' in options)) {
                 options.silent = true;
             }
-            return Backbone.Model.prototype.set.call(this,key,value,options);
+            return this._super(key,value,options);
         },
         getVatLetter: function(){
             return this.get('vat')[2] || null;

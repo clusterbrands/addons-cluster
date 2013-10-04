@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_pos_session_code_inherit_form_">
+            <field name="name">pos.session.code.inherit.form</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree[@string='Statements']//field[@name='journal_id']" position="after"> 
+                    <field name="instrument_id" string="Instrument" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

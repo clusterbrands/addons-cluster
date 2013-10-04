@@ -23,30 +23,6 @@
 
 function pos_fiscal_printer_widgets(instance, module){ 
     
-    module.PosWidget.include({        
-                
-        start: function(){  
-            var self = this    
-            pos = this._super()           
-            return self.pos.ready.done(function() {
-                self.check_printer_status()
-            })
-        },
-        check_printer_status:function(){
-            var self = this   
-            printer = self.pos.proxy.get_printer()
-            if (_.isEmpty(printer))
-                self.screen_selector.show_popup('not-printer-error');
-            else
-                self.pos.proxy.check_printer_status().done(function(response){                    
-                    if (response.status == "error"){
-                        self.printer_error_popup.set_message(response.error)
-                        self.screen_selector.show_popup('printer-error');
-                    }
-                })            
-        },
-    })
-
     module.PosWidget.include({
         build_widgets: function(){
             this._super()

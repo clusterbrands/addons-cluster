@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="BankSelectorPopup" t-extend="BasePopup">
+        <t t-jquery="span.title" t-operation="inner">
+            Journal Selection
+        </t>
+        <t t-jquery="div.content" t-operation="inner">
+            <div class="button-bar">
+                <t t-foreach="widget.instrument_journals" t-as="instrument">
+                    <button style="width:140px;height:140px;float:left" t-att-journal="instrument.journal_id">
+                        <img t-att-src='instrument.journal_image' />
+                        <div><t t-esc="instrument.journal_name" /></div>
+                    </button>
+                </t>          
+            </div>
+        </t>
+        <t t-jquery="div.buttonset" t-operation="inner">
+            <button name="cancel" style="height:35px;width:110px">Cancel</button>
+        </t>
+    </t>
+    <t t-name="InstrumentSelectorPopup" t-extend="BasePopup">
+        <t t-jquery="span.title" t-operation="inner">
+            Instrument Selection
+        </t>
+        <t t-jquery="div.content" t-operation="inner">
+            <div class="button-bar">
+                <t t-foreach="widget.instruments" t-as="instrument">
+                    <button style="width:140px;height:140px;float:left" t-att-instrument="instrument.id">
+                        <img t-att-src='instrument.image' />
+                        <div><t t-esc="instrument.name" /></div>
+                    </button>
+                </t>                 
+            </div>
+        </t>
+        <t t-jquery="div.buttonset" t-operation="inner">
+            <button name="cancel" style="height:35px;width:110px">Cancel</button>
+        </t>
+    </t>
+
+    <t t-extend="PaypadWidget">
+        <t t-jquery="div" t-operation="append">
+            <t t-foreach="widget.instrument_types" t-as="instrument">
+                <button class="paypad-button" t-att-type="instrument.type">
+                    <t t-esc="instrument.type_desc" />
+                </button>
+                <br />
+            </t>
+        </t>
+    </t>
+
+    <!-- Poin of sale overwritten templates -->
+    <t t-name="PaymentlineWidget" t-extend="PaymentlineWidget">
+        <t t-jquery="td.paymentline-type" t-operation="inner">
+            <t t-if="!widget.payment_line.get_cashregister().get('instrument')">
+                <t t-esc="widget.name"></t>
+            </t>
+            <t t-if="widget.payment_line.get_cashregister().get('instrument')">
+                <t t-esc="widget.name + ' '+ widget.payment_line.get_cashregister().get('instrument').code"></t>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="PosTicket" t-extend="PosTicket">
+        <t t-jquery="table:eq(2) tr td:eq(0)" t-operation="inner">
+           <t t-if="!pline.get_cashregister().get('instrument')">
+                <t t-esc="pline.get_cashregister().get('journal_id')[1]"/>
+           </t>
+           <t t-if="pline.get_cashregister().get('instrument')">
+                <t t-esc="pline.get_cashregister().get('journal_id')[1] + ' ' + pline.get_cashregister().get('instrument').code"/>
+           </t>
+        </t>
+    </t>
+
+
+</templates>

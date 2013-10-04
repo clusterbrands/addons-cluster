@@ -1,141 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     
-    <t t-name="CustomerBasePopup">
-        <div class="modal_dialog">
-            <div class="popup" t-att-id="widget.id">
-                <div class="header">
-                    <span class="title"></span>
-                    <a href="#" class="close">
-                        <span class="ui-icon ui-icon-closethick">close</span>
-                    </a>
-                </div>
-                <div class="content">                     
-                </div>
-                <div class="footer">
-                    <div class="buttonset"></div>                                          
-                </div>
-            </div>
-        </div>
-    </t>
-    
-    <t t-name="CustomerConfirm" t-extend="CustomerBasePopup">
-        <t t-jquery="span.title" t-operation="inner">
-            <t t-esc="widget.title"/>
-        </t>
-        <t t-jquery="div.content" t-operation="append">
-            <p>
-                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
-                <span style="font-weight:bold">
-                    <t t-esc="widget.msg"/>
-                </span>   
-            </p>
-        </t>
-        <t t-jquery="div.buttonset" t-operation="append">
-            <button name="reject" style="height:35px;width:110px">No</button>
-            <button name="confirm" style="height:35px;width:110px">Yes</button>            
-        </t>
-    </t>
-    
-    <t t-name="CustomerAlert" t-extend="CustomerBasePopup">
-        <t t-jquery="span.title" t-operation="inner">
-            <t t-esc="widget.title"/>
-        </t>
-        <t t-jquery="div.content" t-operation="append">
-            <p>
-                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
-                <span style="font-weight:bold">
-                    <t t-esc="widget.msg"/>
-                </span>   
-            </p>
-        </t>
-        <t t-jquery="div.buttonset" t-operation="append">
-            <button name="continue" style="height:35px;width:110px">Continue</button>
-        </t>
-    </t>  
-    
-    <t t-name="CustomerForm" t-extend="CustomerBasePopup">
+    <t t-name="CustomerForm" t-extend="BasePopup">
         <t t-jquery="span.title" t-operation="inner">
             Customer Form
         </t>
         <t t-jquery="div.content" t-operation="append">
-            <table>
-                <tr>
-                    <td>
-                        <label>Vat</label>
-                    </td>
-                    <td>
-                         <div id="choiceType">
-                            <input type="radio" id="opt_v" name="choiceType" value="V" t-att-checked="widget.customer.getVatLetter()=='V'?'checked':undefined"/>
-                            <label for="opt_v">V</label>
-                            <input type="radio" id="opt_e" name="choiceType" value="E" t-att-checked="widget.customer.getVatLetter()=='E'?'checked':undefined"/>
-                            <label for="opt_e">E</label>
-                            <input type="radio" id="opt_j" name="choiceType" value="J" t-att-checked="widget.customer.getVatLetter()=='J'?'checked':undefined"/>
-                            <label for="opt_j">J</label>
-                            <input type="radio" id="opt_g" name="choiceType" value="G" t-att-checked="widget.customer.getVatLetter()=='G'?'checked':undefined"/>
-                            <label for="opt_g">G</label>
-                            <input type="radio" id="opt_p" name="choiceType" value="P" t-att-checked="widget.customer.getVatLetter()=='P'?'checked':undefined"/>
-                            <label for="opt_p">P</label>
-                        </div>                    
-                    </td>
-                    <td >
-                        <input name="vat" type="text" style="width:95%" t-att-value="widget.customer.getVatNumbers()" onfocus="this.select()" placeholder="e.g 123456789"/>                                             
-                    </td>
-                    <td>
-                        <button name="search">Search</button> 
-                    </td>
-                </tr>               
-                <tr>
-                    <td>
-                         <label>VAT Legal Statement</label>                
-                    </td>
-                    <td>
-                        <input type="checkbox" name="vat_subjected" t-att-checked="widget.customer.get('vat_subjected') == true ? 'checked':undefined" />
-                    </td>
-                    <td colspan="2">
-                        <label>Wh. Agent</label>
-                        <input type="checkbox" name="wh_iva_agent" t-att-checked="widget.customer.get('wh_iva_agent') == true ? 'checked':undefined"/>              
-                    </td>                    
-                </tr>
-                <tr>
-                    <td>
-                         <label>Name</label>                
-                    </td>
-                    <td colspan="3">
-                        <input type="text" name="name" t-att-value="widget.customer.get('name')" t-att="{'required':''}" style="width:100%"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                         <label>Address</label>                
-                    </td>
-                    <td colspan="3">
-                        <input type="text" name="street"  t-att-value="widget.customer.get('street')" style="width:100%" placeholder="Av. Siempre Viva"/>
-                        <input type="text" name="street2" t-att-value="widget.customer.get('street2')" style="width:100%"/>
-                        <input type="text" name="city"  t-att-value="widget.customer.get('city')" style="width:100%" placeholder="Caracas"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                         <label>Phone</label>                
-                    </td>
-                    <td colspan="3">
-                        <input type="text" name="phone" t-att-value="widget.customer.get('phone')" style="width:100%" placeholder=" +58 426 3504371"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                         <label>Email</label>                
-                    </td>
-                    <td colspan="3">
-                        <input type="text" name="email" t-att-value="widget.customer.get('email')" style="width:100%"/>
-                    </td>
-                </tr>
-            </table>
+            <div class="customer-form">
+                <table>
+                    <tr>
+                        <td>
+                            <label>Vat</label>
+                        </td>
+                        <td style="width:225px">
+                            <div style="margin-left:5px;margin-top:3px" align="center">
+                                <input type="radio" id="opt_v" name="choiceType" value="V" 
+                                t-att-checked="widget.customer.getVatLetter()=='V'?'checked':undefined"/>
+                                <label for="opt_v">V</label>
+                                <input type="radio" id="opt_e" name="choiceType" value="E" 
+                                t-att-checked="widget.customer.getVatLetter()=='E'?'checked':undefined" />
+                                <label for="opt_e">E</label>
+                                <input type="radio" id="opt_j" name="choiceType" value="J" 
+                                t-att-checked="widget.customer.getVatLetter()=='J'?'checked':undefined"/>
+                                <label for="opt_j">J</label>
+                                <input type="radio" id="opt_g" name="choiceType" value="G" 
+                                t-att-checked="widget.customer.getVatLetter()=='G'?'checked':undefined" />
+                                <label for="opt_g">G</label>
+                                <input type="radio" id="opt_p" name="choiceType" value="P" 
+                                t-att-checked="widget.customer.getVatLetter()=='P'?'checked':undefined"/>
+                                <label for="opt_p">P</label>
+                            </div>
+                        </td>
+                        <td style="width:200px">
+                            <input name="vat" type="text" t-att-value="widget.customer.getVatNumbers()" onfocus="this.select()" placeholder="e.g 123456789" />                                             
+                        </td>
+                        <td style="text-align:right">
+                            <button name="search" style="padding:6px 12px">
+                                <img src='/pos_client/static/src/img/search.png' />
+                            </button> 
+                        </td>
+                    </tr>               
+                    <tr>
+                        <td>
+                             <label>VAT Legal Statement</label>                
+                        </td>
+                        <td>
+                            <input type="checkbox" name="vat_subjected" id="vat_subjected"  t-att-checked="widget.customer.get('vat_subjected') == true ? 'checked':undefined" /> 
+                            <label for="vat_subjected" />
+                        </td>
+                        <td colspan="2">
+                            <label>Wh. Agent</label>
+                            <input type="checkbox" name="wh_iva_agent" id="wh_iva_agent" t-att-checked="widget.customer.get('wh_iva_agent') == true ? 'checked':undefined"/> 
+                            <label for="wh_iva_agent" />            
+                        </td>                    
+                    </tr>
+                    <tr>
+                        <td>
+                             <label>Name</label>                
+                        </td>
+                        <td colspan="3">
+                            <input type="text" name="name" t-att-value="widget.customer.get('name')" t-att="{'required':''}" style="width:100%"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:top">
+                             <label>Address</label>                
+                        </td>
+                        <td colspan="3">
+                            <input type="text" name="street"  t-att-value="widget.customer.get('street')" style="width:100%" placeholder="Av. Siempre Viva"/>
+                            <input type="text" name="street2" t-att-value="widget.customer.get('street2')" style="width:100%"/>
+                            <input type="text" name="city"  t-att-value="widget.customer.get('city')" style="width:100%" placeholder="Caracas"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                             <label>Phone</label>                
+                        </td>
+                        <td colspan="3">
+                            <input type="text" name="phone" t-att-value="widget.customer.get('phone')" style="width:100%" placeholder=" +58 426 3504371"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                             <label>Email</label>                
+                        </td>
+                        <td colspan="3">
+                            <input type="text" name="email" t-att-value="widget.customer.get('email')" style="width:100%"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </t>
          <t t-jquery="div.buttonset" t-operation="append">
-            <button name="cancel" style="height:35px;width:110px">Cancel</button>
             <button name="save" style="height:35px;width:110px"><t t-esc="widget.operation"></t></button>
+            <button name="cancel" style="height:35px;width:110px">Cancel</button>
         </t>
     </t>     
 </templates>

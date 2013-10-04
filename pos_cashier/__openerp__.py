@@ -25,7 +25,12 @@
     'version' : "1.0",
     'depends' : ["point_of_sale"],
     'author' : "Me",
-    'description' : "",
+    'description': """
+    
+This module allows you to use cashier's in the POS interface without 
+them be OpenERP users.
+                                                                                
+""",
     'data' : [
         'view/pos_cashier_view.xml',
         'view/pos_cashier_action_menu.xml',
