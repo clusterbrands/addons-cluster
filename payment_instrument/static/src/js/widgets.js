@@ -33,8 +33,8 @@ function payment_instrument_widgets(instance, module){
             bank_selector.on('done',this,this.onInstrumentOtherSelected);
         },
         onInstrumentCashSelected : function(instrument){
-            cash_registers = self.pos.get("cashRegisters");
-            cash_register = _(cash_registers.models).find(function(c) {
+            var cash_registers = this.pos.get("cashRegisters");
+            var cash_register = _(cash_registers.models).find(function(c) {
                 return c.get("journal").id == instrument.journal_id
             })
             this.pos.get('selectedOrder').addPaymentLine(cash_register);
