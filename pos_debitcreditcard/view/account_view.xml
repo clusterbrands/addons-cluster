@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+ <openerp>
+     <data>
+        <record model="ir.ui.view" id="view_account_journal_debitcredit_form">
+            <field name="name">account.journal.payment.instrument.form</field>                         
+            <field name="model">account.journal</field>                                                
+            <field name="inherit_id" ref="account.view_account_journal_form"/>                         
+            <field name="arch" type="xml">                                                             
+                <xpath expr="//field[@name='default_credit_account_id']" position="after">                                      
+                    <field name="bank_account" domain="[('type','not in',('view','closed','consolidation'))]" />
+                </xpath>                                                                            
+            </field>                                                                                
+        </record> 
+         <record model="ir.ui.view" id="view_lote_statement_inherit_form">
+             <field name="name">Bank Statements</field>
+             <field name="model">account.bank.statement</field>
+             <field name="inherit_id" ref="account.view_bank_statement_form"/>
+             <field name="arch" type="xml">
+                 <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="process_lot" invisible="1"/>  
+                 </xpath>
+                 <xpath expr="//div[@name='import_buttons']" position="inside">
+                     <button name="%(pos_debitcreditcard.show_close_lot_action)d" 
+                             type="action" 
+                             string="Close Lot" 
+                             attrs="{'invisible':['|',('state','in',('draft','open')),('process_lot','=','processed')]}"
+                             groups="base.group_user"/> 
+                 </xpath>
+                 <xpath expr="//page[last()]" position="after">
+                     <page string="Lot Notes" attrs="{'invisible':[('process_lot','!=','processed')]}">
+                         <field name="lot_note" />
+                     </page>
+                 </xpath>
+             </field>
+         </record>
+         <record model="ir.ui.view" id="view_close_lot_tree">
+             <field name="name">Bank Statements</field>                                    
+             <field name="model">account.bank.statement</field>                                   
+             <field name="arch" type="xml">                                          
+                 <tree colors="red:process_lot != 'processed';black:process_lot == 'processed'" string="" version="7.0">
+                   <field name="journal_id"/>  
+                   <field name="instrument_id"/>
+                   <field name="date"/>
+                   <field name="name"/>
+                   <field name="balance_start"/>
+                   <field name="balance_end_real"/>
+                   <field name="process_lot"/>
+                   <field name="state" invisible="1"/>
+                 </tree>
+             </field>
+         </record>
+        <record model="ir.actions.act_window" id="action_close_lot_tree">                
+            <field name="sequence" eval="1"/>
+            <field name="name">Close Lots</field>
+            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="domain">[('state', '=', 'confirm'),('instrument_id','!=',False)]</field>
+            <field name="view_id" ref="view_close_lot_tree"/>                                      
+        </record>
+         <menuitem string="Close Lots" action="action_close_lot_tree" id="menu_close_lot_tree" parent="account.menu_finance_bank_and_cash" sequence="8"/> 
+     </data>
+ </openerp>
