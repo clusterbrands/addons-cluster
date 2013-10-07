@@ -90,13 +90,12 @@ function cash_count_widgets(instance, module){
         validate: function(){
             this.hide();
             this.close();
+            model = new instance.web.Model('account.bank.statement');
             bank_statements = this.pos.get('bank_statements')
             cash_register = _(bank_statements).find(function(item) {
                 return item.journal.type == 'cash';
-            });
-            model = new instance.web.Model('account.bank.statement');
-            console.debug(cash_register)
-            model.call('write',[[cash_register.id],{balance_start:500}],null);
+            });            
+            model.call('write',[[cash_register.id],{balance_start:this.amount}],null);
             this.pos.set('opening_balance',this.amount);
             this.pos_widget.screen_selector.set_current_screen('products');
         },
