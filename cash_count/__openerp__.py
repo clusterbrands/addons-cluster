@@ -45,9 +45,9 @@ Note:
 
 """,
     'data': [
-        'view/cash_count_action_menu.xml',
         'view/cash_count_view.xml',
         'view/hr_view.xml',
+        'view/cash_count_action_menu.xml',
     ],
     'js': [
         'static/src/js/backbone-super-min.js',

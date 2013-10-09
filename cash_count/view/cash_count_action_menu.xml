@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+          
+        <record model="ir.actions.act_window" id="cashier_list_action">
+             <field name="name">Cashiers</field>
+             <field name="res_model">hr.employee</field>
+             <field name="view_type">form</field>
+             <field name="domain">[('cashier','=',True),('active','=',True)]</field>
+             <field name="view_mode">kanban,tree,form</field>
+        </record>
 
         <!-- Map action to custom kanban view -->
         <record model="ir.actions.act_window.view" id="act_cashier_kanban_view">
@@ -9,22 +17,14 @@
             <field name="view_id" ref="cashier_kanban_view"/>
             <field name="act_window_id" ref="cashier_list_action"/>
         </record>
-       
+
         <!-- Map action to custom tree view -->
         <record model="ir.actions.act_window.view" id="act_cashier_tree_view">
             <field eval="15" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="cashier_tree_view"/>
             <field name="act_window_id" ref="cashier_list_action"/>
-        </record>
-
-        <record model="ir.actions.act_window" id="cashier_list_action">
-             <field name="name">Cashiers</field>
-             <field name="res_model">hr.employee</field>
-             <field name="view_type">form</field>
-             <field name="domain">[('cashier','=',True),('active','=',True)]</field>
-             <field name="view_mode">kanban,tree,form</field>
-        </record>
+        </record>        
          
         <menuitem 
             name="Cashiers"

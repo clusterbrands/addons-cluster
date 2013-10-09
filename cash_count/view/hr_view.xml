@@ -1,29 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-    <record model="ir.ui.view" id="view_employee_cashier_form_">
-        <field name="name">hr.employee.cashier.form</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='coach_id']" position="after">
-                <field name="cashier"/>
-            </xpath>   
-            <xpath expr="//page[last()]" position="after">
-                <page string="Point of Sale" attrs="{'invisible': [('cashier','!=',True),]}" >
-                    <group>
-                        <group string="Cashier Settings">
-                            <field name="user" attrs="{'required': [('cashier','=',True),('active','=',True)]}" />
-                            <field name="password" attrs="{'required': [('cashier','=',True),('active','=',True)]}" password="True" />
-                            <field name="ean13" />
-                        </group>
-                        <group string="Active">
-                            <field name="active" />
-                        </group>
-                    </group> 
-                </page>
-            </xpath>          
-        </field>
-    </record>
+        <record model="ir.ui.view" id="view_employee_cashier_form_">
+            <field name="name">hr.employee.cashier.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='coach_id']" position="after">
+                    <field name="cashier"/>
+                </xpath>   
+                <xpath expr="//page[last()]" position="after">
+                    <page string="Point of Sale" attrs="{'invisible': [('cashier','!=',True),]}" >
+                        <group>
+                            <group string="Cashier Settings">
+                                <field name="user" attrs="{'required': [('cashier','=',True),('active','=',True)]}" />
+                                <field name="password" attrs="{'required': [('cashier','=',True),('active','=',True)]}" password="True" />
+                                <field name="ean13" />
+                            </group>
+                            <group string="Active">
+                                <field name="active" />
+                            </group>
+                        </group> 
+                    </page>
+                </xpath>          
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="cashier_tree_view">
+            <field name="name">cashier.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Cashiers">
+                    <field name="name" />
+                    <field name="user"/>
+                    <field name="work_phone"/>
+                    <field name="work_email"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="cashier_kanban_view">
+            <field name="name">cashier.kanban</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="last_login"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_employee_vignette">
+                                <div class="oe_employee_image">
+                                    <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
+                                </div>
+                                <div class="oe_employee_details">
+                                    <h4>
+                                        <a type="open"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                    </h4>
+                                    <ul>
+                                        <li id="last_login">
+                                            <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                                  <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                            </span>
+                                        </li>
+                                        <li t-if="record.user.raw_value"><field name="user"/></li>
+                                        <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
+                                        <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
+                                        <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <script>
+                                $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
+                            </script>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
     </data>
 </openerp>
