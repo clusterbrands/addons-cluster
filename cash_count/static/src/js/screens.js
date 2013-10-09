@@ -28,7 +28,7 @@ function cash_count_screens(instance, module){
             model = new instance.web.Model('hr.employee');
             model.call('login',[this.user,this.password],null).done(function(cashier){
                 if (!_.isEmpty(cashier)){
-                    self.pos.set('current_cashier',cashier)
+                    self.pos.set('cashier',cashier)
                     self.pos_widget.screen_selector.set_current_screen('opening_screen');
                     self.hide();
                     self.close();

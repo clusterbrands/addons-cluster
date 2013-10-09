@@ -5,9 +5,8 @@
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
-###############Credits######################################################
-#    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
-#                    
+#############################Credits#########################################
+#    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>           
 #############################################################################
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
@@ -25,7 +24,7 @@
     'name': "Cash Count",
     'category': "Generic Modules/Accounting",
     'version': "1.0",
-    'depends': ['hr','pos_base'],
+    'depends': ['hr','pos_base','payment_instrument'],
     'author': "Coorporacion ClusterBrands C.A",
     'description': """
 
@@ -45,8 +44,10 @@ Note:
 
 """,
     'data': [
-        'view/cash_count_view.xml',
         'view/hr_view.xml',
+        'view/account_view.xml',
+        'view/cash_count_view.xml',
+        'view/point_of_sale_view.xml',        
         'view/cash_count_action_menu.xml',
     ],
     'js': [

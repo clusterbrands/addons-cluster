@@ -30,19 +30,6 @@ function cash_count_widgets(instance, module){
         },
     });
 
-    module.UsernameWidget.include({
-        init:function(parent, options){
-            this._super(parent, options);
-            this.pos.bind('change:current_cashier',this.refresh,this);
-        },
-        get_name: function(){
-            name = this._super();
-            cashier = this.pos.get('current_cashier')
-            if (cashier)
-                return name + " - " + cashier.name
-        },
-    });
-
     module.OpeningWidget = module.BasePopup.extend({
         template:"OpeningWidget",
         events:{
@@ -52,7 +39,7 @@ function cash_count_widgets(instance, module){
         },
         init: function(parent, options){
             this._super(parent, options);
-            this.cashier = this.pos.get('current_cashier').name;
+            this.cashier = this.pos.get('cashier').name;
             this.pos_config = this.pos.get('pos_config').name;
             this.amount = 0
             this._watch = setInterval(this.proxy('updateTime'), 500);
@@ -90,12 +77,22 @@ function cash_count_widgets(instance, module){
         validate: function(){
             this.hide();
             this.close();
-            model = new instance.web.Model('account.bank.statement');
-            bank_statements = this.pos.get('bank_statements')
-            cash_register = _(bank_statements).find(function(item) {
-                return item.journal.type == 'cash';
-            });            
-            model.call('write',[[cash_register.id],{balance_start:this.amount}],null);
+           
+            var cash_registers = this.pos.get('cashRegisters')
+            var cash_register = cash_registers.find(function(c){ 
+                return c.get('journal').type == "cash"
+            })
+            values = {
+                'name': 'Opening Balance',
+                'journal_id' : cash_register.get('journal').id,
+                'account_id' : cash_register.get('journal').internal_account_id[0],
+                'amount': this.amount,
+                'ref': '',
+                'statement_id': cash_register.id,
+                'cashier_id':this.pos.get('cashier').id,
+            }
+            model = new instance.web.Model('account.bank.statement.line');
+            model.call('create',[values],null);
             this.pos.set('opening_balance',this.amount);
             this.pos_widget.screen_selector.set_current_screen('products');
         },
