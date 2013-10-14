@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_employee_cashier_form_">
-            <field name="name">hr.employee.cashier.form</field>
+        <record model="ir.ui.view" id="cash_count_employee_form_view">
+            <field name="name">cash.count.employee.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='coach_id']" position="after">
-                    <field name="cashier"/>
-                </xpath>   
+                    <field name="role"  />
+                </xpath>  
                 <xpath expr="//page[last()]" position="after">
-                    <page string="Point of Sale" attrs="{'invisible': [('cashier','!=',True),]}" >
+                    <page string="Point of Sale" attrs="{'invisible': [('role', 'not in', ('cashier','manager'))]}">
                         <group>
-                            <group string="Cashier Settings">
-                                <field name="user" attrs="{'required': [('cashier','=',True),('active','=',True)]}" />
-                                <field name="password" attrs="{'required': [('cashier','=',True),('active','=',True)]}" password="True" />
-                                <field name="ean13" />
+                            <group string="Role Settings">
+                                <field name="username" 
+                                        attrs="{'required': [('role', 'in', ('cashier','manager'))]}" />
+                                <field name="password" 
+                                        attrs="{'required': [('role', 'in', ('cashier','manager'))]}" password="True" />
                             </group>
-                            <group string="Active">
-                                <field name="active" />
+                            <group string="">
                             </group>
                         </group> 
                     </page>
@@ -32,7 +32,7 @@
             <field name="arch" type="xml">
                 <tree string="Cashiers">
                     <field name="name" />
-                    <field name="user"/>
+                    <field name="username"/>
                     <field name="work_phone"/>
                     <field name="work_email"/>
                 </tree>
@@ -61,7 +61,7 @@
                                                   <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
                                             </span>
                                         </li>
-                                        <li t-if="record.user.raw_value"><field name="user"/></li>
+                                        <li t-if="record.username.raw_value"><field name="username"/></li>
                                         <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
                                         <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
                                         <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>

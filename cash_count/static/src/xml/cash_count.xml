@@ -6,13 +6,24 @@
             Cashier Selection
         </t>
         <t t-jquery="div.content" t-operation="inner">
-            <div align="left" style="min-width:350px;">             
-                <ul>
-                    <li><label for="user">User</label></li>         
-                    <li><input  name="user" type="text" /></li>         
-                    <li><label for="password">Password</label></li>            
-                    <li><input name="password" type="password" /></li> 
-                </ul>
+            <div align="left" style="min-width:300px;">
+                <t t-if="!widget.cashier.isNew()">
+                    <div align="center">
+                        <img t-att-src='widget.get_image_url()'
+                             style="border:solid" width="118px" height="118px"/>
+                    </div>
+                </t>
+                <div>        
+                    <ul>
+                        <li><label for="username">Username</label></li>         
+                        <li><input name="username"  
+                             t-att-value="widget.cashier.get('username')" 
+                             t-att-disabled="widget.cashier.get('username') || undefined"
+                             type="text" /></li>         
+                        <li><label for="password">Password</label></li>            
+                        <li><input name="password" type="password" /></li> 
+                    </ul>
+                </div>
             </div>
         </t>
         <t t-jquery="div.buttonset" t-operation="append">
@@ -26,6 +37,36 @@
             </button>     
         </t>
     </t>
+
+    <t t-name="ManagerLoginWidget" t-extend="BasePopup">
+        <t t-jquery="span.title" t-operation="inner">
+            Manager Authorization
+        </t>
+        <t t-jquery="div.content" t-operation="inner">
+            <div align="left" style="min-width:300px;">
+                <div>        
+                    <ul>
+                        <li><label for="username">Username</label></li>         
+                        <li><input name="username" type="text" /></li>         
+                        <li><label for="password">Password</label></li>            
+                        <li><input name="password" type="password" /></li> 
+                    </ul>
+                </div>
+            </div>
+        </t>
+        <t t-jquery="div.buttonset" t-operation="append">
+            <button name="validate" style="height:80px;width:90px">
+                <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
+                <div>Validate</div>
+            </button>
+            <button name="cancel" style="height:80px;width:90px">
+                <img src='/cash_count/static/src/img/cancel.png' />
+                <div>Cancel</div>
+            </button>     
+        </t>
+    </t>
+
+
 
     <t t-name="OpeningWidget" t-extend="BasePopup">
         <t t-jquery="span.title" t-operation="inner">
@@ -64,8 +105,6 @@
             </button>     
         </t>
     </t>
-
-
 
     <t t-name="CloseWidget" t-extend="BasePopup">
         <t t-jquery="span.title" t-operation="inner">
@@ -168,7 +207,9 @@
             </td>
             <td class="paymentline-amount pos-right-align">
                 <input type="text" t-att-value="widget.line.get_amount().toFixed(2)" />
-                <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
+                <a href='javascript:void(0)' class='delete-payment-line'>
+                    <img src="/point_of_sale/static/src/img/search_reset.gif" />
+                </a>
             </td>
         </tr>
     </t>

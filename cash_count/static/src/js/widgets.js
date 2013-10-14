@@ -10,6 +10,10 @@ function cash_count_widgets(instance, module){
             this.loging_screen.appendTo($('#rightpane'));
             this.screen_selector.add_screen('login-screen',this.loging_screen);
 
+            this.manager_widget = new module.ManagerLoginWidget(this, {draggable:false});
+            this.manager_widget.appendTo($('.point-of-sale'));
+            this.screen_selector.add_popup('manager-widget',this.manager_widget);
+
             this.opening_screen = new module.OpeningScreen(this,{});
             this.opening_screen.appendTo($('#rightpane'));
             this.screen_selector.add_screen('opening_screen',this.opening_screen);
@@ -27,6 +31,124 @@ function cash_count_widgets(instance, module){
         },
         onClickBtnClose: function(){
             this.pos_widget.screen_selector.show_popup('close-widget');
+        },
+    });
+
+    module.LoginWidget = module.BasePopup.extend({
+        template:"LoginWidget",
+        events:{
+            "click button[name='cancel']":"onClickBtnCancel",
+            "click button[name='validate']":"onClickBtnValidate",
+            "change input[name='username']": "onChangeTxtName",
+            "change input[name='password']":"onChangeTxtPassword",
+        },
+        init: function(parent, options){
+            this._super(parent, options);
+            this.initialize();
+        },
+        initialize : function(){
+            var cashier = this.pos.get('cashier')
+            this.cashier = new module.Cashier(cashier);
+        },
+        show: function(){
+            this._super();
+            this.renderElement()
+            this.setFocus();
+        },
+        setFocus: function(){
+            if (this.cashier.get('username') == ""){
+                this.$("input[name='username']").focus();
+            }else
+                this.$("input[name='password']").focus();      
+        },
+        set_position: function(){
+            this.$('.popup').position({my:"center",of:".screen"});
+        },
+        get_image_url : function(){
+            url = instance.session.url('/web/binary/image', 
+                                       {model: 'hr.employee', field: 'image_medium',
+                                       id: this.cashier.get('id')});
+            return url
+        },
+        onClickBtnCancel: function(){
+            this.initialize();
+            this.renderElement();
+            this.setFocus();
+        },
+        onClickBtnValidate:function(){
+            var self = this;
+            model = new instance.web.Model('cash.count.cashier.session');
+            session_id = self.pos.get('pos_session').id
+            values = [session_id,this.cashier.get('username'),this.cashier.get('password')]
+            model.call('open_session',values,null).done(function(response){
+                if (response.status == 0){
+                    self.pos.set_current_cashier(response.cashier_id)
+                    self.pos_widget.screen_selector.set_current_screen('opening_screen');
+                    self.hide();
+                    self.close();
+                }else{
+                    alert = new module.Alert(this,{title:"Error",msg:response.msg});
+                    alert.appendTo($('.point-of-sale'));
+                    alert.on('continue',self,self.onClickBtnCancel);
+                }      
+            })
+        },
+        onChangeTxtName: function(e){
+            this.cashier.set('username', e.target.value);
+        },
+        onChangeTxtPassword: function(e){
+            this.cashier.set('password', e.target.value);
+        },
+    });
+
+    module.ManagerLoginWidget = module.BasePopup.extend({
+        template:"ManagerLoginWidget",
+        events:{
+            "click button[name='cancel']":"onClickBtnCancel",
+            "click button[name='validate']":"onClickBtnValidate",
+            "change input[name='username']": "onChangeTxtName",
+            "change input[name='password']":"onChangeTxtPassword",
+        },
+        init: function(parent, options){
+            this._super(parent, options);
+            this.initialize();
+        },
+        initialize: function(){
+            this.username = "";
+            this.password = "";                 
+        },
+        show: function(){
+            this._super();
+            this.renderElement()
+            this.$("input[name='username']").focus();     
+        },
+        onClickBtnValidate: function(){
+            var self = this
+            values = [this.username, this.password]
+            model = new instance.web.Model('cash.count.cashier.session');
+            context = new instance.web.CompoundContext({'manager':true})
+            model.call('login',values,null).done(function(id){
+                if (id != []){
+                    
+                }else{
+                    var msg = "Wrong username or password"
+                    var alert = new module.Alert(self,{title:'Error', msg:msg});
+                    alert.appendTo($('.point-of-sale'));
+                    alert.show();
+                    alert.on('continue',self,self.onClickBtnCancel);
+                }
+            });
+        },
+        onClickBtnCancel: function(){
+            this.initialize();
+            this.renderElement();
+            this.$("input[name='username']").focus();
+        },
+        onChangeTxtName: function(e){
+            this.username =  e.target.value;
+        },
+        onChangeTxtPassword: function(e){
+            this.password = e.target.value;
         },
     });
 

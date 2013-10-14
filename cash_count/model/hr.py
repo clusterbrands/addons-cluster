@@ -1,25 +1,33 @@
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class hr_employee(osv.Model):
     _inherit = 'hr.employee'
 
-    def login(self, cr, uid, user, password, context=None):
-        context = context or {}
-        ids = self.search(
-            cr, uid, [('user', '=', user), ('password', '=', password)], context=context)
-        if ids:
-            return self.read(cr, uid, ids[0], context=context)
+    def _check_username_uniqueness(self, cr, uid, ids, context=None):
+        context = context or {}        
+        obj = self.browse(cr, uid, ids, context=context)[0]
+        if obj.role == 'cashier':
+            user_ids = self.search(cr, uid, [('username', '=', obj.username),
+                                             ('id', '!=', ids)])
+            return len(user_ids) == 0
         else:
-            return {}
+            return True
 
     _columns = {
-        'cashier': fields.boolean('Is a Cashier', required=False),
-        'user': fields.char('User', size=64, required=False),
+        'role': fields.selection([('cashier', 'Cashier'),
+                                  ('manager', 'Manager'), ], 'PoS Role',
+                                 select=True),
+        'username': fields.char('Username', size=64, required=False),
         'password': fields.char('Password', size=64, required=False),
-        'active': fields.boolean('Active', required=False),
-        'ean13': fields.char('EAN13 Barcode', size=13),
     }
+
     _defaults = {
-        'active': True,
+        'role': 'none'
     }
+
+    _constraints = [
+        (_check_username_uniqueness,
+         _("This username already exists"), ['username'])
+    ]

@@ -2,10 +2,40 @@ function cash_count_models(instance, module){
 
     module.PosModel = module.PosModel.extend({
         initialize:function(session,attributes){
+
             this._super(session,attributes);
             this.set({
                 'currentXReport':null,
             });
+        },
+        load_server_data : function(){
+            var self = this
+            var loaded = this._super()
+                .then(function(){
+                    return self.fetch('hr.employee',
+                                      ['name','username','image_small'],
+                                      [['role','=','cashier']])
+                }).then(function(cashiers){
+                    self.set('cashiers',cashiers)
+                    session_id = self.get('pos_session').id
+                    return self.fetch('cash.count.cashier.session',
+                                      ['cashier_id'],
+                                      [['state','=','opened'],
+                                      ['session_id','=',session_id]]) 
+                }).then(function(session){
+                    if (!_.isEmpty(session))
+                        self.set_current_cashier(session[0].cashier_id[0]);
+                });
+            return loaded
+        },
+        set_current_cashier: function(cashier_id){
+            cashiers = this.get('cashiers')
+            cashier = {}
+            cashier = _(cashiers).find(function(c) {
+                return c.id = cashier_id;
+            })
+            if (!_.isEmpty(cashier))
+                this.set('cashier',cashier)
         },
         new_x_report: function(){
             var XReport = new module.XReport({});
@@ -116,5 +146,15 @@ function cash_count_models(instance, module){
     module.XReportCollection = Backbone.Collection.extend({
         model: module.XReport,
     })
+
+    module.Cashier = Backbone.Model.extend({
+        defaults:{
+            'username': '',
+            'password':'',
+        },
+        initialize :function(attrs){
+            this._super(attrs);
+        },
+    });
 
 }

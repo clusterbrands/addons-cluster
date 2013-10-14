@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="workflow" id="wkf_cashier_session">
+            <field name="name">Cashier Session Workflow</field>
+            <field name="osv">cash.count.cashier.session</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <!-- Activities -->
+        <record model="workflow.activity" id="act_open">
+            <field name="wkf_id" ref="wkf_cashier_session"/>
+            <field name="name">opened</field>
+            <field name="action">wkf_action_open()</field>
+            <field name="flow_start">True</field>
+            <field name="kind">function</field>
+        </record>
+
+        <record model="workflow.activity" id="act_close">
+            <field name="wkf_id" ref="wkf_cashier_session"/>
+            <field name="name">closed</field>
+            <field name="action">wkf_action_close()</field>
+            <field name="kind">function</field>
+        </record>
+
+        <!-- Transitions -->
+        <record model="workflow.transition" id="trans_open_to_close">
+          <field name="act_from" ref="act_open" />
+          <field name="act_to" ref="act_close" />
+          <field name="signal">close</field>          
+        </record>
+
+    </data>
+</openerp>
+
