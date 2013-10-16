@@ -66,8 +66,6 @@
         </t>
     </t>
 
-
-
     <t t-name="OpeningWidget" t-extend="BasePopup">
         <t t-jquery="span.title" t-operation="inner">
             Starting Balance
@@ -112,14 +110,14 @@
         </t>
         <t t-jquery="div.content" t-operation="inner">
             <div style="min-width:300px;">             
-                <button name="reportx" class="button-center">
-                    <img src='/cash_count/static/src/img/reporte_x.png' />
-                    <div>Report X</div>
-                </button>
                 <button name="lock" class="button-center">
                     <img src='/cash_count/static/src/img/lock.png' />
                     <div>Lock Session</div>
                 </button> 
+                <button name="close" class="button-center">
+                    <img src='/cash_count/static/src/img/close.png' />
+                    <div>Close</div>
+                </button>
             </div>
         </t>
         <t t-jquery="div.buttonset" t-operation="append">

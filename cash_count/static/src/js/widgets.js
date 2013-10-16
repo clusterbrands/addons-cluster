@@ -70,12 +70,7 @@ function cash_count_widgets(instance, module){
                                        id: this.cashier.get('id')});
             return url
         },
-        onClickBtnCancel: function(){
-            this.initialize();
-            this.renderElement();
-            this.setFocus();
-        },
-        onClickBtnValidate:function(){
+        openSession: function(){
             var self = this;
             model = new instance.web.Model('cash.count.cashier.session');
             session_id = self.pos.get('pos_session').id
@@ -92,6 +87,38 @@ function cash_count_widgets(instance, module){
                     alert.on('continue',self,self.onClickBtnCancel);
                 }      
             })
+        },
+        openExistingSession: function(){
+            var self = this;
+            model = new instance.web.Model('cash.count.cashier.session');
+            session_id = self.pos.get('pos_session').id
+            values = [session_id,this.cashier.get('username'),this.cashier.get('password')]
+            context = new instance.web.CompoundContext()
+            model.call('unlock_session',values,{context:context}).done(function(response){
+                if (response){
+                    self.hide();
+                    self.close();
+                    self.pos_widget.screen_selector.set_current_screen('products');
+                }else{
+                    var msg = "Wrong username or password"
+                    var alert = new module.Alert(self,{title:'Error', msg:msg});
+                    alert.appendTo($('.point-of-sale'));
+                    alert.show();
+                    alert.on('continue',self,self.onClickBtnCancel);
+                }
+            });
+        },
+        onClickBtnCancel: function(){
+            this.initialize();
+            this.renderElement();
+            this.setFocus();
+        },
+        onClickBtnValidate:function(){
+            var cashier = this.pos.get('cashier');
+            if (cashier)
+                this.openExistingSession();
+            else
+                this.openSession();               
         },
         onChangeTxtName: function(e){
             this.cashier.set('username', e.target.value);
@@ -126,10 +153,13 @@ function cash_count_widgets(instance, module){
             var self = this
             values = [this.username, this.password]
             model = new instance.web.Model('cash.count.cashier.session');
-            context = new instance.web.CompoundContext({'manager':true})
-            model.call('login',values,null).done(function(id){
+            var context = new instance.web.CompoundContext({'manager':true})
+            model.call('login',values,{context:context}).done(function(id){
                 if (id != []){
-                    
+                    session_id = self.pos.get('cashier_session')[0].id
+                    model.call('close_session',[session_id],null).done(function(response){
+                        self.pos_widget.try_close(); 
+                    });
                 }else{
                     var msg = "Wrong username or password"
                     var alert = new module.Alert(self,{title:'Error', msg:msg});
@@ -227,18 +257,27 @@ function cash_count_widgets(instance, module){
     module.CloseWidget =  module.BasePopup.extend({
         template:"CloseWidget",
         events:{
+            "click button[name='lock']":"onClickBtnLock",
+            "click button[name='close']":"onClickBtnClose",
             "click button[name='cancel']":"onClickBtnCancel",
-            "click button[name='reportx']":"onClickBtnReportX",
         },
         init: function(parent, options){
             this._super(parent, options);
         },
-        onClickBtnCancel: function(){
-            this.close();
-            this.hide();
+        onClickBtnLock: function(){
+            this.pos_widget.screen_selector.set_current_screen('login-screen');
         },
-        onClickBtnReportX: function(){
-            this.pos_widget.screen_selector.set_current_screen('xreport');
+        onClickBtnClose: function(){
+            var self = this
+            var model = new instance.web.Model('cash.count.cashier.session');
+            var session_id = self.pos.get('cashier_session')[0].id
+            model.call('close_session',[session_id],null).done(function(response){
+                self.pos_widget.try_close(); 
+            });
+        },
+        onClickBtnCancel: function(){
+            this.hide();
+            this.close();
         },
     });
     

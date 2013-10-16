@@ -18,7 +18,7 @@ class cashier_session(osv.Model):
         obj = self.pool.get('hr.employee')
         criteria = [('username', '=', username), ('password', '=', password)]
         if context.get('manager'):
-            criteria.append(('role','=','manager'))
+            criteria.append(('role', '=', 'manager'))
         ids = obj.search(cr, uid, criteria, context=context)
         if ids:
             return ids[0]
@@ -27,7 +27,7 @@ class cashier_session(osv.Model):
 
     def wkf_action_open(self, cr, uid, ids, context=None):
         context = context or {}
-        values = {'opening_date':time.strftime('%Y-%m-%d %H:%M:%S')}
+        values = {'opening_date': time.strftime('%Y-%m-%d %H:%M:%S')}
         return self.write(cr, uid, ids, values, context=context)
 
     def open_session(self, cr, uid, session_id, username, password, context=None):
@@ -39,15 +39,42 @@ class cashier_session(osv.Model):
             if len(session_ids) == 0:
                 values = {'session_id': session_id, 'cashier_id': cashier_id}
                 s_id = self.create(cr, uid, values, context=context)
-                result = {'status':0,'cashier_id':cashier_id}
+                result = {'status': 0, 'cashier_id': cashier_id}
             else:
-                result = {'status':1,'msg':_("You can open only one session at a time")}
+                result = {'status': 1, 'msg': _(
+                    "You can open only one session at a time")}
         else:
-            result = {'status':1,'msg':_("Wrong user name or password")}
+            result = {'status': 1, 'msg': _("Wrong user name or password")}
         return result
 
-    def close_session(self, cr, uid, session_id, employee_id, context=None):
-        
+    def close_session(self, cr, uid, session_id, context=None):
+        context = context or {}
+        session = self.browse(cr, uid, session_id, context=context)
+        if session.state == 'opened':
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'cash.count.cashier.session', session_id, 'close', cr)
+            return True
+        return False
+
+    def wkf_action_close(self, cr, uid, ids, context=None):
+        context = context or {}
+        values = {'closing_date': time.strftime('%Y-%m-%d %H:%M:%S')}
+        values.update({'state':'closed'})
+        return self.write(cr, uid, ids, values, context=context)
+
+    def unlock_session(self, cr, uid, session_id, username, password, context=None):
+        context = context or {}
+        cashier_id = self.login(cr, uid, username, password, context=context)
+        if cashier_id:
+            c = [('session_id', '=', session_id),
+                 ('state', '=', 'opened'), ('cashier_id', '=', cashier_id)]
+            session_ids = self.search(cr, uid, c, context=context)
+            if len(session_ids) == 1:
+                return True
+
+        return False
+
+    # def close_session(self, cr, uid, session_id, employee_id, context=None):
 
     _columns = {
         'session_id': fields.many2one('pos.session', 'Pos Session', required=True),

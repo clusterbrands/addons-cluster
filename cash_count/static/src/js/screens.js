@@ -23,7 +23,13 @@ function cash_count_screens(instance, module){
                 label: _t('Unlock'),
                 icon: '/cash_count/static/src/img/unlock.png',
                 click: function(){
-                    self.pos_widget.screen_selector.show_popup('manager-widget');   
+                    var msg = "This action requires manager credentials. Do you want to continue?"
+                    confirm = new module.Confirm(this,{title:"Confirm",msg:msg});
+                    confirm.appendTo($('.point-of-sale'));
+                    confirm.show();
+                    confirm.on('yes',this,function(){
+                        self.pos_widget.screen_selector.show_popup('manager-widget');
+                    });
                 }
             });
             setTimeout(this.proxy('showPopup'), 500);

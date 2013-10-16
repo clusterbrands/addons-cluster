@@ -19,12 +19,14 @@ function cash_count_models(instance, module){
                     self.set('cashiers',cashiers)
                     session_id = self.get('pos_session').id
                     return self.fetch('cash.count.cashier.session',
-                                      ['cashier_id'],
+                                      [],
                                       [['state','=','opened'],
                                       ['session_id','=',session_id]]) 
                 }).then(function(session){
-                    if (!_.isEmpty(session))
+                    if (!_.isEmpty(session)){
+                        self.set('cashier_session',session)
                         self.set_current_cashier(session[0].cashier_id[0]);
+                    }
                 });
             return loaded
         },

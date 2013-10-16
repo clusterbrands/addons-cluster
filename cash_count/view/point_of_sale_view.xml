@@ -6,6 +6,9 @@
             <field name="model">pos.session</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="cashier_id"></field>
+                </xpath>
                 <xpath expr="//separator[@string='Summary by Payment Methods']" position="replace">
                 </xpath>
                 <xpath expr="//field[@name='statement_ids']" position="replace">
