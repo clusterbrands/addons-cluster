@@ -42,7 +42,7 @@
         </t>
         <t t-jquery="div.content" t-operation="append">
             <p>
-                <img src='/pos_base/static/src/img/alert.png' />
+                <img src='/pos_base/static/src/img/question.png' />
                 <span style="font-weight:bold;font-size:16px">
                     <t t-esc="widget.msg"/>
                 </span>   
