@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+		<record id="access_rule_partner_invoice" model="ir.rule">
+            <field name="name">Partner Invoice</field>
+            <field ref="account.model_account_invoice" name="model_id"/>
+            <field name="domain_force">[('partner_id.company_ids','in', user.company_id.id)]</field>
+        </record>
+
+		<record id="access_rule_partner_sale" model="ir.rule">
+            <field name="name">Partner Sale</field>
+            <field ref="sale.model_sale_order" name="model_id"/>
+            <field name="domain_force">[('partner_id.company_ids','in', user.company_id.id)]</field>
+        </record>
+		<record id="access_rule_partner_purchase" model="ir.rule">
+            <field name="name">Partner Purchase</field>
+            <field ref="purchase.model_purchase_order" name="model_id"/>
+            <field name="domain_force">[('partner_id.company_ids','in', user.company_id.id)]</field>
+        </record>
+
+    </data>
+</openerp>

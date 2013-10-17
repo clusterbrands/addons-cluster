@@ -100,6 +100,15 @@ class pos_order(osv.Model):
         statement_id = data.get('statement_id', False)                                              
         assert journal_id or statement_id, "No statement_id or journal_id passed to the method!" 
 
+        if not statement_id:
+            for statement in order.session_id.statement_ids:
+                if statement.id == statement_id:
+                    journal_id = statement.journal_id.id
+                    break
+                elif statement.journal_id.id == journal_id:
+                    statement_id = statement.id
+                    break
+
         args.update({                                                                               
             'statement_id' : statement_id,                                                          
             'pos_statement_id' : order_id,                                                          

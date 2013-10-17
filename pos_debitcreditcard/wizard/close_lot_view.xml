@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="show_close_lot_action" model="ir.actions.act_window">
+             <field name="name">Close Lot</field>
+             <field name="res_model">close.lot</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="target">new</field>
+        </record>
+        <record model="ir.ui.view" id="view_close_form_wizard">
+            <field name="name">close.lot.wizard</field>                                    
+            <field name="model">close.lot</field>                                   
+            <field name="arch" type="xml">                                          
+                <form string="" version="7.0">
+                    <label for="nro_lot" />
+                    <field name="nro_lot" />
+                    <label for="note" />
+                    <field name="note" />
+                    <footer>
+                        <button name="exec_lot" string="Process" class="oe_highlight" type="object"/>
+                        or
+                        <button special="cancel" string="Close" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+    </data>
+</openerp>
