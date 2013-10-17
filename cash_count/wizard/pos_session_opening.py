@@ -7,7 +7,7 @@ class pos_session_opening(osv.osv_memory):
 
     _columns = {
         'cashier_name': fields.char('Cashier', size=64, readonly=True),
-        'cashier_session': fields.boolean('Has Cashier', required=False),
+        'session_opened': fields.boolean('Has Open Session', required=False),
     }
 
     def on_change_config(self, cr, uid, ids, config_id, context=None):
@@ -20,8 +20,9 @@ class pos_session_opening(osv.osv_memory):
             cr, uid, values.get('pos_session_id'), context=context)
         if session.cashier_session_id:
             values.update({'cashier_name': session.cashier_id.name})
-            values.update({'cashier_session': True})
+            values.update({'session_opened': True})
         else:
-            values.update({'cashier_session': False})
+            values.update({'session_opened': False})        
         result.update({'value': values})
         return result
+
