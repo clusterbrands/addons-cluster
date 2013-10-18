@@ -145,6 +145,50 @@
         </div>
     </t>
 
+    <t t-name="XReportReceiptScreen">
+        <div id="receipt-screen" class="screen" >
+            <header><h2>Receipt Screen</h2></header>
+            <div class="pos-step-container">
+                <div class="pos-receipt-container">
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="XReportTicket">
+        <div class="pos-report-ticket" style="400px">
+            <div align="center"><h3>Report X</h3></div>
+            <!-- <br /> -->
+            <div class="pos-right-align">
+                <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
+                         Date.CultureInfo.formatPatterns.longTime)"/> 
+            </div>    
+            <br />
+            <t t-esc="widget.company.name"/><br />
+            User: <t t-esc="widget.user.name"/><br />
+            Cashier: <t t-esc="widget.cashier.name"/><br />
+            Shop: <t t-esc="widget.shop_obj.name"/><br />
+            <br />
+            <table>
+                <tr t-foreach="widget.currentXReportLines.toArray()" t-as="line">
+                    <td>
+                        <t t-esc="line.get_instrument()"/>
+                    </td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(line.get_amount().toFixed(2))"/>
+                    </td>
+                </tr>                
+            </table>
+            <br />
+            <table>
+                <tr class="emph"><td>Total:</td><td class="pos-right-align">
+                    <t t-esc="widget.format_currency(widget.currentXReport.getTotal())"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </t>
+
     <t t-name="XReportInstrumentWidget">
         <div class="instrument-container">
             <div class="instrument-scroller">
@@ -188,10 +232,6 @@
                 <span class="column-name">Date:</span>
                 <span><t t-esc="widget.getDate()"></t></span>
             </li>
-             <li class="orderline">
-                <span class="column-name">Time:</span>
-                <span><t t-esc="widget.getTime()"></t></span>
-            </li>
         </t>
          <t t-jquery="div.summary" t-operation="replace">
             <div></div>
@@ -211,4 +251,6 @@
             </td>
         </tr>
     </t>
+
+
 </templates>

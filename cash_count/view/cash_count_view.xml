@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data>        
+    <data>
+        <record model="ir.ui.view" id="view_cash_count_cashier_session_form">
+            <field name="name">cash.count.cashier.session.form.view</field>
+            <field name="model">cash.count.cashier.session</field>
+            <field name="arch" type="xml">
+                <form string="Cashier Session" version="7.0">
+                    <header>
+                    </header>
+                    <sheet>
+                        <h1 class="oe_title">
+                            Session:
+                            <!-- <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/> -->
+                        </h1>
+                        <!-- <group>
+                            <field name="cash_control" invisible="1" />
+                            <group>
+                                <field name="user_id"/>
+                                <field name="config_id"/>
+                            </group>
+                            <group>
+                                <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
+                                <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
+                            </group>
+                            <newline/>
+                        </group> -->
+                    </sheet>
+                </form>
+            </field>
+        </record>        
     </data>
 </openerp>

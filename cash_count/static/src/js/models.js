@@ -24,7 +24,7 @@ function cash_count_models(instance, module){
                                       ['session_id','=',session_id]]) 
                 }).then(function(session){
                     if (!_.isEmpty(session)){
-                        self.set('cashier_session',session)
+                        self.set('cashier_session',session[0])
                         self.set_current_cashier(session[0].cashier_id[0]);
                     }
                 });
@@ -41,7 +41,7 @@ function cash_count_models(instance, module){
         },
         new_x_report: function(){
             var XReport = new module.XReport({});
-            XReport.set('cashier',this.get('current_cashier'));
+            XReport.set('cashier',this.get('cashier'));
             XReport.set('user',this.get('user'));
             XReport.set('pos_config',this.get('pos_config'));
             XReport.set('opening_balance',this.get('opening_balance'));
@@ -49,8 +49,7 @@ function cash_count_models(instance, module){
             this.set('currentXReport',XReport);
         },
         save_x_report: function(){
-            report = this.get('currentXReport')
-            console.debug(report.exportAsJSON());                    
+            report = this.get('currentXReport');                   
         },
     })
 
@@ -72,7 +71,7 @@ function cash_count_models(instance, module){
         },
         get_instrument: function(){
             instrument = this.get('instrument');
-            return instrument.journal_name + ' - ' + instrument.code;
+            return instrument.name + ' - ' + instrument.code;
         },
         exportAsJSON: function(){
             return {

@@ -34,3 +34,45 @@
     height: 100%;
     overflow: hidden;
 }
+
+.point-of-sale .pos-report-ticket {
+    text-align: left;
+    width: 400px;
+    font-size: 16px;
+    background-color: white;
+    margin: 20px;
+    padding: 15px;
+    padding-bottom:30px;
+    display: inline-block;
+    font-family: "Inconsolata";
+    border-radius: 2px;
+    box-shadow: 0px 1px 0px white, 0px 3px 0px #C1B9D6, 0px 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.point-of-sale .pos-report-ticket .emph{
+    font-size: 20px;
+    margin:5px;
+}
+
+.point-of-sale .pos-report-ticket table {
+    width: 100%;
+    border: 0;
+    table-layout: fixed;
+}
+.point-of-sale .pos-report-ticket table td {
+    border: 0;
+    word-wrap: break-word;
+}
+
+@media print {
+    .pos-report-ticket {
+        margin: 0;
+    }
+
+    .point-of-sale .pos-report-ticket{
+        font-size: 14px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        border: solid 1px black !important;
+    }
+}

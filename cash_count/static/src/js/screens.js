@@ -1,4 +1,5 @@
 function cash_count_screens(instance, module){
+    var QWeb = instance.web.qweb;
 
     module.LoginScreen = module.ScreenWidget.extend({
         template: 'LoginScreen',
@@ -18,27 +19,26 @@ function cash_count_screens(instance, module){
                     self.pos_widget.try_close();                     
                 }
             });
-
-            this.add_action_button({
-                label: _t('Unlock'),
-                icon: '/cash_count/static/src/img/unlock.png',
-                click: function(){
-                    var msg = "This action requires manager credentials. Do you want to continue?"
-                    confirm = new module.Confirm(this,{title:"Confirm",msg:msg});
-                    confirm.appendTo($('.point-of-sale'));
-                    confirm.show();
-                    confirm.on('yes',this,function(){
-                        self.pos_widget.screen_selector.show_popup('manager-widget');
-                    });
-                }
-            });
-            setTimeout(this.proxy('showPopup'), 500);
+            if (this.pos.get('cashier_session'))
+                this.add_action_button({
+                    label: _t('Unlock'),
+                    icon: '/cash_count/static/src/img/unlock.png',
+                    click: function(){
+                        var msg = "This action requires manager credentials. Do you want to continue?"
+                        confirm = new module.Confirm(this,{title:"Confirm",msg:msg});
+                        confirm.appendTo($('.point-of-sale'));
+                        confirm.show();
+                        confirm.on('yes',this,function(){
+                            manager_widget = new module.ManagerLoginWidget(self, {draggable:false});
+                            manager_widget.appendTo($('.point-of-sale'));
+                            manager_widget.show();
+                        });
+                    }
+                });
+            setTimeout(this.proxy('showPopup'), 300);
         },
         showPopup: function(){
-            this.login_widget = new module.LoginWidget(this, {modal:false,closeable:false,draggable:false});
-            this.login_widget.appendTo($('.point-of-sale'));
-            this.login_widget.show();
-
+            this.pos_widget.screen_selector.show_popup('login-widget');
         },
     });
 
@@ -78,6 +78,8 @@ function cash_count_screens(instance, module){
     module.XReportScreen = module.ScreenWidget.extend({
         template:'XReportScreen',
         back_screen: 'products',
+        next_screen: 'xreport-receipt',
+
         init: function(parent, options){
             this._super(parent, options); 
         },
@@ -119,6 +121,13 @@ function cash_count_screens(instance, module){
             this.pos.get('currentXReport').set('printer_serial',printer_serial);
             this.pos.get('currentXReport').set('report_number',report_number);
             this.pos.save_x_report();
+            var self = this
+            var model = new instance.web.Model('cash.count.cashier.session');
+            var session_id = self.pos.get('cashier_session').id
+            model.call('close_session',[session_id],null).done(function(response){
+                self.pos_widget.screen_selector.set_current_screen(self.next_screen);
+            });
+           
          
         },
         close: function(){
@@ -129,6 +138,72 @@ function cash_count_screens(instance, module){
             this.order_widget.replace($('.order-container'));
             this.instrument_widget.close();
 
+        },
+    });
+
+    module.XReportReceiptScreen = module.ScreenWidget.extend({
+        template: 'XReportReceiptScreen',
+        show_numpad:     false,
+        show_leftpane:   false,
+
+        init: function(parent, options) {
+            this._super(parent,options);
+            this.user = this.pos.get('user');
+            this.company = this.pos.get('company');
+            this.shop_obj = this.pos.get('shop');
+            this.cashier = ""
+
+        },
+
+        renderElement: function() {
+            this._super();
+            this.pos.bind('change:currentXReport', this.changeCurrentReport, this);
+        },
+
+        changeCurrentReport: function() {
+            if (this.currentXReportLines)
+                this.currentXReportLines.unbind();
+            this.currentXReportLines = (this.pos.get('currentXReport')).get('lines');
+            this.currentXReportLines.bind('add', this.refresh, this);
+            this.currentXReportLines.bind('change', this.refresh, this);
+            this.currentXReportLines.bind('remove', this.refresh, this);
+            this.refresh();
+        },
+
+        refresh: function() {
+            this.currentXReport = this.pos.get('currentXReport');
+            this.cashier = this.currentXReport.get('cashier');
+            this.$('.pos-receipt-container', this.$el).html(QWeb.render('XReportTicket',{widget:this}));
+        },
+
+        show: function(){
+            this._super();
+            var self = this;
+            this.pos_widget.set_cashier_controls_visible(false);
+
+            this.currentXReport = this.pos.get('currentXReport');
+            this.currentXReportLines = this.currentXReport.get('lines').models
+
+            this.add_action_button({
+                label: _t('Print'),
+                icon: '/point_of_sale/static/src/img/icons/png48/printer.png',
+                click: function(){  
+                    self.print();
+                }
+            });
+
+            this.add_action_button({
+                label: _t('Exit'),
+                icon: '/point_of_sale/static/src/img/icons/png48/system-log-out.png',
+                click: function(){
+                    self.pos_widget.try_close();
+                },
+            });
+            setTimeout(this.proxy('print'), 300);
+
+        },
+        print: function() {
+            window.print();
         },
     });
 }

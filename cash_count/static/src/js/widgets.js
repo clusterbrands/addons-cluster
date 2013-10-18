@@ -10,9 +10,10 @@ function cash_count_widgets(instance, module){
             this.loging_screen.appendTo($('#rightpane'));
             this.screen_selector.add_screen('login-screen',this.loging_screen);
 
-            this.manager_widget = new module.ManagerLoginWidget(this, {draggable:false});
-            this.manager_widget.appendTo($('.point-of-sale'));
-            this.screen_selector.add_popup('manager-widget',this.manager_widget);
+
+            this.login_widget = new module.LoginWidget(this, {modal:false,closeable:false,draggable:false});
+            this.login_widget.appendTo($('.point-of-sale'));
+            this.screen_selector.add_popup('login-widget',this.login_widget);
 
             this.opening_screen = new module.OpeningScreen(this,{});
             this.opening_screen.appendTo($('#rightpane'));
@@ -21,6 +22,10 @@ function cash_count_widgets(instance, module){
             this.x_report_screen = new module.XReportScreen(this,{});
             this.x_report_screen.appendTo($('#rightpane'));
             this.screen_selector.add_screen('xreport',this.x_report_screen);
+
+            this.x_report_receipt_screen = new module.XReportReceiptScreen(this,{});
+            this.x_report_receipt_screen.appendTo($('#rightpane'));
+            this.screen_selector.add_screen('xreport-receipt',this.x_report_receipt_screen);
             
             this.close_widget = new module.CloseWidget(this, {closeable:false,draggable:false});
             this.close_widget.appendTo($('.point-of-sale'));            
@@ -76,8 +81,9 @@ function cash_count_widgets(instance, module){
             session_id = self.pos.get('pos_session').id
             values = [session_id,this.cashier.get('username'),this.cashier.get('password')]
             model.call('open_session',values,null).done(function(response){
-                if (response.status == 0){
-                    self.pos.set_current_cashier(response.cashier_id)
+                if (response.status == 0){                    
+                    self.pos.set('cashier_session',response.session);
+                    self.pos.set_current_cashier(response.session.cashier_id[0])
                     self.pos_widget.screen_selector.set_current_screen('opening_screen');
                     self.hide();
                     self.close();
@@ -155,11 +161,11 @@ function cash_count_widgets(instance, module){
             model = new instance.web.Model('cash.count.cashier.session');
             var context = new instance.web.CompoundContext({'manager':true})
             model.call('login',values,{context:context}).done(function(id){
-                if (id != []){
-                    session_id = self.pos.get('cashier_session')[0].id
-                    model.call('close_session',[session_id],null).done(function(response){
-                        self.pos_widget.try_close(); 
-                    });
+                if (id){
+                    self.hide();
+                    self.close();
+                    self.pos_widget.screen_selector.close_popup();
+                    self.pos_widget.screen_selector.set_current_screen('xreport');
                 }else{
                     var msg = "Wrong username or password"
                     var alert = new module.Alert(self,{title:'Error', msg:msg});
@@ -216,10 +222,11 @@ function cash_count_widgets(instance, module){
         onClickBtnValidate: function(){
             var self = this
             var msg = "Are you sure to start this POS with the initial amount ";
-            msg+= this.amount + " ?"
+            var amount = this.format_currency(this.amount)
+            msg+= amount + " ?"
             confirm = new module.Confirm(this,{title:"Confirm",msg:msg});
             confirm.appendTo($('.point-of-sale'));
-            confirm.on('no',this,this.renderElement);
+            confirm.on('no',this,this.onClickBtnCancel);
             confirm.on('yes',this,this.validate)
         },
         onClickBtnCancel: function(){
@@ -268,12 +275,7 @@ function cash_count_widgets(instance, module){
             this.pos_widget.screen_selector.set_current_screen('login-screen');
         },
         onClickBtnClose: function(){
-            var self = this
-            var model = new instance.web.Model('cash.count.cashier.session');
-            var session_id = self.pos.get('cashier_session')[0].id
-            model.call('close_session',[session_id],null).done(function(response){
-                self.pos_widget.try_close(); 
-            });
+            this.pos_widget.screen_selector.set_current_screen('xreport');
         },
         onClickBtnCancel: function(){
             this.hide();
@@ -368,7 +370,6 @@ function cash_count_widgets(instance, module){
                 instrument_line.set_amount(val);
         },
         close: function(){
-            console.debug('unbind');
             this.currentXReportLines.unbind();
         },
     });

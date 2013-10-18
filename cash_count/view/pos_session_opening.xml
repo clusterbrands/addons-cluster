@@ -23,7 +23,7 @@
                             class="oe_highlight"
                         />
 
-                        <button name="open_ui" type="object" string="Close Session" 
+                        <button name="close_session_cashier" type="object" string="Close Session" 
                             attrs="{'invisible' : ['|',('pos_state', 'not in', ('opened',)),('session_opened','!=',True)]}" 
                         />
 

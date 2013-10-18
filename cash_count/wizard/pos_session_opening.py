@@ -10,6 +10,19 @@ class pos_session_opening(osv.osv_memory):
         'session_opened': fields.boolean('Has Open Session', required=False),
     }
 
+    def close_session_cashier(self, cr, uid, ids, context=None):
+        context = context or {}
+        data = self.browse(cr, uid, ids[0], context=context)
+        return {
+            'name': _('Session'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'cash.count.cashier.session',
+            'res_id': data.cashier_session_id,
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+        }
+
     def on_change_config(self, cr, uid, ids, config_id, context=None):
         context = context or {}
         result = super(pos_session_opening, self).on_change_config(

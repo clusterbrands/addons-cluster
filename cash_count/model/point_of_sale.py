@@ -27,6 +27,7 @@ class pos_session(osv.Model):
                                                required=False),
         'cashier_id': fields.related('cashier_session_id', 'cashier_id',
                                      type='many2one', 
+                                     readonly='True',
                                      relation='hr.employee',
                                      string='Current Cashier'),
 

@@ -23,7 +23,7 @@ class cashier_session(osv.Model):
         if ids:
             return ids[0]
         else:
-            return []
+            return False
 
     def wkf_action_open(self, cr, uid, ids, context=None):
         context = context or {}
@@ -39,7 +39,8 @@ class cashier_session(osv.Model):
             if len(session_ids) == 0:
                 values = {'session_id': session_id, 'cashier_id': cashier_id}
                 s_id = self.create(cr, uid, values, context=context)
-                result = {'status': 0, 'cashier_id': cashier_id}
+                session = self.read(cr, uid, s_id, context=context)
+                result = {'status': 0, 'session': session}
             else:
                 result = {'status': 1, 'msg': _(
                     "You can open only one session at a time")}
