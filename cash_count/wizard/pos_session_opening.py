@@ -12,13 +12,12 @@ class pos_session_opening(osv.osv_memory):
 
     def close_session_cashier(self, cr, uid, ids, context=None):
         context = context or {}
-        data = self.browse(cr, uid, ids[0], context=context)
         return {
-            'name': _('Session'),
+            'name': _('Report X'),
             'view_type': 'form',
             'view_mode': 'form,tree',
-            'res_model': 'cash.count.cashier.session',
-            'res_id': data.cashier_session_id,
+            'res_model': 'wizard.reportx',
+            'target': 'new',
             'view_id': False,
             'type': 'ir.actions.act_window',
         }

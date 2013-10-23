@@ -1,1 +1,2 @@
 import pos_session_opening
+import wizard_reportx

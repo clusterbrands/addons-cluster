@@ -49,6 +49,7 @@ Note:
         'view/cash_count_view.xml',
         'view/point_of_sale_view.xml',
         'view/pos_session_opening.xml',        
+        'wizard/wizard_reportx_view.xml',
         'view/cash_count_action_menu.xml',
         'workflow/cash_count_workflow.xml',
     ],

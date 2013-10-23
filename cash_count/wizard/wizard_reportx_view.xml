@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="wizard_reportx_form_view">
+            <field name="name">wizard.reportx.form.view</field>
+            <field name="model">wizard.reportx</field>
+            <field name="arch" type="xml">
+                <form string="Report X" version="7.0">
+                    <sheet>
+                        <group string="Report X">
+                            <group>
+                                <field name="user_id"/>
+                                <field name="cashier_id"/>
+                                <field name="config_id"/>
+                            </group>
+                        </group>
+                        <group string="Payment Methods Summary">
+                            <field name="line_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="journal_id" on_change="onchange_journal(journal_id)" />
+                                    <field name="type" invisible="1" />
+                                    <field name="instrument_id" 
+                                     attrs="{'required' : [('type', '!=', 'cash')]}"
+                                     domain="[('journal_id','=', journal_id)]"  />
+                                    <field name="amount" sum="Total" />
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="end_session" type="object" string="Validate &amp; End Session" class="oe_highlight"/>
+                        or
+                        <button special="cancel" widget="link" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>        
+    </data>
+</openerp>
