@@ -21,7 +21,7 @@
                                     <field name="type" invisible="1" />
                                     <field name="instrument_id" 
                                      attrs="{'required' : [('type', '!=', 'cash')]}"
-                                     domain="[('journal_id','=', journal_id)]"  />
+                                     domain="[('journal_id','=', journal_id)]" />
                                     <field name="amount" sum="Total" />
                                 </tree>
                             </field>

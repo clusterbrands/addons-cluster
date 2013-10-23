@@ -2,6 +2,7 @@ import time
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp import netsvc
+import openerp.addons.decimal_precision as dp
 
 
 class cashier_session(osv.Model):
@@ -53,14 +54,15 @@ class cashier_session(osv.Model):
         session = self.browse(cr, uid, session_id, context=context)
         if session.state == 'opened':
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'cash.count.cashier.session', session_id, 'close', cr)
+            wf_service.trg_validate(
+                uid, 'cash.count.cashier.session', session_id, 'close', cr)
             return True
         return False
 
     def wkf_action_close(self, cr, uid, ids, context=None):
         context = context or {}
         values = {'closing_date': time.strftime('%Y-%m-%d %H:%M:%S')}
-        values.update({'state':'closed'})
+        values.update({'state': 'closed'})
         return self.write(cr, uid, ids, values, context=context)
 
     def unlock_session(self, cr, uid, session_id, username, password, context=None):
@@ -90,3 +92,27 @@ class cashier_session(osv.Model):
     _defaults = {
         'state': 'opened',
     }
+
+    class reportx (osv.Model):
+        _name = "cash.count.reportx"
+
+        _columns = {
+            'number': fields.char('Report Number', size=50),
+            'date': fields.datetime('Created Date', readonly=True),
+            'cashier_session_id': fields.many2one('cash.count.cashier.session',
+                                                  'Cashier Session'),
+            'printer_id': fields.many2one('fiscal_printer.printer'),
+            'line_ids':fields.one2many('cash.count.reportx.line', 'reportx_id', 'Report Details'), 
+        }
+
+    class reportx_line(osv.Model):
+        _name = "cash.count.reportx.line"
+
+        _columns = {
+            'reportx_id': fields.many2one('cash.count.reportx','Report X'),
+            'statement_id': fields.many2one('account.bank.statement',
+                                            'Statement'),
+            'end_balance': fields.float('Ending Balance',
+                                        required=True,
+                                        digits_compute=dp.get_precision('Account')),
+        }

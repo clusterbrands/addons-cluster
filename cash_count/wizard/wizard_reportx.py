@@ -30,6 +30,18 @@ class wizard_reportx(osv.osv_memory):
 
     def end_session(self, cr, uid, ids, context=None):
         context = context or {}
+        # WARNING Insert here fiscal_printer code to print the report
+        data = self.browse(cr, uid, ids[0], context=context)
+        lines = []
+        for line in data.line_ids:            
+            for s in data.pos_session_id.statement_ids:
+                if s.journal_id.id == int(line.journal_id) and s.instrument_id.id == line.instrument_id.id:
+                    lines.append((0,0,{'statement_id':s.id,'end_balance':line.amount}))
+        values = {}
+        values['cashier_session_id'] = data.pos_session_id.cashier_session_id.id
+        values['line_ids'] = lines
+        obj = self.pool.get('cash.count.reportx')
+        obj.create(cr, uid, values, context=context)
 
 class wizard_reportx_line(osv.osv_memory):
     _name = "wizard.reportx.line"
@@ -51,13 +63,13 @@ class wizard_reportx_line(osv.osv_memory):
         if journal_id:
             obj = self.pool.get('account.journal')
             journal = obj.browse(cr, uid, journal_id, context=context)
-            vals.update({'type':journal.type,'instrument_id':''})
-        return {'value':vals}
+            vals.update({'type': journal.type, 'instrument_id': ''})
+        return {'value': vals}
 
     _columns = {
         'reportx_id': fields.many2one('wizard.reportx', 'Report'),
         'journal_id': fields.selection(_get_journals, 'Journal', required=True),
-        'type':fields.char('Type', size=64), 
+        'type': fields.char('Type', size=64),
         'instrument_id': fields.many2one('payment_instrument.instrument',
                                          'Payment Instrument'),
         'amount': fields.float('Amount',

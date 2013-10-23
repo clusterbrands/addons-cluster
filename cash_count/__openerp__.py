@@ -24,7 +24,7 @@
     'name': "Cash Count",
     'category': "Generic Modules/Accounting",
     'version': "1.0",
-    'depends': ['hr','pos_base','payment_instrument'],
+    'depends': ['hr','pos_base','fiscal_printer','payment_instrument'],
     'author': "Coorporacion ClusterBrands C.A",
     'description': """
 
