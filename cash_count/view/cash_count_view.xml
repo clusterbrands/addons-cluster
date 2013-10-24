@@ -5,29 +5,51 @@
             <field name="name">cash.count.cashier.session.form.view</field>
             <field name="model">cash.count.cashier.session</field>
             <field name="arch" type="xml">
-                <form string="Cashier Session" version="7.0">
-                    <header>
-                    </header>
-                    <sheet>
-                        <h1 class="oe_title">
-                            Session:
-                            <!-- <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/> -->
-                        </h1>
-                        <!-- <group>
-                            <field name="cash_control" invisible="1" />
-                            <group>
-                                <field name="user_id"/>
-                                <field name="config_id"/>
-                            </group>
-                            <group>
-                                <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
-                                <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
-                            </group>
-                            <newline/>
-                        </group> -->
-                    </sheet>
+                <form string="Cashier Session" version="7.0">            
+                    <group>
+                        <group>
+                            <field name="cashier_id"/>
+                            <field name="reportx_id" readonly="1"/>
+                            <field name="state"/>
+
+                        </group>
+                        <group>
+                            <field name="opening_date" />
+                            <field name="closing_date" />                                
+                        </group>
+                    </group>                    
                 </form>
             </field>
-        </record>        
+        </record>
+        <record model="ir.ui.view" id="view_cash_count_reportx_form">
+            <field name="name">cash.count.reportx.form.view</field>
+            <field name="model">cash.count.reportx</field>
+            <field name="arch" type="xml">
+                <form string="Report X" version="7.0" create="false" edit="false"> 
+                    <sheet>
+                        <h1>
+                            Report X
+                        </h1>
+                        <br/>
+                        <group col="4">
+                            <field name="cashier_session_id" />
+                            <field name="number" />                           
+                            <field name="date" /> 
+                            <field name="printer_id" />
+                        </group> 
+                        <group col="4" string=""> 
+                            <field name="line_ids" nolabel="1">
+                                <tree>
+                                    <field name="statement_id" />
+                                    <field name="journal_id" />
+                                    <field name="instrument_id" />
+                                    <field name="end_balance" />
+                                </tree>
+                            </field> 
+                        </group>
+                    </sheet>         
+                </form>
+            </field>
+        </record>      
     </data>
 </openerp>

@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name="cashier_id"></field>
+                    <field name="sequence_id"></field>
                 </xpath>
                 <xpath expr="//separator[@string='Summary by Payment Methods']" position="replace">
                 </xpath>
@@ -27,9 +28,10 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Cashiers History">
+                        <page string="Cashier Sessions">
                             <field name="cashier_session_ids" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
                                 <tree string="Statements">
+                                    <field name="name" />
                                     <field name="cashier_id" />
                                     <field name="opening_date" />
                                     <field name="closing_date" />
@@ -37,6 +39,10 @@
                                 </tree>
                             </field>
                         </page>
+                      <!--   <page string="X Reports">
+                            <field name="reportx_ids">
+                            </field>
+                        </page> -->
                     </notebook>
                 </xpath>      
             </field>

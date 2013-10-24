@@ -1,6 +1,8 @@
+from openerp import netsvc
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+
 
 
 class wizard_reportx(osv.osv_memory):
@@ -33,15 +35,34 @@ class wizard_reportx(osv.osv_memory):
         # WARNING Insert here fiscal_printer code to print the report
         data = self.browse(cr, uid, ids[0], context=context)
         lines = []
-        for line in data.line_ids:            
+        for line in data.line_ids:
             for s in data.pos_session_id.statement_ids:
                 if s.journal_id.id == int(line.journal_id) and s.instrument_id.id == line.instrument_id.id:
-                    lines.append((0,0,{'statement_id':s.id,'end_balance':line.amount}))
+                    lines.append((0, 0, {'statement_id': s.id, 'end_balance': line.amount}))
+       
+        s_id = data.pos_session_id.cashier_session_id.id
         values = {}
-        values['cashier_session_id'] = data.pos_session_id.cashier_session_id.id
+        values['cashier_session_id'] = s_id
+        values['number'] = str(s_id)
         values['line_ids'] = lines
-        obj = self.pool.get('cash.count.reportx')
-        obj.create(cr, uid, values, context=context)
+        r_obj = self.pool.get('cash.count.reportx')
+        reportx_id = r_obj.create(cr, uid, values, context=context)
+        if reportx_id:
+            s_obj = self.pool.get('cash.count.cashier.session')
+            vals = {'reportx_id': reportx_id}
+            s_obj.write(cr, uid, s_id, vals, context=context)
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'cash.count.cashier.session', s_id, 'close', cr)
+        return {
+            'name': _('Your Session'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.session.opening',
+            'target': 'inline',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+        }
+    
 
 class wizard_reportx_line(osv.osv_memory):
     _name = "wizard.reportx.line"

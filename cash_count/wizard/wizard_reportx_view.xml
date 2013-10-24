@@ -6,7 +6,7 @@
             <field name="model">wizard.reportx</field>
             <field name="arch" type="xml">
                 <form string="Report X" version="7.0">
-                    <sheet>
+                    <!-- <sheet> -->
                         <group string="Report X">
                             <group>
                                 <field name="user_id"/>
@@ -26,7 +26,7 @@
                                 </tree>
                             </field>
                         </group>
-                    </sheet>
+                    <!-- </sheet> -->
                     <footer>
                         <button name="end_session" type="object" string="Validate &amp; End Session" class="oe_highlight"/>
                         or

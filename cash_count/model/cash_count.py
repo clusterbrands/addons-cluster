@@ -77,9 +77,16 @@ class cashier_session(osv.Model):
 
         return False
 
-    # def close_session(self, cr, uid, session_id, employee_id, context=None):
+    def create(self, cr, uid, values, context=None):
+        context = context or {}
+        s_obj = self.pool.get('pos.session')
+        s_id = values.get('session_id')
+        session = s_obj.browse(cr, uid, s_id, context=context)
+        values.update({'name': session.sequence_id._next()})
+        return super(cashier_session, self).create(cr, uid, values, context=context)
 
     _columns = {
+        'name': fields.char('Cashier Session ID', size=32, required=True, readonly=True),
         'session_id': fields.many2one('pos.session', 'Pos Session', required=True),
         'cashier_id': fields.many2one('hr.employee', 'Cashier', required=True),
         'opening_date': fields.datetime('Opening Date', readonly=True),
@@ -87,6 +94,7 @@ class cashier_session(osv.Model):
         'state': fields.selection(SESSION_STATE, 'Status',
                                   required=True, readonly=True,
                                   select=1),
+        'reportx_id': fields.many2one('cash.count.reportx', 'Report X'),
     }
 
     _defaults = {
@@ -95,24 +103,34 @@ class cashier_session(osv.Model):
 
     class reportx (osv.Model):
         _name = "cash.count.reportx"
-
+        _rec_name = 'number'
         _columns = {
             'number': fields.char('Report Number', size=50),
-            'date': fields.datetime('Created Date', readonly=True),
+            'date': fields.datetime('Date', readonly=True),
             'cashier_session_id': fields.many2one('cash.count.cashier.session',
                                                   'Cashier Session'),
-            'printer_id': fields.many2one('fiscal_printer.printer'),
-            'line_ids':fields.one2many('cash.count.reportx.line', 'reportx_id', 'Report Details'), 
+            'printer_id': fields.many2one('fiscal_printer.printer', 'Printer'),
+            'line_ids': fields.one2many('cash.count.reportx.line', 'reportx_id',
+                                        'Report Details'),
         }
 
     class reportx_line(osv.Model):
         _name = "cash.count.reportx.line"
 
         _columns = {
-            'reportx_id': fields.many2one('cash.count.reportx','Report X'),
+            'reportx_id': fields.many2one('cash.count.reportx', 'Report X'),
             'statement_id': fields.many2one('account.bank.statement',
                                             'Statement'),
+            'journal_id': fields.related('statement_id', 'journal_id',
+                                         type='many2one',
+                                         relation='account.journal',
+                                         string='Journal'),
+            'instrument_id': fields.related('statement_id', 'instrument_id',
+                                            type='many2one',
+                                            relation='payment_instrument.instrument',
+                                            string='Instrument'),
             'end_balance': fields.float('Ending Balance',
                                         required=True,
-                                        digits_compute=dp.get_precision('Account')),
+                                        digits_compute=dp.get_precision(
+                                            'Account')),
         }

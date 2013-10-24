@@ -19,6 +19,7 @@ class pos_session_opening(osv.osv_memory):
             'res_model': 'wizard.reportx',
             'target': 'new',
             'view_id': False,
+            'context': context,
             'type': 'ir.actions.act_window',
         }
 
