@@ -2,10 +2,10 @@
 <openerp>
     <data>
         <report auto="False" id="purchase.report_purchase_quotation" model="purchase.order" 
-                name="purchase.quotation" rml="purchase_reports/report/request_quotation.rml"
+                name="purchase.quotation.cluster" rml="purchase_reports/report/request_quotation.rml"
                 string="Request for Quotation"/>
         <report auto="False" id="purchase.report_purchase_order" model="purchase.order"
-                name="purchase.order" rml="purchase_reports/report/order.rml"
+                name="purchase.order.cluster" rml="purchase_reports/report/order.rml"
                 usage="default" string="Purchase Order"/>
     </data>
 </openerp>

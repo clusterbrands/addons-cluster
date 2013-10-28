@@ -31,6 +31,6 @@ class request_quotation(report_sxw.rml_parse):
             'time': time,
             'user': self.pool.get('res.users').browse(cr, uid, uid, context)
         })
-report_sxw.report_sxw('report.cluster.purchase.quotation','purchase.order','purchase_reports/report/request_quotation.rml',parser=request_quotation)
+report_sxw.report_sxw('report.purchase.quotation.cluster','purchase.order','addons/purchase_reports/report/request_quotation.rml',parser=request_quotation)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
