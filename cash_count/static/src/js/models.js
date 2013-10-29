@@ -44,10 +44,6 @@ function cash_count_models(instance, module){
             XReport.set('cashier_session_id',this.get('cashier_session').id);
             this.set('currentXReport',XReport);
         },
-        save_x_report: function(){
-            report = this.get('currentXReport');    
-            console.debug(report.exportAsJSON());               
-        },
     })
 
     module.XReportLine = Backbone.Model.extend({
@@ -73,7 +69,7 @@ function cash_count_models(instance, module){
         exportAsJSON: function(){
             return {
                 'instrument_id':this.get('instrument').id,
-                'journal_name': this.get('instrument').journal_id,
+                'journal_id': this.get('instrument').journal_id,
                 'amount': this.get('amount'),
             }
         }

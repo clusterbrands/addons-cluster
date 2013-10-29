@@ -105,12 +105,22 @@ class cashier_session(osv.Model):
         _name = "cash.count.reportx"
         _rec_name = 'number'
 
-        def create_from_ui(cr, uid, vals, context=None):
+        def create_from_ui(self, cr, uid, data, context=None):
             context = context or {}
-            cs_id = vals.get('cashier_session_id')
+            cs_id = data.get('cashier_session_id')
             cs_obj = self.pool.get('cash.count.cashier.session')
             cs = cs_obj.browse(cr, uid, cs_id, context=context)
             lines = []
+            for line in data.get('lines'):
+                for s in cs.session_id.statement_ids:
+                    if s.journal_id.id == line['journal_id'] and s.instrument_id.id == line['instrument_id']:
+                        lines.append((0, 0, {'statement_id': s.id, 'end_balance': line['amount']}))
+            data['lines'] = lines;
+            r_id = self.create(cr, uid, data, context=context)
+            cs_obj.write(cr, uid, cs_id, {'reportx_id':r_id}, context=context)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'cash.count.cashier.session', cs_id, 'close', cr)
+            return r_id
 
 
         _columns = {
@@ -119,7 +129,7 @@ class cashier_session(osv.Model):
             'cashier_session_id': fields.many2one('cash.count.cashier.session',
                                                   'Cashier Session'),
             'printer_id': fields.many2one('fiscal_printer.printer', 'Printer'),
-            'line_ids': fields.one2many('cash.count.reportx.line', 'reportx_id',
+            'lines': fields.one2many('cash.count.reportx.line', 'reportx_id',
                                         'Report Details'),
         }
 

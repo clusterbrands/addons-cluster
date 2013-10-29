@@ -116,15 +116,14 @@ function cash_count_screens(instance, module){
         },
         validate:function(){
             //need insert printer command here
-            this.pos.save_x_report();
-            // var self = this
-            // var model = new instance.web.Model('cash.count.cashier.session');
-            // var session_id = self.pos.get('cashier_session').id
-            // model.call('close_session',[session_id],null).done(function(response){
-            //     self.pos_widget.screen_selector.set_current_screen(self.next_screen);
-            // });
-           
-         
+            var self = this
+            report = this.pos.get('currentXReport'); 
+            model =   new instance.web.Model('cash.count.reportx');
+            context = new instance.web.CompoundContext()
+            model.call('create_from_ui',[report.exportAsJSON()],{context:context}).done(function(id){
+                self.pos_widget.screen_selector.set_current_screen('xreport-receipt');
+            });
+                
         },
         close: function(){
             this._super();

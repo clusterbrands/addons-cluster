@@ -39,7 +39,7 @@ function payment_instrument_models(instance, module) {
                     cash_journal = _(journals).find(function(j){return j.type == "cash";});
                     if (cash_journal){
                         instruments.push({
-                            id : null,
+                            id : false,
                             name : 'Cash',
                             type : 'cash',
                             type_desc: 'Cash',
