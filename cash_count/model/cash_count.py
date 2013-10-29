@@ -104,6 +104,15 @@ class cashier_session(osv.Model):
     class reportx (osv.Model):
         _name = "cash.count.reportx"
         _rec_name = 'number'
+
+        def create_from_ui(cr, uid, vals, context=None):
+            context = context or {}
+            cs_id = vals.get('cashier_session_id')
+            cs_obj = self.pool.get('cash.count.cashier.session')
+            cs = cs_obj.browse(cr, uid, cs_id, context=context)
+            lines = []
+
+
         _columns = {
             'number': fields.char('Report Number', size=50),
             'date': fields.datetime('Date', readonly=True),

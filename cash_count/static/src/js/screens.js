@@ -116,17 +116,13 @@ function cash_count_screens(instance, module){
         },
         validate:function(){
             //need insert printer command here
-            printer_serial = '1234';
-            report_number = '001';
-            this.pos.get('currentXReport').set('printer_serial',printer_serial);
-            this.pos.get('currentXReport').set('report_number',report_number);
             this.pos.save_x_report();
-            var self = this
-            var model = new instance.web.Model('cash.count.cashier.session');
-            var session_id = self.pos.get('cashier_session').id
-            model.call('close_session',[session_id],null).done(function(response){
-                self.pos_widget.screen_selector.set_current_screen(self.next_screen);
-            });
+            // var self = this
+            // var model = new instance.web.Model('cash.count.cashier.session');
+            // var session_id = self.pos.get('cashier_session').id
+            // model.call('close_session',[session_id],null).done(function(response){
+            //     self.pos_widget.screen_selector.set_current_screen(self.next_screen);
+            // });
            
          
         },
@@ -172,7 +168,7 @@ function cash_count_screens(instance, module){
 
         refresh: function() {
             this.currentXReport = this.pos.get('currentXReport');
-            this.cashier = this.currentXReport.get('cashier');
+            this.cashier = this.pos.get('cashier');
             this.$('.pos-receipt-container', this.$el).html(QWeb.render('XReportTicket',{widget:this}));
         },
 

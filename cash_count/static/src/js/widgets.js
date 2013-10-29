@@ -10,7 +10,6 @@ function cash_count_widgets(instance, module){
             this.loging_screen.appendTo($('#rightpane'));
             this.screen_selector.add_screen('login-screen',this.loging_screen);
 
-
             this.login_widget = new module.LoginWidget(this, {modal:false,closeable:false,draggable:false});
             this.login_widget.appendTo($('.point-of-sale'));
             this.screen_selector.add_popup('login-widget',this.login_widget);
@@ -427,19 +426,16 @@ function cash_count_widgets(instance, module){
     module.OrderWidgetXReport = module.PosBaseWidget.extend({
         template:"OrderWidgetXReport",
         getCashierName: function(){
-            return this.pos.get('currentXReport').get('cashier').name;
+            return this.pos.get('cashier').name;
         },
         getUserName: function(){
-            return this.pos.get('currentXReport').get('user').name;
+            return this.pos.get('user').name;
         },
         getPosName: function(){
-            return this.pos.get('currentXReport').get('pos_config').name;
+            return this.pos.get('pos_config').name;
         },
         getDate: function(){
-            return this.pos.get('currentXReport').get('date');
-        },
-        getTime: function(){
-            return this.pos.get('currentXReport').get('time');
+            return instance.web.date_to_str(new Date());
         },
     })
 }
