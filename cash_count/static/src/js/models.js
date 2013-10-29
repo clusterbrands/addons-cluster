@@ -14,7 +14,7 @@ function cash_count_models(instance, module){
                 .then(function(){
                     return self.fetch('hr.employee',
                                       ['name','username','image_small'],
-                                      [['role','=','cashier']])
+                                      [['role','in',['cashier','manager']]])
                 }).then(function(cashiers){
                     self.set('cashiers',cashiers)
                     session_id = self.get('pos_session').id
