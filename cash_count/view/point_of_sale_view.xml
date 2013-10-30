@@ -46,7 +46,7 @@
                                     <field name="cashier_id" />
                                     <field name="number" />
                                     <field name="date" /> 
-                                    <field name="total" />                                    
+                                    <field name="total" sum="Total" />                                    
                                 </tree>
                             </field>
                         </page>
