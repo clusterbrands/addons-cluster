@@ -127,6 +127,7 @@ class cashier_session(osv.Model):
                         lines.append(
                             (0, 0, {'statement_id': s.id, 'end_balance': line['amount']}))
             data['lines'] = lines
+            data['date'] = time.strftime('%Y-%m-%d %H:%M:%S')
             r_id = self.create(cr, uid, data, context=context)
             cs_obj.write(cr, uid, cs_id, {'reportx_id': r_id}, context=context)
             wf_service = netsvc.LocalService("workflow")

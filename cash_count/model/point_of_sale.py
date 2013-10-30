@@ -53,10 +53,10 @@ class pos_session(osv.Model):
                                      string='Current Cashier'),
         'cashier_session_ids': fields.one2many('cash.count.cashier.session',
                                                'session_id', 'Cashier Sessions',
-                                               required=False),
+                                               required=False, readonly=True),
         'reportx_ids': fields.one2many('cash.count.reportx',
                                        'pos_session_id', 'Reports X',
-                                        required=False),
+                                        required=False, readonly=True),
         
 
 

@@ -32,7 +32,9 @@
                         </h1>
                         <br/>
                         <group col="4">
+                            <field name="pos_session_id" />
                             <field name="cashier_session_id" />
+                            <field name="cashier_id" />
                             <field name="number" />                           
                             <field name="date" /> 
                             <field name="printer_id" />
