@@ -46,14 +46,18 @@ class pos_session(osv.Model):
                                               type='many2one',
                                               relation='cash.count.cashier.session',
                                               string='Current Cashier Session'),
-        'cashier_session_ids': fields.one2many('cash.count.cashier.session',
-                                               'session_id', 'Cashier Sessions',
-                                               required=False),
         'cashier_id': fields.related('cashier_session_id', 'cashier_id',
                                      type='many2one', 
                                      readonly='True',
                                      relation='hr.employee',
                                      string='Current Cashier'),
+        'cashier_session_ids': fields.one2many('cash.count.cashier.session',
+                                               'session_id', 'Cashier Sessions',
+                                               required=False),
+        'reportx_ids': fields.one2many('cash.count.reportx',
+                                       'pos_session_id', 'Reports X',
+                                        required=False),
+        
 
 
     }

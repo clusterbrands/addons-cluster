@@ -105,6 +105,16 @@ class cashier_session(osv.Model):
         _name = "cash.count.reportx"
         _rec_name = 'number'
 
+        def _compute_total(self, cr, uid, ids, fieldnames, args, context=None):
+            context = context or {}
+            result = dict()
+            for record in self.browse(cr, uid, ids, context=context):
+                total = 0.0
+                for line in record.lines:
+                    total += line.end_balance
+                result[record.id] = total
+            return result
+
         def create_from_ui(self, cr, uid, data, context=None):
             context = context or {}
             cs_id = data.get('cashier_session_id')
@@ -114,23 +124,33 @@ class cashier_session(osv.Model):
             for line in data.get('lines'):
                 for s in cs.session_id.statement_ids:
                     if s.journal_id.id == line['journal_id'] and s.instrument_id.id == line['instrument_id']:
-                        lines.append((0, 0, {'statement_id': s.id, 'end_balance': line['amount']}))
-            data['lines'] = lines;
+                        lines.append(
+                            (0, 0, {'statement_id': s.id, 'end_balance': line['amount']}))
+            data['lines'] = lines
             r_id = self.create(cr, uid, data, context=context)
-            cs_obj.write(cr, uid, cs_id, {'reportx_id':r_id}, context=context)
+            cs_obj.write(cr, uid, cs_id, {'reportx_id': r_id}, context=context)
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'cash.count.cashier.session', cs_id, 'close', cr)
+            wf_service.trg_validate(
+                uid, 'cash.count.cashier.session', cs_id, 'close', cr)
             return r_id
-
 
         _columns = {
             'number': fields.char('Report Number', size=50),
             'date': fields.datetime('Date', readonly=True),
             'cashier_session_id': fields.many2one('cash.count.cashier.session',
                                                   'Cashier Session'),
+            'cashier_id': fields.related('cashier_session_id', 'cashier_id',
+                                         type='many2one',
+                                         relation='hr.employee',
+                                         string='Cashier'),
+            'pos_session_id': fields.many2one('pos.session',
+                                              'PoS Session'),
             'printer_id': fields.many2one('fiscal_printer.printer', 'Printer'),
             'lines': fields.one2many('cash.count.reportx.line', 'reportx_id',
-                                        'Report Details'),
+                                     'Report Details'),
+            'total': fields.function(_compute_total, type='float',
+                                     string='Total',
+                                     digits_compute=dp.get_precision('Account')),
         }
 
     class reportx_line(osv.Model):

@@ -4,12 +4,12 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 
-
 class wizard_reportx(osv.osv_memory):
     _name = "wizard.reportx"
 
     _columns = {
         'pos_session_id': fields.many2one('pos.session', 'PoS Session'),
+        'cashier_session_id': fields.many2one('cash.count.cashier.session', 'Cashier Session'),
         'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
         'cashier_id': fields.many2one('hr.employee', 'Cashier', readonly=True),
         'config_id': fields.many2one('pos.config', 'Point of Sale',
@@ -25,6 +25,8 @@ class wizard_reportx(osv.osv_memory):
             cr, uid, context.get('active_id'), context=context)
         result = {}
         result['pos_session_id'] = sop.pos_session_id.id
+        result[
+            'cashier_session_id'] = sop.pos_session_id.cashier_session_id.id
         result['user_id'] = sop.pos_session_id.user_id.id
         result['cashier_id'] = sop.pos_session_id.cashier_id.id
         result['config_id'] = sop.pos_session_id.config_id.id
@@ -36,23 +38,18 @@ class wizard_reportx(osv.osv_memory):
         data = self.browse(cr, uid, ids[0], context=context)
         lines = []
         for line in data.line_ids:
-            for s in data.pos_session_id.statement_ids:
-                if s.journal_id.id == int(line.journal_id) and s.instrument_id.id == line.instrument_id.id:
-                    lines.append((0, 0, {'statement_id': s.id, 'end_balance': line.amount}))
-       
-        s_id = data.pos_session_id.cashier_session_id.id
+            lines.append({
+                'journal_id': int(line.journal_id),
+                'instrument_id': line.instrument_id.id,
+                'amount': line.amount,
+            })
         values = {}
-        values['cashier_session_id'] = s_id
-        values['number'] = str(s_id)
-        values['line_ids'] = lines
-        r_obj = self.pool.get('cash.count.reportx')
-        reportx_id = r_obj.create(cr, uid, values, context=context)
-        if reportx_id:
-            s_obj = self.pool.get('cash.count.cashier.session')
-            vals = {'reportx_id': reportx_id}
-            s_obj.write(cr, uid, s_id, vals, context=context)
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'cash.count.cashier.session', s_id, 'close', cr)
+        values['pos_session_id'] = data.pos_session_id.id
+        values['cashier_session_id'] = data.cashier_session_id.id
+        values['number'] = str(data.cashier_session_id.id)
+        values['lines'] = lines
+        obj = self.pool.get('cash.count.reportx')
+        obj.create_from_ui(cr, uid, values, context=context)
         return {
             'name': _('Your Session'),
             'view_type': 'form',
@@ -62,7 +59,7 @@ class wizard_reportx(osv.osv_memory):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
-    
+
 
 class wizard_reportx_line(osv.osv_memory):
     _name = "wizard.reportx.line"
@@ -87,6 +84,15 @@ class wizard_reportx_line(osv.osv_memory):
             vals.update({'type': journal.type, 'instrument_id': ''})
         return {'value': vals}
 
+    def _check_line_uniqueness(self, cr, uid, ids, context=None):
+        context = context or {}
+        data = self.browse(cr, uid, ids[0], context=context)
+        c = [('reportx_id', '=', data.reportx_id.id), 
+             ('journal_id', '=', int(data.journal_id)),
+             ('instrument_id', '=', data.instrument_id.id)]
+        result = self.search(cr, uid, c, context=context)
+        return len(result) <= 1
+
     _columns = {
         'reportx_id': fields.many2one('wizard.reportx', 'Report'),
         'journal_id': fields.selection(_get_journals, 'Journal', required=True),
@@ -97,3 +103,8 @@ class wizard_reportx_line(osv.osv_memory):
                                required=True,
                                digits_compute=dp.get_precision('Account')),
     }
+
+    _constraints = [
+        (_check_line_uniqueness,_("Duplicated Payment Instrument"), [])
+
+    ]

@@ -42,6 +42,7 @@ function cash_count_models(instance, module){
         new_x_report: function(){
             var XReport = new module.XReport({});
             XReport.set('cashier_session_id',this.get('cashier_session').id);
+            XReport.set('pos_session_id',this.get('pos_session').id);
             this.set('currentXReport',XReport);
         },
     })
@@ -84,6 +85,7 @@ function cash_count_models(instance, module){
             this._super(attrs);
             this.set({
                 'cashier_session_id': null,
+                'pos_session_id': null,
                 'printer_id': null,
                 'number': null,
                 'date': null,
@@ -121,6 +123,7 @@ function cash_count_models(instance, module){
             },this));
             return {
                 'cashier_session_id': this.get('cashier_session_id'),
+                'pos_session_id': this.get('pos_session_id'),
                 'printer_id': this.get('printer_id'), //WARNING need implementation
                 'date': this.get('date'),
                 'number': this.get('number'),

@@ -38,7 +38,7 @@
                             <field name="printer_id" />
                         </group> 
                         <group col="4" string=""> 
-                            <field name="line_ids" nolabel="1">
+                            <field name="lines" nolabel="1">
                                 <tree>
                                     <field name="statement_id" />
                                     <field name="journal_id" />

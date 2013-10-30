@@ -39,10 +39,17 @@
                                 </tree>
                             </field>
                         </page>
-                      <!--   <page string="X Reports">
+                        <page string="Reports X">
                             <field name="reportx_ids">
+                                <tree string="Reports X">
+                                    <field name="cashier_session_id" />
+                                    <field name="cashier_id" />
+                                    <field name="number" />
+                                    <field name="date" /> 
+                                    <field name="total" />                                    
+                                </tree>
                             </field>
-                        </page> -->
+                        </page>
                     </notebook>
                 </xpath>      
             </field>
