@@ -1,7 +1,6 @@
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
-
 class pos_session(osv.Model):
     _inherit = 'pos.session'
 

@@ -245,7 +245,7 @@ function cash_count_widgets(instance, module){
                 'journal_id' : cash_register.get('journal').id,
                 'account_id' : cash_register.get('journal').internal_account_id[0],
                 'amount': this.amount,
-                'ref': '',
+                'ref': this.pos.get('cashier_session').name,
                 'statement_id': cash_register.id,
                 'cashier_id':this.pos.get('cashier').id,
             }
