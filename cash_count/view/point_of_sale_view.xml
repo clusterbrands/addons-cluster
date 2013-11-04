@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data> 
+        <record model="ir.ui.view" id="view_cash_count_pos_session_form">
+            <field name="name">cash.count.pos.session.form.view</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="cashier_id"></field>
+                    <field name="sequence_id"></field>
+                </xpath>
+                <xpath expr="//separator[@string='Summary by Payment Methods']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='statement_ids']" position="replace">
+                    <notebook colspan="4">
+                        <page string="Payment Summary">
+                            <field name="statement_ids" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                                <tree string="Statements">
+                                    <field name="name" />
+                                    <field name="journal_id" />
+                                    <field name="balance_start" />
+                                    <field name="total_entry_encoding" />
+                                    <field name="balance_end_x" />
+                                    <field name="difference" />
+                                    <field name="balance_end_real" />
+                                    <field name="currency" groups="base.group_multi_currency" />
+                                    <field name="state" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Cashier Sessions">
+                            <field name="cashier_session_ids" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                                <tree string="Statements">
+                                    <field name="name" />
+                                    <field name="cashier_id" />
+                                    <field name="opening_date" />
+                                    <field name="closing_date" />
+                                    <field name="state" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Reports X">
+                            <field name="reportx_ids">
+                                <tree string="Reports X">
+                                    <field name="cashier_session_id" />
+                                    <field name="cashier_id" />
+                                    <field name="number" />
+                                    <field name="date" /> 
+                                    <field name="total" sum="Total" />                                    
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>      
+            </field>
+        </record>      
+    </data>
+</openerp>

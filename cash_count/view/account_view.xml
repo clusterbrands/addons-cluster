@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_bank_statement_form2_cashier">
+            <field name="name">account.bank.statement.form.cashier</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="cashier_id" options="{'no_open': True,'create_edit': false}" />
+                </xpath> 
+            </field>  
+        </record>
+    </data>
+</openerp>

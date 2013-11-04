@@ -39,12 +39,13 @@ function payment_instrument_models(instance, module) {
                     cash_journal = _(journals).find(function(j){return j.type == "cash";});
                     if (cash_journal){
                         instruments.push({
-                            id : -1,
+                            id : false,
                             name : 'Cash',
                             type : 'cash',
                             type_desc: 'Cash',
                             code : 'CSH',
                             journal_id : cash_journal.id,
+                            journal_name: cash_journal.name,
                         });
                     }
                     self.set("payment_instruments",instruments);
