@@ -1,2 +1,0 @@
-import pos_cashier
-import point_of_sale

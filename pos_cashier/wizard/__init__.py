@@ -1,2 +1,0 @@
-import pos_session_opening
-import pos_cashier_session_opening
