@@ -101,6 +101,8 @@ class cashier_session(osv.Model):
         'state': 'opened',
     }
 
+    _order = "name"
+
     class reportx (osv.Model):
         _name = "cash.count.reportx"
         _rec_name = 'number'

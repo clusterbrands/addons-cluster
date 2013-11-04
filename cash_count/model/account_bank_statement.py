@@ -5,6 +5,42 @@ class account_bank_statement(osv.osv):
 
     _inherit = 'account.bank.statement' 
 
+    def _compute_difference(self, cr, uid, ids, fieldnames, args, context=None):
+        result =  dict.fromkeys(ids, 0.0)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = obj.balance_end_x - obj.balance_end
+        return result
+
+    def _get_statement2(self, cr, uid, ids, context=None):
+        context = context or {}
+        res = []
+        obj = self.pool.get('cash.count.reportx.line')
+        for line in obj.browse(cr, uid, ids, context=context):
+            res.append(line.statement_id.id)
+        return res
+
+
+    def _balance_end_x(self, cr, uid, ids, name, attr, context=None):
+        context = context or {}
+        res = {}
+        for statement in self.browse(cr, uid, ids, context=context):
+            res[statement.id] = statement.balance_start
+            for line in statement.reportx_line_ids:
+                res[statement.id] += line.end_balance
+        return res
+
+    _columns = {
+        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float"),
+        'reportx_line_ids': fields.one2many('cash.count.reportx.line',
+                                            'statement_id',
+                                            'Report X Lines'),
+        'balance_end_x': fields.function(_balance_end_x, 
+            store={
+                'cash.count.reportx.line': (_get_statement2,['end_balance'],10),
+            },
+            string="Cashiers Balance"), 
+    }
+
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(account_bank_statement, self).fields_view_get(cr, user, view_id, view_type, context, toolbar, submenu)
         if view_type=='form':
