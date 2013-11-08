@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="product_property_list_action">
+             <field name="name">Products Properties</field>
+             <field name="res_model">pos_restaurant.product_property</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem 
+            name="Products Properties"
+            parent="point_of_sale.menu_point_of_sale_product"
+            id="menu_point_of_sale_product_property"
+            action="product_property_list_action" />
+    </data>
+</openerp>
