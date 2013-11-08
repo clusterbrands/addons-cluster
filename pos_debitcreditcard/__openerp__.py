@@ -1,34 +1,36 @@
 #!/usr/bin/python
-# -*- encoding: utf-8 -*-                                                       
-############################################################################### 
-#    Module Writen to OpenERP, Open Source Management Solution                  
-#    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).                 
-#    All Rights Reserved                                                        
-# Credits######################################################                 
-#    Coded by: Luis Escobar <luis@vauxoo.com>                                      
-#    Audited by:  Humberto Arocha <humbertoarocha@gmail.com>                    
-############################################################################### 
-#    This program is free software: you can redistribute it and/or modify          
-#    it under the terms of the GNU Affero General Public License as published   
-#    by the Free Software Foundation, either version 3 of the License, or          
-#    (at your option) any later version.                                        
-#                                                                               
-#    This program is distributed in the hope that it will be useful,            
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of             
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              
-#    GNU Affero General Public License for more details.                        
-#                                                                               
-#    You should have received a copy of the GNU Affero General Public License   
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.         
-###############################################################################
+# -*- encoding: utf-8 -*-
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    Module Writen to OpenERP, Open Source Management Solution
+#    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
+#    All Rights Reserved
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    Author: Cluster Brands
+#    Copyright 2013 Cluster Brands
+#    Designed By: Jose J Perez M <jose.perez@clusterbrands.com>
+#    Coded by: Luis Escobar <luis@vauxoo.com>
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-{                                                                                  
-    "name": "Pos Debit and Credit Card Payment Instrument",
-    "version": "0.1",
-    "depends": ["base", "point_of_sale","payment_instrument"],
-    "summary": "",
-    "author": "Vauxoo",
-    "description": """
+{
+    'name': 'Pos Debit and Credit Card Payment Instrument',
+    'category': 'Accounting/Point of Sale',
+    'version': '0.1',
+    'author': 'Vauxoo/Cluster Brands',
+    'website': 'http://www.clusterbrands.com',
+    'description': """
     Add a process in POS to work with debit and credit card payments instrument.
 
     Note:
@@ -73,20 +75,27 @@
          Luego que realice las ventas y desee realizar el cierre de un lote del Punto de Venta 
          se debe abrir el 'Bank statement' que desee procesar y presione el boton 'Close Lot'
 
-    """,                      
-    "website": "http://vauxoo.com",                                             
-    "category": "Point Of Sale",                                                
-    "data": [                                                                   
-        #'view/point_of_sale_view.xml',
+    """,
+    'depends': [
+        'base',
+        'point_of_sale',
+        'payment_instrument',
+    ],
+    'data': [
         'wizard/close_lot_view.xml',
         'view/account_view.xml',
-    ],                                                                          
-    'js':[
-    ],                                                                          
+    ],
+    'js': [
+    ],
     'css': [
-    ],                                                                          
-    'qweb': [ 
-    ],                                                                          
-    "active": False,                                                            
-    "installable": True,                                                        
+    ],
+    'qweb': [
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'installable': True,
+    'active': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

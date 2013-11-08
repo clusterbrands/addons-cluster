@@ -1,15 +1,18 @@
-
+#!/usr/bin/python
 # -*- encoding: utf-8 -*-
-#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
-# Credits######################################################
-#    Coded by: Coorporacion ClusterBrands C.A
-#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    Author: Cluster Brands
+#    Copyright 2013 Cluster Brands
+#    Designed By: Jose J Perez M <jose.perez@clusterbrands.com>
+#    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -19,13 +22,13 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
-    'name': "POS Base",
-    'category': "Generic Modules/Accounting",
-    'version': "1.0",
-    'depends': ["point_of_sale"],
-    'author': "Coorporacion ClusterBrands C.A",
+    'name': 'POS Base',
+    'category': 'Point of Sale',
+    'version': '1.0',
+    'author': 'Cluster Brands',
+    'website': 'http://www.clusterbrands.com',
     'description': """
 
 This module contains a set of generic widgets to be used as a 
@@ -37,7 +40,11 @@ Main features
     * Alert widget to show warning messages.
     * Confirm widget to emulate javascripts prompt messages.
 """,
-    'data': [],
+    'depends': [
+        'point_of_sale'
+    ],
+    'data': [
+    ],
     'js': [
         'static/src/js/backbone-super-min.js',
         'static/src/js/screens.js',
@@ -49,4 +56,11 @@ Main features
     'qweb': [
         'static/src/xml/pos_base.xml',
     ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'installable': True,
+    'active': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

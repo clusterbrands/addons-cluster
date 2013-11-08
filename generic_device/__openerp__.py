@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
-###########################################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
-###############Credits######################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    Author: Cluster Brands
+#    Copyright 2013 Cluster Brands
+#    Designed By: Jose J Perez M <jose.perez@clusterbrands.com>
 #    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
-#                    
-#############################################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
 #    by the Free Software Foundation, either version 3 of the License, or
@@ -20,11 +22,14 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 {
-    'name' : "Generic Device",
-    'category' : "Test",
-    'version' : "1.0",
-    'author' : "Me",
+    'name': 'Generic Device',
+    'category': 'Generic Modules',
+    'version': '1.0',
+    'author': 'Cluster Brands',
+    'website': 'http://www.clusterbrands.com',
     'description': """
 
 This module provides a generic interface for the implementation 
@@ -36,5 +41,21 @@ Main features
 * Generic methods to send a receive commands and error handling
 
 """,
-    'data' : [],
+    'depends': [
+    ],
+    'data': [
+    ],
+    'js': [
+    ],
+    'css': [
+    ],
+    'qweb': [
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'installable': True,
+    'active': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
