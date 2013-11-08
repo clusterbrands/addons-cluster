@@ -1,15 +1,18 @@
-
+#!/usr/bin/python
 # -*- encoding: utf-8 -*-
-#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
-# Credits######################################################
-#    Coded by: Coorporacion ClusterBrands C.A
-#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    Author: Cluster Brands
+#    Copyright 2013 Cluster Brands
+#    Designed By: Jose J Perez M <jose.perez@clusterbrands.com>
+#    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -19,25 +22,35 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
-    'name': "Web Remote Address",
-    'category': "Generic Modules/Web",
-    'version': "1.0",
-    'depends': ['web'],
-    'author': "Coorporacion ClusterBrands C.A",
+    'name': 'Web Remote Address',
+    'category': 'Generic Modules/Web',
+    'version': '1.0',
+    'author': 'Cluster Brands',
+    'website': 'http://www.clusterbrands.com',
     'description': """
 
 This module extend the OpenERPSession class to add the remote address of 
 the http request to the context
 
-Main features
--------------
-
 """,
-    'data': [],
-    'js': [],
-    'css': [],
-    'qweb': [],
-    'auto_install': True,
+    'depends': [
+        'web'
+    ],
+    'data': [
+    ],
+    'js': [
+    ],
+    'css': [
+    ],
+    'qweb': [
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'installable': True,
+    'active': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

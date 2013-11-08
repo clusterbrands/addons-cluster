@@ -1,14 +1,15 @@
-
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
-###########################################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
-###############Credits######################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    Author: Cluster Brands
+#    Copyright 2013 Cluster Brands
+#    Designed By: Jose J Perez M <jose.perez@clusterbrands.com>
 #    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
-#                    
-#############################################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
 #    by the Free Software Foundation, either version 3 of the License, or
@@ -21,12 +22,13 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
     'name': "Payment Instrument",
-    'category': "Generic Modules/Accounting",
+    'category': "Point of Sale",
     'version': "1.0",
-    'depends': ['point_of_sale','pos_base'],
-    'author': "Coorporacion ClusterBrands C.A",
+    'author': 'Cluster Brands',
+    'website': 'http://www.clusterbrands.com',
     'description': """
 
 This module allows you to add multiple POS payment instruments. 
@@ -46,6 +48,10 @@ Note:
  -A payment instrument must contain at least one rule
 
 """,
+    'depends': [
+        'point_of_sale',
+        'pos_base'
+    ],
     'data': [
         'view/account_view.xml',
         'view/payment_instrument_view.xml',
@@ -61,5 +67,14 @@ Note:
     'css': [
         'static/src/css/pos.css',
     ],
-    'qweb': ['static/src/xml/payment_instrument.xml'],
+    'qweb': [
+        'static/src/xml/payment_instrument.xml'
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'installable': True,
+    'active': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

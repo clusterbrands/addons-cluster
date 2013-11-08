@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
-#############################################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
-###############Credits#######################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    Author: Cluster Brands
+#    Copyright 2013 Cluster Brands
+#    Designed By: Jose J Perez M <jose.perez@clusterbrands.com>
 #    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
-#                    
-#############################################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
 #    by the Free Software Foundation, either version 3 of the License, or
@@ -20,12 +22,13 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
-    'name': "Cluster Brands Purchase Reports",
-    'category': "Generic Modules/Purchase",
-    'version': "1.0",
-    'depends': ['purchase'],
-    'author': "Coorporacion ClusterBrands C.A",
+    'name': 'Cluster Brands Purchase Reports',
+    'category': 'Purchase',
+    'version': '1.0',
+    'author': 'Cluster Brands',
+    'website': 'http://www.clusterbrands.com',
     'description': """
     
 This module contain a custom purchase
@@ -39,10 +42,23 @@ Main features
     * order report with a user signature and venezuelan vat format
 
 """,
+    'depends': [
+        'purchase',
+    ],
     'data': [
         'purchase_report.xml',
     ],
-    'js': [],
-    'css': [],
-    'qweb': [],
+    'js': [
+    ],
+    'css':[
+    ],
+    'qweb': [
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'installable': True,
+    'active': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

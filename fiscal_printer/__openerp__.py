@@ -1,16 +1,18 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
-###########################################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
-###############Credits######################################################
-#    Coded by: Eduardo Ochoa    <eduardo.ochoa@clusterbrands.com.ve>
-#                               <elos3000@gmail.com>
-#############################################################################
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#    Author: Cluster Brands
+#    Copyright 2013 Cluster Brands
+#    Designed By: Jose J Perez M <jose.perez@clusterbrands.com>
+#    Coded by: Eduardo Ochoa  <eduardo.ochoa@clusterbrands.com.ve>
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -20,18 +22,36 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
-    'name' : "Fiscal Printer",
-    'category' : "Test",
-    'version' : "1.0",
-    'depends':['l10n_ve_fiscal_requirements','generic_device'],
-    'author' : "Me",
+    'name': 'Fiscal Printer',
+    'category': 'Generic/Fiscal Printer',
+    'version': '1.0',
+    'author': 'Cluster Brands',
+    'website': 'http://www.clusterbrands.com',
     'description' : """Fiscal Printer""",
     'init_xml': [
         'data/fiscal_printer_data.xml'
-     ],
-    'data' : [        
+    ],
+    'depends': [
+        'l10n_ve_fiscal_requirements',
+        'generic_device'
+    ],
+    'data': [
         'view/fiscal_printer_view.xml',
         'view/fiscal_printer_action_menu.xml',
     ],
+    'js': [
+    ],
+    'css': [
+    ],
+    'qweb': [
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'installable': True,
+    'active': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
