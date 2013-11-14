@@ -16,7 +16,7 @@ function pos_restaurant_widgets(instance, module){
             this._super(parent, options)
         },
         show_selector: function(product){
-            property_selector = new module.PropertySelector(this,{product:product})
+            property_selector = new module.PropertySelector(this,{product:product,draggable:false})
             property_selector.appendTo($('.point-of-sale'));
             property_selector.show();               
         },
@@ -51,18 +51,15 @@ function pos_restaurant_widgets(instance, module){
             if(this.scrollbar){
                 this.scrollbar.destroy();
             }
-            var products = this.pos.get('products')
-            _(this.current.get('optional_product_ids')).each(function(p) {
-                if (products.get(p)){
-                    var product = new module.CustomProductWidget(self, {
-                        model: products.get(p),
-                        click_product_action: self.click_product_action,
-                    });
-                    self.productwidgets.push(product);
-                    product.on('select',self,self.select);
-                    product.on('unselect',self,self.unSelect);
-                    product.appendTo(self.$('.product-list'));     
-                }              
+          
+            _(this.current.get('optional_products')).each(function(p) {         
+                var product = new module.CustomProductWidget(self, {
+                    model: p,
+                    click_product_action: self.click_product_action,
+                });
+                self.productwidgets.push(product);
+                product.on('select',self,self.select);
+                product.appendTo(self.$('.product-list'));                      
             });
 
             this.scrollbar = new module.ScrollbarWidget(this,{
@@ -84,18 +81,25 @@ function pos_restaurant_widgets(instance, module){
             var properties = new module.ProductPropertiesCollection();
             var product_properties = self.pos.get('product_properties');
             _(product.get('property_ids')).each(function(id) {
-                if (product_properties.get(id))
-                    properties.push(product_properties.get(id));
+                var property = product_properties.get(id);
+                var products = self.pos.get('products');
+                var optional_products = []
+                _.each(property.get('optional_product_ids'), function(p){
+                    optional_products.push(products.get(p));
+                });
+                property.set('optional_products', optional_products);
+                properties.push(property);
             });
             properties.sortByField('sequence')
             return properties
         },
-        select: function(product){
-            console.debug(product)
-            this.current.selected_products.push(product.id);
-        },
-        unSelect: function(product){
-            
+        select: function(product, widget){
+            if (this.current.get('single_choice')){
+                _.each(this.productwidgets,function(w){
+                    w.unSelect();
+                });
+            }
+            widget.select();
         },
         set_step: function(value){
             this.step = value;
@@ -111,7 +115,6 @@ function pos_restaurant_widgets(instance, module){
             }
         },
         onClickBtnNext: function(){
-            console.debug(this.product_properties);
             if (this.product_properties.at(this.step + 1)){
                 this.set_step(this.step + 1);
             }
@@ -121,16 +124,27 @@ function pos_restaurant_widgets(instance, module){
         init: function(parent, options) {
             this._super(parent,options);
             this.click_product_action = this.on_click_action;
-            this.selected = false;
         },
         on_click_action: function(){
-            this.selected = !this.selected;
-            if (this.selected){
-                this.$el.addClass('selected');
-                this.trigger('select', this.model);
+            this.model.set('selected',!this.model.get('selected'));
+            if (this.model.get('selected')){
+                this.trigger('select', this.model, this);
             }else{
                 this.$el.removeClass('selected');
-                this.trigger('unselect', this.model);
+            }
+        },
+        select:function(){
+            this.model.set('selected', true);
+            this.$el.addClass('selected');
+        },
+        unSelect: function(){ 
+            this.model.set('selected', false);
+            this.$el.removeClass('selected');
+        },
+        renderElement: function(){
+            this._super();
+            if (this.model.get('selected')){
+                this.$el.addClass('selected');
             }
         },
     })

@@ -5,8 +5,8 @@ function pos_restaurant_models(instance, module){
             self = this
             loaded = this._super().then(function(){
                 return self.fetch('pos_restaurant.product_property',[],[]);
-            }).then(function(product_properties){
-                product_properties = new module.ProductPropertiesCollection(product_properties)
+            }).then(function(properties){
+                var product_properties = new module.ProductPropertiesCollection(properties)
                 self.set('product_properties',product_properties);
             });
             return loaded 
