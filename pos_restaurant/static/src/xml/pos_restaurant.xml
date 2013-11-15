@@ -1,18 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
+
+    <t t-name="SummaryWidget">
+        <div align="left" class="pos-sale-ticket">
+            <table>
+                <colgroup>
+                    <col width='75%' />
+                    <col width='25%' />
+                </colgroup>
+                <tr>
+                    <td><t t-esc="widget.product.get('name')"/></td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(widget.product.get('price'))"/>
+                    </td>
+                </tr>
+            </table>            
+        </div>
+        
+        <t t-foreach="widget.product_properties.toArray()" t-as="property" >
+            <t t-if="property.get('selected_products').length > 0">
+                <div align="left" class="pos-sale-ticket" >
+                    <t t-esc="property.get('name')" />:
+                    <table>
+                        <colgroup>
+                            <col width='5%' />
+                            <col width='70%' />
+                            <col width='25%' />
+                        </colgroup>
+                        <tr t-foreach="property.get('selected_products')" t-as="product">
+                            <td></td>
+                            <td>
+                               <t t-esc="product.get('name')"/>
+                            </td>
+                            <td class="pos-right-align">
+                                <t t-esc="widget.format_currency(product.get('price'))"/>
+                                <a href='javascript:void(0)' class='delete-payment-line' 
+                                    t-att-product_id="product.id" t-att-property_id="property.id">
+                                    <img src="/pos_restaurant/static/src/img/delete.png" />
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+
+        <div align="left" class="pos-sale-ticket">
+            <table>
+                <colgroup>
+                    <col width='75%' />
+                    <col width='25%' />
+                </colgroup>
+                <tr>
+                    <td>Total:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(widget.getTotal())"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+      
+    </t>
+    
     <t t-name="PropertySelector" t-extend="BasePopup">
         <t t-jquery="span.title" t-operation="inner">
             <t t-esc="widget.current.get('name')" />
         </t>
         <t t-jquery="div.content" t-operation="inner">
-            <div align="left" style="width:800px;height:350px;">
-                <div class='product-list-container'>
-                    <div class="product-list-scroller">
-                        <ol id="products-screen-ol" class="product-list">
-                        </ol>
+            <div align="left" style="width:800px;height:450px;">
+                <t t-if="widget.step &lt; widget.last">
+                    <div class='product-list-container'>
+                        <div class="product-list-scroller">
+                            <ol id="products-screen-ol" class="product-list">
+                            </ol>
+                        </div>
+                        <span class="placeholder-ScrollbarWidget" />
                     </div>
-                    <span class="placeholder-ScrollbarWidget" />
-                </div>
+                </t>
+                <t t-if="widget.step == widget.last">
+                    <t t-call="SummaryWidget" />
+                </t>
             </div>
         </t> 
         <t t-jquery="div.buttonset" t-operation="inner">
@@ -28,11 +95,12 @@
                     <div>Next</div>
                 </button>
             </t>   
-             <button name="done" style="height:80px;width:90px;">
-                <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
-                <div>Done</div>
-            </button> 
-        </t> 
+            <t t-if="widget.step == widget.last">
+                <button name="done" style="height:80px;width:90px;">
+                    <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
+                    <div>Done</div>
+                </button>
+            </t> 
+        </t>
     </t>
-
 </templates>

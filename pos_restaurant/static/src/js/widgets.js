@@ -27,6 +27,7 @@ function pos_restaurant_widgets(instance, module){
         events:{
             "click button[name='done']":"onClickBtnDone",
             "click button[name='next']":"onClickBtnNext",
+            "click a.delete-payment-line":"onClickBtnDelete",
             "click button[name='previous']":"onClickBtnPrevious",           
         },
         init: function(parent, options){
@@ -48,9 +49,6 @@ function pos_restaurant_widgets(instance, module){
                 this.productwidgets[i].destroy();
             }
             this.productwidgets = []; 
-            if(this.scrollbar){
-                this.scrollbar.destroy();
-            }
           
             _(this.current.get('optional_products')).each(function(p) {         
                 var product = new module.CustomProductWidget(self, {
@@ -59,37 +57,32 @@ function pos_restaurant_widgets(instance, module){
                 });
                 self.productwidgets.push(product);
                 product.on('select',self,self.select);
+                product.on('unSelect',self,self.unSelect);
                 product.appendTo(self.$('.product-list'));                      
             });
-
-            this.scrollbar = new module.ScrollbarWidget(this,{
-                target_widget:   this,
-                target_selector: '.product-list-scroller',
-                on_show: function(){
-                    self.$('.product-list-scroller').css({'padding-right':'62px'},100);
-                },
-                on_hide: function(){
-                    self.$('.product-list-scroller').css({'padding-right':'0px'},100);
-                },
-            });
-
-            this.scrollbar.replace(this.$('.placeholder-ScrollbarWidget'));
-
         },
         loadProperties : function(product){
             var self = this;
             var properties = new module.ProductPropertiesCollection();
             var product_properties = self.pos.get('product_properties');
             _(product.get('property_ids')).each(function(id) {
-                var property = product_properties.get(id);
+                var property = product_properties.get(id).clone();
                 var products = self.pos.get('products');
                 var optional_products = []
                 _.each(property.get('optional_product_ids'), function(p){
-                    optional_products.push(products.get(p));
+                    var product  = products.get(p).clone();
+                    product.set('selected',false);
+                    optional_products.push(product);
                 });
+                property.set('selected_products', []);
                 property.set('optional_products', optional_products);
                 properties.push(property);
             });
+
+            var aux = new Backbone.Model();
+            aux.set('name',"Order Summary");
+            aux.set('selected_products',[]);
+            properties.push(aux);
             properties.sortByField('sequence')
             return properties
         },
@@ -98,15 +91,43 @@ function pos_restaurant_widgets(instance, module){
                 _.each(this.productwidgets,function(w){
                     w.unSelect();
                 });
-            }
+                this.current.set('selected_products',[product]);
+            }else
+                this.current.get('selected_products').push(product);
             widget.select();
+        },
+        unSelect: function(product){
+            var selected_products = this.current.get('selected_products');
+            this.current.set('selected_products',_.without(selected_products,product));
+        },
+        getTotal: function(){
+            var subtotal = 0.0;
+            _.each(this.product_properties.models, function(property){
+                _.each(property.get('selected_products'), function(product){
+                    subtotal+= product.get('price');
+                });
+            });
+            return subtotal + this.product.get('price');
         },
         set_step: function(value){
             this.step = value;
             this.current = this.product_properties.at(this.step);
             this.renderElement();
         },
+        onClickBtnDelete: function(event){
+            var product_id = this.$(event.currentTarget).attr('product_id');
+            var property_id = this.$(event.currentTarget).attr('property_id');
+            var property = this.product_properties.get(property_id);            
+            var product =  _(property.get('optional_products')).find(function(p) {
+                return p.id == product_id;
+            })
+            product.set('selected',false);
+            selected_products  = property.get('selected_products');
+            property.set('selected_products',_.without(selected_products,product));
+            this.renderElement();
+        },
         onClickBtnDone: function(){
+            this.getTotal();
             alert("Done");
         },
         onClickBtnPrevious: function(){
@@ -130,6 +151,7 @@ function pos_restaurant_widgets(instance, module){
             if (this.model.get('selected')){
                 this.trigger('select', this.model, this);
             }else{
+                this.trigger('unSelect', this.model, this);
                 this.$el.removeClass('selected');
             }
         },
