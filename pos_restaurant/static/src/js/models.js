@@ -28,6 +28,4 @@ function pos_restaurant_models(instance, module){
             this.sort();
         }
     });
-
-
 }

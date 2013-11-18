@@ -27,8 +27,12 @@ function pos_restaurant_widgets(instance, module){
         events:{
             "click button[name='done']":"onClickBtnDone",
             "click button[name='next']":"onClickBtnNext",
+            "click button[name='add']":"onClickBtnAdd",
+            "click button[name='del']":"onClickBtnDel",
             "click a.delete-payment-line":"onClickBtnDelete",
-            "click button[name='previous']":"onClickBtnPrevious",           
+            "click button[name='previous']":"onClickBtnPrevious", 
+            "change input.name":"onChangeName",
+            "change input.rif":"onChangeRif",          
         },
         init: function(parent, options){
             var self = this
@@ -38,6 +42,7 @@ function pos_restaurant_widgets(instance, module){
             this.product_properties = this.loadProperties(options.product);  
             this.current = this.product_properties.at(this.step);
             this.productwidgets = [];
+            this.orderNames = new Backbone.Collection();
             this.steps = this.product_properties.length;
             this.last = this.steps - 1;     
         },
@@ -79,10 +84,16 @@ function pos_restaurant_widgets(instance, module){
                 properties.push(property);
             });
 
-            var aux = new Backbone.Model();
-            aux.set('name',"Order Summary");
-            aux.set('selected_products',[]);
-            properties.push(aux);
+            var summary = new Backbone.Model();
+            summary.set('name',"Order Summary");
+            summary.set('selected_products',[]);
+
+            var customization = new Backbone.Model();
+            customization.set('name',"Order Customization");
+            customization.set('selected_products',[]);
+
+            properties.push(summary);
+            properties.push(customization);
             properties.sortByField('sequence')
             return properties
         },
@@ -114,6 +125,21 @@ function pos_restaurant_widgets(instance, module){
             this.current = this.product_properties.at(this.step);
             this.renderElement();
         },
+        onChangeRif: function(e){
+            var i = this.$(e.target).attr('index');
+            var val = this.$(e.target).val();
+            this.orderNames.at(i).set('rif',val);
+            p = this.pos.db.search_customer(module.country_code+val);
+            if (p){
+                this.$("input.name[index="+i+"]").val(p.name);
+                this.orderNames.at(i).set('name',p.name);
+            }
+        },
+        onChangeName: function(e){
+            var i = this.$(e.target).attr('index');
+            var val = this.$(e.target).val();
+            this.orderNames.at(i).set('name',val);
+        },
         onClickBtnDelete: function(event){
             var product_id = this.$(event.currentTarget).attr('product_id');
             var property_id = this.$(event.currentTarget).attr('property_id');
@@ -125,6 +151,19 @@ function pos_restaurant_widgets(instance, module){
             selected_products  = property.get('selected_products');
             property.set('selected_products',_.without(selected_products,product));
             this.renderElement();
+        },
+        onClickBtnAdd: function(){
+            this.orderNames.push({
+                'rif': '',
+                'name':'',
+            });
+            this.renderElement();
+            this.$('input.rif:last-child').focus();
+        },
+        onClickBtnDel: function(){
+            this.orderNames.pop();
+            this.renderElement();
+            this.$('input.rif:last-child').focus();
         },
         onClickBtnDone: function(){
             this.getTotal();
