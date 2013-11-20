@@ -165,4 +165,26 @@
             </t> 
         </t>
     </t>
+    <t t-name="CustomProductWidget">
+        <li class='product'>
+            <a href="#">
+                <div class="product-img">
+                    <img src='' /> <!-- the product thumbnail -->
+                    <t t-if="!widget.model.get('to_weight')">
+                        <span class="price-tag">
+                            <t t-esc="widget.format_currency(widget.model.get('price'))"/>
+                        </span>
+                    </t>
+                    <t t-if="widget.model.get('to_weight')">
+                        <span class="price-tag">
+                            <t t-esc="widget.format_currency(widget.model.get('price'))+'/Kg'"/>
+                        </span>
+                    </t>
+                </div>
+                <div class="product-name">
+                    <t t-esc="widget.model.get('name')"/>
+                </div>
+            </a>
+        </li>
+    </t>
 </templates>

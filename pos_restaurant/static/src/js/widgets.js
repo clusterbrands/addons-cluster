@@ -1,5 +1,12 @@
 function pos_restaurant_widgets(instance, module){
-   
+
+    module.PosWidget.include({
+        init:function(parent,options){
+            this._super();
+            this.product_cache = new module.ImageCache();
+        },
+    })
+  
     module.ProductListWidget.include({
         init: function(parent, options){
             var self = this
@@ -49,7 +56,6 @@ function pos_restaurant_widgets(instance, module){
         renderElement: function(){
             var self=this;
             this._super();
-
             for(var i = 0, len = this.productwidgets.length; i < len; i++){
                 this.productwidgets[i].destroy();
             }
@@ -180,10 +186,20 @@ function pos_restaurant_widgets(instance, module){
             }
         },
     });
-    module.CustomProductWidget = module.ProductWidget.extend({
+
+    module.ProductWidget.include({
+        renderElement: function() {
+            this._super();
+            this.pos_widget.product_cache.get_image(this.model.get_image_url());
+        },
+    })
+
+    module.CustomProductWidget =  module.PosBaseWidget.extend({
+        template: 'CustomProductWidget',
         init: function(parent, options) {
             this._super(parent,options);
-            this.click_product_action = this.on_click_action;
+            this.model = options.model;
+            this.model.attributes.weight = options.weight;
         },
         on_click_action: function(){
             this.model.set('selected',!this.model.get('selected'));
@@ -203,10 +219,15 @@ function pos_restaurant_widgets(instance, module){
             this.$el.removeClass('selected');
         },
         renderElement: function(){
+            var self= this;
             this._super();
+            this.$('img').replaceWith(this.pos_widget.product_cache.get_image(this.model.get_image_url()));
             if (this.model.get('selected')){
                 this.$el.addClass('selected');
             }
+            $("a", this.$el).click(function(e){
+                self.on_click_action();
+            });
         },
-    })
+    });
 }

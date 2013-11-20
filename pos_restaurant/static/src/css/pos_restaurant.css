@@ -1,10 +1,12 @@
+.point-of-sale .popup .product-list{
+    padding: 0 !important;
+}
 .point-of-sale .popup .pos-sale-ticket{
     padding-bottom:15px;
     margin:8px;
     float:left;
-    width: 720px;
+    width: 750px;
     font-size:16px;
-    /*font-weight: normal;*/
 }
 
 .point-of-sale .popup .pos-sale-ticket .rif{

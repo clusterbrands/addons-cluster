@@ -15,10 +15,10 @@ function pos_base_screens(instance,module){
             this.closeable = _(options).has('closeable') ? options.closeable : true; 
             this.draggable = _(options).has('draggable') ? options.draggable : true; 
             this.modal = _(options).has('modal') ? options.modal : true;
-        }, 
+        },
         start: function(){
-            this.renderElement();
-        },   
+            this.set_position();
+        },
         renderElement: function(){
             this._super();
             this.$("a.close").off('click').click(_.bind(this.closePopup,this));
