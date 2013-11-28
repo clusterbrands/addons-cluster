@@ -77,6 +77,7 @@ CMD_ADD_PAYMENT = '2'
 CMD_REDUCE_Z = 'I0Z'
 CMD_REDUCE_X = 'I0X'
 CMD_GET_LAST_Z = 'U0Z'
+CMD_GET_LAST_X = 'U0X'
 
 RETRIES_BEFORE_TIMEOUT = 3
 
@@ -173,6 +174,8 @@ class SRP350(SerialBase):
         self._port.setTimeout(1.5)
         self._port.setWriteTimeout(5)
         self._port.setParity(serial.PARITY_EVEN)
+        self._port.setXonXoff(0)
+        self._port.setRtsCts(0)
         self.remainder_value = Decimal("0.0")       
         self._reset()
     #
@@ -336,6 +339,10 @@ class SRP350(SerialBase):
         fmt = ''
         if 'response' in kwargs:
             fmt = kwargs.pop('response')
+
+        raw = False
+        if 'raw' in kwargs:
+            raw = kwargs.pop('raw')
         
         for arg in args:
             if isinstance(arg, int):
@@ -345,7 +352,11 @@ class SRP350(SerialBase):
             else:
                 raise NotImplementedError(type(arg))
         
-        data = self._create_packet(cmd) 
+        if raw:
+            data = cmd;
+        else:
+            data = self._create_packet(cmd) 
+        
         self.write(data) 
        
         reply = self._read_reply(struct.calcsize(fmt))        
@@ -355,7 +366,8 @@ class SRP350(SerialBase):
         if (reply[0] == chr(NAK)):
             raise CommandError(_("Unrecognized command"))
         
-        self._check_error()
+        if (reply[0] != chr(ENQ)):
+            self._check_error()
         return retval
         
     def _read_reply(self, size):
@@ -622,7 +634,7 @@ class SRP350(SerialBase):
     def open_till(self):
         self.summarize()    
 
-    def close_till(self, previous_day):
+    def close_till(self, previous_day=False):
         self._send_command(CMD_REDUCE_Z,response='c')
 
     def till_add_cash(self, value):
@@ -641,23 +653,32 @@ class SRP350(SerialBase):
         # Leitura Memory Fiscal reducoes
         pass
         
-    def has_pending_reduce():
-         """
+    def has_pending_reduce(self):
+        """
         Check if a z reduce is pending
         """
         s1 = self.read_status1()
-        z = _get_last_z()
-        return (z["last_invoice_number"] == s1["last_invoice_number"])
+        z = self._get_last_z()
+        return (z["last_invoice_number"] != s1["last_invoice_number"])
         
     # Till / Daily flow (Custom Methods)
-    def _get_last_z():
-        reply = self._send_command(CMD_GET_LAST_Z,response='188s')   
-        reply = reply[0][3:186]
+    def _get_last_z(self):
+
+        self._send_command(CMD_GET_LAST_Z,response='c') 
+        reply = self._send_command(chr(ACK), response="199s", raw=True)
+        reply = reply[0][1:197]
         reply = reply.split("\n")      
-        z = dict(zip(z_keys,reply))
+        z = dict(zip(z_keys,reply)) 
         return z
-        
-        
+
+    # Till / Daily flow (Custom Methods)
+    def _get_last_x(self):
+        reply = self._send_command(CMD_GET_LAST_X,response='c')
+        reply = self._send_command(chr(ACK), response="199s", raw=True) 
+        reply = reply[0][1:197]
+        reply = reply.split("\n")      
+        x = dict(zip(z_keys,reply))
+        return x       
         
     # Introspection
 
