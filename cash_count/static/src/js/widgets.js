@@ -169,7 +169,6 @@ function cash_count_widgets(instance, module){
                     var msg = "Wrong username or password"
                     var alert = new module.Alert(self,{title:'Error', msg:msg});
                     alert.appendTo($('.point-of-sale'));
-                    alert.show();
                     alert.on('continue',self,self.onClickBtnCancel);
                 }
             });
@@ -225,6 +224,7 @@ function cash_count_widgets(instance, module){
             msg+= amount + " ?"
             confirm = new module.Confirm(this,{title:"Confirm",msg:msg});
             confirm.appendTo($('.point-of-sale'));
+            confirm.show();
             confirm.on('no',this,this.onClickBtnCancel);
             confirm.on('yes',this,this.validate)
         },

@@ -35,7 +35,7 @@ function cash_count_screens(instance, module){
                         });
                     }
                 });
-            setTimeout(this.proxy('showPopup'), 300);
+            setTimeout(this.proxy('showPopup'), 400);
         },
         showPopup: function(){
             this.pos_widget.screen_selector.show_popup('login-widget');
