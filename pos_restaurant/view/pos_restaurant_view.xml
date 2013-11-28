@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+         <record model="ir.ui.view" id="product_property_tree">
+            <field name="name">product_property.tree</field>
+            <field name="model">pos_restaurant.product_property</field>
+            <field name="arch" type="xml">
+                <tree string="Product Properties">
+                    <field name="name" />
+                    <field name="single_choice" />
+                    <field name="sequence" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_property_form">
+            <field name="name">product_property.form</field>
+            <field name="model">pos_restaurant.product_property</field>
+            <field name="arch" type="xml">
+                <form string="Product Properties" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                         <group col="4">
+                           <!--  <group> -->
+                                <field name="single_choice" />
+                                <field name="sequence" />
+                           <!--  </group> -->
+                        </group>
+                        <group string="Optional Products">
+                            <field name="optional_product_ids" nolabel="1" />
+                        </group>
+                        <group string="Applied Products">
+                            <field name="applied_product_ids" nolabel="1" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

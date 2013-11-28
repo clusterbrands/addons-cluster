@@ -1,0 +1,89 @@
+.point-of-sale .popup .product-list{
+    padding: 0 !important;
+}
+.point-of-sale .popup .pos-sale-ticket{
+    padding-bottom:15px;
+    margin:8px;
+    float:left;
+    width: 750px;
+    font-size:16px;
+}
+
+.point-of-sale .popup .pos-sale-ticket .rif{
+    height:auto!important;
+    font-size:18px;
+    font-family:'Inconsolata'
+}
+
+.point-of-sale .popup .pos-sale-ticket .name{
+    height:auto!important;
+    font-size:18px;
+    font-family:'Inconsolata'
+}
+
+.point-of-sale .popup .pos-sale-ticket table {
+    width: 100%;
+    border: 0;
+    table-layout: fixed;
+}
+.point-of-sale .popup .pos-sale-ticket table td {
+    border: 0;
+    word-wrap: break-word;
+}
+
+.point-of-sale .popup .product-list-container {
+    position:relative;
+}
+
+.point-of-sale .popup .product {
+    position:relative;
+    vertical-align: top;
+    display: inline-block;
+    line-height: 10px;
+    font-size: 11px;
+    margin: 5px !important;
+    width: 100px;
+    height:100px;
+    background:#fff;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    overflow: hidden;
+    -webkit-box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
+       -moz-box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
+            box-shadow: 0px 2px 0px #dad8e4, 0px 1px 8px #636480; 
+}
+
+.point-of-sale .selected {
+    color: #7f82ac;
+    background: #7f82ac;;
+    outline: 4px solid #7f82ac;
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+.point-of-sale .popup .product .product-img {
+    position: relative;
+    width: 100px;
+    height: 70px;
+    background: white;
+    text-align: center;
+}
+
+.point-of-sale .popup .product .product-img img {
+    max-width:  100px;
+    max-height: 70px;
+}
+
+.point-of-sale .popup .product .price-tag {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    vertical-align: top;
+    color: white;
+    line-height: 13px;
+    background: #7f82ac;
+    padding: 2px 5px;
+    border-radius: 3px;
+    box-shadow: 0px 1px 0px #9A9CC5, 0px 3px 0px #7E86AC, 0px 3px 3px rgba(12, 14, 68, 0.67);
+}
