@@ -73,7 +73,7 @@ class printer(osv.Model):
                                  ('enabled', '=', True)])
         if not p_id:
             self._print_error("Error",
-                              _("This POS does not have a configured fiscal printer"))
+                              _("This POS does not have configured a fiscal printer"))
         else:
             if json:
                 printer = self._get_device(cr,uid,p_id,context=context)
