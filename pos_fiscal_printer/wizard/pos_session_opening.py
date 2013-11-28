@@ -19,4 +19,4 @@ class pos_session_opening(osv.osv_memory):
         if res.get("reduce"):
             raise osv.except_osv("Error", _("Has pending to do a z report"))
         else:
-            return super(self, pos_session_opening).open_ui(cr, uid, ids, context=context)
+            return super(pos_session_opening, self).open_ui(cr, uid, ids, context=context)
