@@ -193,8 +193,7 @@ class SRP350(SerialBase):
         return reduce(xor,map(ord,command))
     
     
-    def _read_status(self):
-        
+    def _read_status(self):        
         self.write(chr(ENQ))
         time.sleep(0.02)
         rt = self.read(5)
@@ -628,11 +627,14 @@ class SRP350(SerialBase):
     
     def setup(self):
         pass
-    def summarize(self):
-        self._send_command(CMD_REDUCE_X,response='c')
+    
+    def summarize(self):        
+        self._send_command(CMD_REDUCE_X,response='cc')
+        s1 = self.read_status1()
+        return s1['notfis_document_number']  
     
     def open_till(self):
-        self.summarize()    
+        self.summarize() 
 
     def close_till(self, previous_day=False):
         self._send_command(CMD_REDUCE_Z,response='c')
@@ -672,11 +674,11 @@ class SRP350(SerialBase):
         return z
 
     # Till / Daily flow (Custom Methods)
-    def _get_last_x(self):
+    def _get_last_x(self):      
         reply = self._send_command(CMD_GET_LAST_X,response='c')
-        reply = self._send_command(chr(ACK), response="199s", raw=True) 
+        reply = self._send_command(chr(ACK), response="199s", raw=True)
         reply = reply[0][1:197]
-        reply = reply.split("\n")      
+        reply = reply.split("\n")  
         x = dict(zip(z_keys,reply))
         return x       
         
@@ -723,7 +725,7 @@ class SRP350(SerialBase):
         return constants
 
     def get_payment_constants(self):
-         raise DriverError(_("This command is not supported"
+         raise DriverError(_("This command is not supported "
                         "for the current printer"))
 
     def get_sintegra(self):
