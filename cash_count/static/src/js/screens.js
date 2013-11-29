@@ -61,8 +61,7 @@ function cash_count_screens(instance, module){
                 click: function(){
                     self.pos.set('current_cashier',null);
                     self.close(); 
-                    self.pos_widget.screen_selector.set_current_screen(self.back_screen);
-                    
+                    self.pos_widget.screen_selector.set_current_screen(self.back_screen);              
                 }
             });
         },
@@ -129,8 +128,8 @@ function cash_count_screens(instance, module){
                         self.pos_widget.screen_selector.set_current_screen('xreport-receipt');
                     });
                 }else{
-                    self.pos_widget.print_error_popup.set_message(response.error)
-                    self.pos_widget.screen_selector.show_popup('print-error');
+                    print_error = new module.Alert(self,{title:"Printer Error",msg:response.error});
+                    print_error.appendTo($('.point-of-sale'));
                 }
             });                
         },

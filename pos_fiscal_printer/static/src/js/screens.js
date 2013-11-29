@@ -38,8 +38,8 @@ function pos_fiscal_printer_screens(instance,module){
                             self.pos.push_order(currentOrder.exportAsJSON()) 
                             self.pos.get('selectedOrder').destroy();
                         }else{
-                            self.pos_widget.print_error_popup.set_message(response.error)
-                            self.pos_widget.screen_selector.show_popup('print-error');
+                            print_error = new module.Alert(self,{title:"Printer Error",msg:response.error})
+                            print_error.appendTo($('.point-of-sale'));
                         }
                     })
                 }else{
