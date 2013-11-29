@@ -46,6 +46,7 @@
                                     <field name="cashier_session_id" />
                                     <field name="cashier_id" />
                                     <field name="number" />
+                                    <field name="printer_serial" />
                                     <field name="date" /> 
                                     <field name="total" sum="Total" />                                    
                                 </tree>

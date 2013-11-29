@@ -115,15 +115,24 @@ function cash_count_screens(instance, module){
             });            
         },
         validate:function(){
-            //need insert printer command here
             var self = this
-            report = this.pos.get('currentXReport'); 
-            model =   new instance.web.Model('cash.count.reportx');
-            context = new instance.web.CompoundContext()
-            model.call('create_from_ui',[report.exportAsJSON()],{context:context}).done(function(id){
-                self.pos_widget.screen_selector.set_current_screen('xreport-receipt');
-            });
-                
+            this.pos.proxy.print_report_x().done(function(response){
+                if (response.status == "ok"){                
+                    report_number = response.values.report_number;
+                    printer_serial = response.values.printer_serial;
+                    report = self.pos.get('currentXReport'); 
+                    report.set('number', report_number);
+                    report.set('printer_serial', printer_serial);
+                    model =   new instance.web.Model('cash.count.reportx');
+                    context = new instance.web.CompoundContext()
+                    model.call('create_from_ui',[report.exportAsJSON()],{context:context}).done(function(id){
+                        self.pos_widget.screen_selector.set_current_screen('xreport-receipt');
+                    });
+                }else{
+                    self.pos_widget.print_error_popup.set_message(response.error)
+                    self.pos_widget.screen_selector.show_popup('print-error');
+                }
+            });                
         },
         close: function(){
             this._super();

@@ -148,6 +148,7 @@ class cashier_session(osv.Model):
                                          string='Cashier'),
             'pos_session_id': fields.many2one('pos.session',
                                               'PoS Session'),
+            'printer_serial': fields.char('Printer Serial', size=64, required=True), 
             'printer_id': fields.many2one('fiscal_printer.printer', 'Printer'),
             'lines': fields.one2many('cash.count.reportx.line', 'reportx_id',
                                      'Report Details'),
