@@ -628,7 +628,7 @@ class SRP350(SerialBase):
     def setup(self):
         pass
     
-    def summarize(self):        
+    def summarize(self):       
         self._send_command(CMD_REDUCE_X,response='cc')
         s1 = self.read_status1()
         return s1['notfis_document_number']  
@@ -637,7 +637,11 @@ class SRP350(SerialBase):
         self.summarize() 
 
     def close_till(self, previous_day=False):
-        self._send_command(CMD_REDUCE_Z,response='c')
+        data = self._create_packet(CMD_REDUCE_Z)
+        self.write(data)
+        time.sleep(15)
+        z = self._get_last_z()
+        return z['last_z_number']
 
     def till_add_cash(self, value):
         # Suprimento
