@@ -137,7 +137,13 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         self.check_printer_serial(printer)
         driver = self._get_driver(printer)
         report_number = driver.summarize()
-        return {"report_number":report_number,"printer_serial":printer.get("serial")}       
+        return {"report_number":report_number,"printer_serial":printer.get("serial")}  
+
+    def print_report_z(self, printer, params):
+        self.check_printer_serial(printer)
+        driver = self._get_driver(printer)
+        report_number = driver.close_till()
+        return {"report_number":report_number,"printer_serial":printer.get("serial")}     
     
     def _add_items(self,driver,order_lines):
         for product in order_lines:
