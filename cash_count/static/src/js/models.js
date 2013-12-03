@@ -87,6 +87,7 @@ function cash_count_models(instance, module){
                 'cashier_session_id': null,
                 'pos_session_id': null,
                 'printer_id': null,
+                'printer_serial': null,
                 'number': null,
                 'date': null,
                 'lines': new module.XReportLineCollection(),
@@ -127,6 +128,7 @@ function cash_count_models(instance, module){
                 'printer_id': this.get('printer_id'), //WARNING need implementation
                 'date': this.get('date'),
                 'number': this.get('number'),
+                'printer_serial': this.get('printer_serial'),
                 'lines' : lines, 
             }
         }   

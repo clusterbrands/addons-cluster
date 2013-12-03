@@ -35,7 +35,7 @@ function cash_count_screens(instance, module){
                         });
                     }
                 });
-            setTimeout(this.proxy('showPopup'), 300);
+            setTimeout(this.proxy('showPopup'), 400);
         },
         showPopup: function(){
             this.pos_widget.screen_selector.show_popup('login-widget');
@@ -61,8 +61,7 @@ function cash_count_screens(instance, module){
                 click: function(){
                     self.pos.set('current_cashier',null);
                     self.close(); 
-                    self.pos_widget.screen_selector.set_current_screen(self.back_screen);
-                    
+                    self.pos_widget.screen_selector.set_current_screen(self.back_screen);              
                 }
             });
         },
@@ -115,15 +114,24 @@ function cash_count_screens(instance, module){
             });            
         },
         validate:function(){
-            //need insert printer command here
             var self = this
-            report = this.pos.get('currentXReport'); 
-            model =   new instance.web.Model('cash.count.reportx');
-            context = new instance.web.CompoundContext()
-            model.call('create_from_ui',[report.exportAsJSON()],{context:context}).done(function(id){
-                self.pos_widget.screen_selector.set_current_screen('xreport-receipt');
-            });
-                
+            this.pos.proxy.print_report_x().done(function(response){
+                if (response.status == "ok"){                
+                    report_number = response.values.report_number;
+                    printer_serial = response.values.printer_serial;
+                    report = self.pos.get('currentXReport'); 
+                    report.set('number', report_number);
+                    report.set('printer_serial', printer_serial);
+                    model =   new instance.web.Model('cash.count.reportx');
+                    context = new instance.web.CompoundContext()
+                    model.call('create_from_ui',[report.exportAsJSON()],{context:context}).done(function(id){
+                        self.pos_widget.screen_selector.set_current_screen('xreport-receipt');
+                    });
+                }else{
+                    print_error = new module.Alert(self,{title:"Printer Error",msg:response.error});
+                    print_error.appendTo($('.point-of-sale'));
+                }
+            });                
         },
         close: function(){
             this._super();

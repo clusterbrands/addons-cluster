@@ -50,7 +50,8 @@ Note:
         'hr',
         'pos_base',
         'fiscal_printer',
-        'payment_instrument'
+        'pos_fiscal_printer',
+        'payment_instrument',
     ],
     'data': [
         'view/hr_view.xml',

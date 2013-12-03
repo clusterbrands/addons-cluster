@@ -63,6 +63,8 @@
 
 .point-of-sale  .content{
     overflow: hidden;
+    padding: .5em .5em;
+    margin: 0px .5em;
 }
 
 .point-of-sale .popup .content input[type=text]{
@@ -72,7 +74,7 @@
     margin: 2px 2px 2px 2px;
     text-indent:2px;
     font-size: 20px;
-    width:100%;
+    width:96%;
     height:35px;
 }
 
@@ -83,7 +85,7 @@
     margin: 2px 2px 2px 2px;
     text-indent:2px;
     font-size: 20px;
-    width:100%;
+    width:96%;
     height:35px;
 }
 

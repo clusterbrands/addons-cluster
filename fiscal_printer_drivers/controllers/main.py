@@ -45,7 +45,8 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
                     device=printer.get('port'))
         return fiscal
     
-    def _check_printer_serial(self,printer,driver):
+    def check_printer_serial(self, printer):
+        driver = self._get_driver(printer)
         serial = driver.get_serial()
         if serial <> printer.get('serial'):
             raise Exception("The connected printer does not match with the configured for this POS")
@@ -54,7 +55,6 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
     def check_printer_status(self,printer,params):
         driver = self._get_driver(printer)
         driver.check_printer_status()
-        self._check_printer_serial(printer,driver)
         
     def read_workstation(self,printer,params):
         return{"workstation":gethostname()}
@@ -65,48 +65,56 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         serial = driver.get_serial()
         return {"serial":serial}
         
-    def read_payment_methods(self,printer,params):
+    def read_payment_methods(self, printer, params):
+        self.check_printer_serial(printer)
         payment_methods = params.get('payment_methods')
         driver = self._get_driver(printer)
         payment_methods = driver.get_payment_constants()
         return ""
         
     def write_payment_methods(self,printer,params):
+        self.check_printer_serial(printer)
         payment_methods =params.get('payment_methods')
         driver = self._get_driver(printer)
         driver.set_payment_methods(payment_methods)
         return {"exec":True} 
         
     def read_tax_rates(self,printer,params):
+        self.check_printer_serial(printer)
         payment_methods =[]
         driver = self._get_driver(printer)
         tax_rates = driver.get_tax_constants()
         return {"tax_rates":tax_rates}
         
     def write_tax_rates(self,printer,params):
+        self.check_printer_serial(printer)
         tax_rates = params.get('tax_rates')
         driver = self._get_driver(printer)
         driver.set_tax_rates(tax_rates)
     
     def read_headers(self,printer,params):
+        self.check_printer_serial(printer)
         headers =[]
         driver = self._get_driver(printer)
         headers = driver.get_coupon_headers()
         return {"headers":headers}
         
     def write_headers(self,printer,params):
+        self.check_printer_serial(printer)
         headers = params.get('headers')
         driver = self._get_driver(printer)
         driver.set_coupon_headers(headers)
         return {"exec":True}
         
     def read_footers(self,printer,params):
+        self.check_printer_serial(printer)
         footers =[]
         driver = self._get_driver(printer)
         footers = driver.get_coupon_footers()
         return {"footers":footers}
         
     def write_footers(self,printer,params):
+        self.check_printer_serial(printer)
         footers = params.get('footers')
         driver = self._get_driver(printer)
         driver.set_coupon_footers(footers)
@@ -120,10 +128,22 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         return printers
         
     def has_pending_reduce(self, printer, params):
+        self.check_printer_serial(printer)
         driver = self._get_driver(printer)
         res = driver.has_pending_reduce()
         return {"reduce":res}
-       
+
+    def print_report_x(self, printer, params):
+        self.check_printer_serial(printer)
+        driver = self._get_driver(printer)
+        report_number = driver.summarize()
+        return {"report_number":report_number,"printer_serial":printer.get("serial")}  
+
+    def print_report_z(self, printer, params):
+        self.check_printer_serial(printer)
+        driver = self._get_driver(printer)
+        report_number = driver.close_till()
+        return {"report_number":report_number,"printer_serial":printer.get("serial")}     
     
     def _add_items(self,driver,order_lines):
         for product in order_lines:
@@ -172,6 +192,7 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         order_lines = receipt.get('orderlines')
         payment_lines = receipt.get('paymentlines') 
         printer_status = self.check_printer_status(printer,{})
+        self.check_printer_serial(printer)
         driver = self._get_driver(printer)
         driver.identify_customer(str(client.get('name')),
            str(client.get('address')), str(client.get('vat')))

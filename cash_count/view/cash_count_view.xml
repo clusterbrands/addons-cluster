@@ -37,7 +37,7 @@
                             <field name="cashier_id" />
                             <field name="number" />                           
                             <field name="date" /> 
-                            <field name="printer_id" />
+                            <field name="printer_serial" />
                         </group> 
                         <group col="4" string=""> 
                             <field name="lines" nolabel="1">

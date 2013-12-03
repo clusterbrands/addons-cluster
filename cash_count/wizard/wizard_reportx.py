@@ -34,31 +34,38 @@ class wizard_reportx(osv.osv_memory):
 
     def end_session(self, cr, uid, ids, context=None):
         context = context or {}
-        # WARNING Insert here fiscal_printer code to print the report
-        data = self.browse(cr, uid, ids[0], context=context)
-        lines = []
-        for line in data.line_ids:
-            lines.append({
-                'journal_id': int(line.journal_id),
-                'instrument_id': line.instrument_id.id,
-                'amount': line.amount,
-            })
-        values = {}
-        values['pos_session_id'] = data.pos_session_id.id
-        values['cashier_session_id'] = data.cashier_session_id.id
-        values['number'] = str(data.cashier_session_id.id)
-        values['lines'] = lines
-        obj = self.pool.get('cash.count.reportx')
-        obj.create_from_ui(cr, uid, values, context=context)
-        return {
-            'name': _('Your Session'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'pos.session.opening',
-            'target': 'inline',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-        }
+       
+        obj = self.pool.get("fiscal_printer.printer")
+        printer = obj.get_printer(cr, uid, context=context)
+
+        res = printer.send_command("print_report_x")
+
+        if res:
+            data = self.browse(cr, uid, ids[0], context=context)
+            lines = []
+            for line in data.line_ids:
+                lines.append({
+                    'journal_id': int(line.journal_id),
+                    'instrument_id': line.instrument_id.id,
+                    'amount': line.amount,
+                })
+            values = {}
+            values['number'] = res.get('report_number')
+            values['printer_serial'] = res.get('printer_serial')
+            values['pos_session_id'] = data.pos_session_id.id
+            values['cashier_session_id'] = data.cashier_session_id.id
+            values['lines'] = lines
+            obj = self.pool.get('cash.count.reportx')
+            obj.create_from_ui(cr, uid, values, context=context)
+            return {
+                'name': _('Your Session'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'pos.session.opening',
+                'target': 'inline',
+                'view_id': False,
+                'type': 'ir.actions.act_window',
+            }
 
 
 class wizard_reportx_line(osv.osv_memory):

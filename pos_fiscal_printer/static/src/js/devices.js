@@ -53,6 +53,9 @@ function pos_fiscal_printer_devices(instance,module){
             });
             return ret;
         },
+        print_report_x: function(){
+            return this.send_command('print_report_x');
+        },
         print_receipt: function(receipt){
             return this.send_command('print_receipt',{receipt: receipt});
         },

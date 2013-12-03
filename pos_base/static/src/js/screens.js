@@ -24,8 +24,8 @@ function pos_base_screens(instance,module){
             this.$("a.close").off('click').click(_.bind(this.closePopup,this));
             $(window).unbind();
             $(window).bind('resize',this.set_position);
-            if (this.draggable)
-                this.$('.popup').draggable();
+            // if (this.draggable)
+            //     this.$('.popup').draggable();
             if (this.modal){
                 this.$el.addClass('modal_dialog');
             }
@@ -47,10 +47,13 @@ function pos_base_screens(instance,module){
             this.title = options.title || "";
             this.msg = options.msg || "";
         },
+        start:function(){
+            this._super();
+            this.$('button').focus();
+        },
         renderElement:function(){
             this._super();
             this.$('button').off('click').click(_.bind(this.onClickBtn,this));
-            this.$('button').focus();
         },
         onClickBtn: function(){
             this.close();

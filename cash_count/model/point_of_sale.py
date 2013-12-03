@@ -43,6 +43,8 @@ class pos_session(osv.Model):
     def wkf_action_close(self, cr, uid, ids, context=None):
         """ Enable difference adjusment for bank journals """
         # Close CashBox
+        obj = self.pool.get("fiscal_printer.printer")
+        printer = obj.get_printer(cr, uid, context=context)
         bsl = self.pool.get('account.bank.statement.line')
         for record in self.browse(cr, uid, ids, context=context):
             for st in record.statement_ids:
@@ -74,16 +76,19 @@ class pos_session(osv.Model):
                 st.write({'balance_end_real' : st.balance_end_x})
                 getattr(st, 'button_confirm_%s' %
                         st.journal_id.type)(context=context)
-        self._confirm_orders(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
-        
-        obj = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'point_of_sale', 'menu_point_root')[1]
-        return {
-            'type': 'ir.actions.client',
-            'name': 'Point of Sale Menu',
-            'tag': 'reload',
-            'params': {'menu_id': obj},
-        }
+
+        res = printer.send_command("print_report_z")
+        if res:
+            self._confirm_orders(cr, uid, ids, context=context)
+            data = {'report_z_number':res.get('report_number'),'state' : 'closed'}
+            self.write(cr, uid, ids, data, context=context)        
+            obj = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'point_of_sale', 'menu_point_root')[1]
+            return {
+                'type': 'ir.actions.client',
+                'name': 'Point of Sale Menu',
+                'tag': 'reload',
+                'params': {'menu_id': obj},
+            }
 
     _columns = {
         'sequence_id' : fields.many2one('ir.sequence', 'Session IDs Sequence', readonly=True,
@@ -105,7 +110,5 @@ class pos_session(osv.Model):
         'reportx_ids': fields.one2many('cash.count.reportx',
                                        'pos_session_id', 'Reports X',
                                         required=False, readonly=True),
-        
-
-
+        'report_z_number': fields.char('Z Report Number', size=56, readonly=True),
     }
