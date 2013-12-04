@@ -172,7 +172,7 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
     
     def _check_printer_params(self,receipt):
         order_lines = receipt.get('orderlines')
-        payment_lines = receipt.get('paymentlines') 
+        payment_lines = receipt.get('paymentlines')
         for product in order_lines:
             if (product.get('tax_code') == ""):
                 raise Exception("The product : '"+
@@ -185,7 +185,7 @@ class FiscalPrinterController(openerp.addons.web.http.Controller):
         for payment in payment_lines:
             if (payment.get('payment_method_code') == ""):
                 raise Exception("The payment method "+
-                    payment.get("journal")+" is not configured for the current printer")
+                    payment.get("journal")+" is not configured for the current printer")        
     
     def _print_receipt(self,receipt,printer):
         client = receipt.get('client')

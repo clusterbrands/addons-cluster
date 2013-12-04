@@ -113,13 +113,15 @@ function pos_fiscal_printer_models(instance, module){
         },
         export_for_printing : function(){
             printer = this.pos.proxy.get_printer();
-            account_journal_id = this.cashregister.get('journal_id')[0]
-            payment_methods = printer.payment_method_ids;
-            payment_method = _.detect(payment_methods,function(p){
-                                return p.account_journal_id[0] == account_journal_id
+            journal_id = this.cashregister.get('journal_id')[0]
+            instrument = this.cashregister.get("instrument") || {'id':false};
+            payment_instrument_ids = printer.payment_instrument_ids;
+            payment_method = _.detect(payment_instrument_ids,function(p){
+                                    return p.journal_id[0] == journal_id && 
+                                    (p.instrument_id[0] == instrument.id || p.instrument_id==false);
                             })  
             payment_line = this._super();
-            payment_line.payment_method_code = payment_method ? payment_method.code:""
+            payment_line.payment_method_code = payment_method ? payment_method.payment_method_id[1]:""
             return payment_line
         }
     })

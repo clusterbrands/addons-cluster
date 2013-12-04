@@ -1,2 +1,1 @@
 import fiscal_printer
-

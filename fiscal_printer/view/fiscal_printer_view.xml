@@ -58,14 +58,27 @@
                                             colspan="1"
                                             type="object"/>
                                  </div>
-                                 <field name="payment_method_ids">
+                                <separator string="Payment Constants" />
+                                <field name="payment_method_ids">
                                     <tree string="" editable="bottom"> 
-                                        <field name="account_journal_id"/>                                      
                                         <field name="code"/>
                                         <field name="current_description" readonly="1"/>
                                         <field name="description"/>                                        
                                     </tree>
-                                 </field>
+                                </field>
+                                <separator string="Instrument Codes" />
+                                <field name="payment_instrument_ids">
+                                    <tree string="" editable="bottom"> 
+                                        <field name="journal_id" 
+                                         domain="[('type', 'in', ('cash','bank')),]"
+                                         on_change="onchange_journal(journal_id)" />
+                                        <field name="type" invisible="1" />
+                                        <field name="instrument_id"  
+                                         attrs="{'required' : [('type', '!=', 'cash')]}"
+                                         domain="[('journal_id','=', journal_id)]"/>
+                                        <field name="payment_method_id"/>                                        
+                                    </tree>
+                                </field>
                             </page> 
                             <page string="Tax Rates">
                                 <div class="oe_right oe_button_box" name="buttons">

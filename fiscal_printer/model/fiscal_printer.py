@@ -266,6 +266,8 @@ class printer(osv.Model):
         'enabled': fields.boolean(string="Active"),
         'payment_method_ids': fields.one2many('fiscal_printer.payment_method',
                                               'printer_id', string="Payment Methods"),
+        'payment_instrument_ids': fields.one2many('fiscal_printer.payment_instrument',
+                                                  'printer_id', string="Payment Instrument"),
         'tax_rate_ids': fields.one2many('fiscal_printer.tax_rate',
                                         'printer_id', string="Tax Rates"),
         'measure_unit_ids': fields.one2many('fiscal_printer.measure_unit',
@@ -286,10 +288,11 @@ class printer(osv.Model):
 class payment_method(osv.Model):
 
     _name = 'fiscal_printer.payment_method'
+    _rec_name = 'code' 
     _columns = {
         'printer_id': fields.many2one('fiscal_printer.printer'),
-        'account_journal_id': fields.many2one('account.journal',
-                                              string='Payment Method', domain=[('journal_user', '=', 'True')]),
+        # 'account_journal_id': fields.many2one('account.journal',
+        #                                       string='Payment Method', domain=[('journal_user', '=', 'True')]),
         'code': fields.char(string='Code', size=2),
         'description': fields.char(string='Description', size=50),
         'current_description': fields.char(string='Current Description', size=50),
@@ -297,6 +300,28 @@ class payment_method(osv.Model):
 
     _defaults = {
         'current_description': lambda *a: "Not available"
+    }
+
+class payment_instrument(osv.Model):
+    _name = 'fiscal_printer.payment_instrument'
+
+    def onchange_journal(self, cr, uid, ids, journal_id, context=None):
+        context = context or {}
+        vals = {}
+        if journal_id:
+            obj = self.pool.get('account.journal')
+            journal = obj.browse(cr, uid, journal_id, context=context)
+            vals.update({'type': journal.type, 'instrument_id': False})
+        return {'value': vals}
+
+    _columns = {
+        'printer_id': fields.many2one('fiscal_printer.printer'),
+        'journal_id':  fields.many2one('account.journal',
+                                        string='Journal', 
+                                        domain=[('journal_user', '=', 'True')]),
+        'type': fields.char('Type', size=64),
+        'instrument_id': fields.many2one('payment_instrument.instrument', 'Instrument'), 
+        'payment_method_id': fields.many2one('fiscal_printer.payment_method', 'Code'),      
     }
 
 

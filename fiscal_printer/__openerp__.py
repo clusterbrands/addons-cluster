@@ -35,6 +35,7 @@
     ],
     'depends': [
         'l10n_ve_fiscal_requirements',
+        'payment_instrument',
         'generic_device'
     ],
     'data': [
