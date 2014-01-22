@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="account_financial_report_view_inherit">
+            <field name="name">account_financial_report_view_inherit</field>
+            <field name="model">afr</field>
+            <field name="inherit_id" ref="account_financial_report.account_financial_report_view"/>
+              <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_ledger']" position="after">
+                    <field name="hide_views" />
+                </xpath>
+                <xpath expr="//field[@name='tot_check']" position="before">
+                    <field name="partial_sumarize" />
+                </xpath>
+              </field>
+            </record>
+    </data>
+</openerp>
