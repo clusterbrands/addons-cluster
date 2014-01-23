@@ -10,8 +10,8 @@
 <!--
                 <drawString x="1.0cm" y="24.5cm">[[company.logo and removeParentNode('para') or company.name]]</drawString> 
 -->
-                <place x="-3.5cm" y="22.50cm" width="19cm"  height="5.0cm"> 
-                    <blockTable colWidths="9.6cm,9.4cm" style="TITLE">
+                <place x="-3.5cm" y="22.50cm" width="21cm"  height="5.0cm"> 
+                    <blockTable colWidths="9.6cm,11.4cm" style="TITLE">
                         <tr>
                             <td><para style="TOP_TITLE"></para></td>
                             <td><para style="TITLE_CENTER_NAME">
