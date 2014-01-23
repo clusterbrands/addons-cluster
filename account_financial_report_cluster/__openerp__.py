@@ -44,6 +44,7 @@ Notes:
     ],
     'data': [
         'view/wizard.xml',
+        'view/report.xml',
         'view/account_financial_report_view.xml',
     ],
     'js': [

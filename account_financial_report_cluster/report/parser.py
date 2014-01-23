@@ -24,6 +24,6 @@ class account_balance_cluster(account_balance):
 
 report_sxw.report_sxw('report.afr.2cols',
                       'wizard.report',
-                      'addons/account_financial_report/report/balance_full_2_cols.rml',
+                      'account_financial_report_cluster/report/balance_full_2_cols.rml',
                       parser=account_balance_cluster,
                       header=False)

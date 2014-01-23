@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <report 
+            auto="False"
+            id="account_financial_report.2_col_report"
+            menu="True"
+            model="wizard.report"
+            name="afr.2cols"
+            rml="account_financial_report_cluster/report/balance_full_2_cols.rml"
+            string="Balance 2 Columnas"
+            header="False"
+        />
+    </data>
+</openerp>

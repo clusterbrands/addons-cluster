@@ -19,43 +19,43 @@ msgstr ""
 #: field:afr,hide_views:0
 #: field:wizard.report,hide_views:0
 msgid "Hide 'View' Accounts"
-msgstr "Hide 'View' Accounts"
+msgstr ""
 
 #. module: account_financial_report_cluster
 #: help:afr,partial_sumarize:0
 #: help:wizard.report,partial_sumarize:0
 msgid "help='Checking will add a new line at the end of each account which will Summarize Columns in Report'"
-msgstr "help='Checking will add a new line at the end of each account which will Summarize Columns in Report'"
+msgstr ""
 
 #. module: account_financial_report_cluster
 #: help:afr,hide_views:0
 #: help:wizard.report,hide_views:0
 msgid "Hide Accounts types 'View'"
-msgstr "Hide Accounts types 'View'"
+msgstr ""
 
 #. module: account_financial_report_cluster
 #: field:afr,partial_sumarize:0
 #: field:wizard.report,partial_sumarize:0
 msgid "Partial Summarize?"
-msgstr "Partial Summarize?"
+msgstr ""
 
 #. module: account_financial_report_cluster
 #: model:ir.model,name:account_financial_report_cluster.model_wizard_report
 msgid "wizard.report"
-msgstr "wizard.report"
+msgstr ""
 
 #. module: account_financial_report_cluster
 #: model:ir.model,name:account_financial_report_cluster.model_afr
 msgid "afr"
-msgstr "afr"
+msgstr ""
 
 #. module: account_financial_report_cluster
 #: report:afr.2cols:0
 msgid "(Expressed in"
-msgstr "(Expresado en"
+msgstr ""
 
 #. module: account_financial_report_cluster
 #: report:afr.2cols:0
 msgid "VAT:"
-msgstr "RIF:"
+msgstr ""
 
