@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-22 20:14+0000\n"
-"PO-Revision-Date: 2014-01-22 20:14+0000\n"
+"POT-Creation-Date: 2014-01-23 16:13+0000\n"
+"PO-Revision-Date: 2014-01-23 16:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,17 @@ msgstr ""
 #. module: ifrs_report_extended
 #: report:addons/ifrs_report_extended/report/report_webkit_html.mako:19
 msgid "Expressed in"
+msgstr ""
+
+#. module: ifrs_report_extended
+#: code:addons/ifrs_report_extended/model/ifrs.py:15
+#, python-format
+msgid "ALL PERIODS OF THE FISCALYEAR "
+msgstr ""
+
+#. module: ifrs_report_extended
+#: model:ir.model,name:ifrs_report_extended.model_ifrs_ifrs
+msgid "ifrs.ifrs"
 msgstr ""
 
 #. module: ifrs_report_extended
