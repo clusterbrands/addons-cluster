@@ -2,6 +2,7 @@
 <openerp>
         <data noupdate="0">
     <record id="ifrs_report.ir_header_webkit_ifrsreport_two_colums" model="ir.header_webkit">
+        <field name="name">Reports IFRS WebKit Two Columns</field>
         <field name="footer_html">
 <![CDATA[<html>
     <head>
