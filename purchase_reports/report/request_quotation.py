@@ -29,7 +29,7 @@ class request_quotation(report_sxw.rml_parse):
         super(request_quotation, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
-            'user': self.pool.get('res.users').browse(cr, uid, uid, context)
+            'user': self.pool.get('res.users').browse(cr, uid, uid, context),
         })
 report_sxw.report_sxw('report.purchase.quotation.cluster','purchase.order','addons/purchase_reports/report/request_quotation.rml',parser=request_quotation)
 

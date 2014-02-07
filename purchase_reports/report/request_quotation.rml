@@ -89,7 +89,7 @@
           </para>
           <para style="terp_default_9">Tel.: [[ (order.partner_id and order.partner_id.phone) or removeParentNode('para') ]]</para>
           <para style="terp_default_9">Fax: [[ (order.partner_id and order.partner_id.fax) or removeParentNode('para') ]]</para>
-          <para style="P1">TVA: [[ (order.partner_id and order.partner_id.vat[2:12]) or removeParentNode('para') ]]</para>
+          <para style="P1">TVA: [[ (order.partner_id.vat and order.partner_id.vat[2:12]) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
