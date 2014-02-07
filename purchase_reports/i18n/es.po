@@ -50,7 +50,7 @@ msgid "Default Purchase Pricelist"
 msgstr "Tarifa de compra por defecto"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Tel :"
 msgstr "Tel :"
 
@@ -161,13 +161,13 @@ msgstr "Precio total"
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order,minimum_planned_date:0
-#: report:purchase.quotation:0
+#: report:purchase.quotation.cluster:0
 #: field:purchase.report,expected_date:0
 msgid "Expected Date"
 msgstr "Fecha prevista"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Shipping address :"
 msgstr "Dirección de envío :"
 
@@ -389,7 +389,7 @@ msgid "Search Purchase Order"
 msgstr "Buscar orden de compra"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Date Req."
 msgstr "Fecha solicitud"
 
@@ -683,7 +683,7 @@ msgid "Purchase Pricelist"
 msgstr "Tarifa de compra"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Total :"
 msgstr "Total :"
 
@@ -719,7 +719,7 @@ msgid "Send by Email"
 msgstr "Enviar por correo electrónico"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
 #: field:purchase.order.line,date_order:0
@@ -759,7 +759,7 @@ msgid "Waiting Supplier Ack"
 msgstr "Esperando aceptación proveedor"
 
 #. module: purchase
-#: report:purchase.quotation:0
+#: report:purchase.quotation.cluster:0
 msgid "Request for Quotation :"
 msgstr "Solicitud de presupuesto:"
 
@@ -770,7 +770,7 @@ msgid "On Incoming Shipments"
 msgstr "En envíos entrantes"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Taxes :"
 msgstr "Impuestos :"
 
@@ -878,8 +878,8 @@ msgid "Supplier Features"
 msgstr "Características del proveedor"
 
 #. module: purchase
-#: report:purchase.order:0
-#: report:purchase.quotation:0
+#: report:purchase.order.cluster:0
+#: report:purchase.quotation.cluster:0
 msgid "Qty"
 msgstr "Cantidad"
 
@@ -914,7 +914,7 @@ msgid "Order of Month"
 msgstr "Ordenes del mes"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 #: field:purchase.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Precio unidad"
@@ -1074,7 +1074,7 @@ msgid "Manage purchase requisitions"
 msgstr "Gestionar solicitudes de compra"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 #: field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
@@ -1138,7 +1138,7 @@ msgid "Picking List"
 msgstr "Albarán"
 
 #. module: purchase
-#: report:purchase.quotation:0
+#: report:purchase.quotation.cluster:0
 msgid "Fax:"
 msgstr "Fax:"
 
@@ -1163,8 +1163,8 @@ msgid "The invoice is created automatically if the Invoice control of the purcha
 msgstr "La factura se crea de forma automática si el control de factura de la orden de compra es 'Desde albarán'. La factura también puede ser generada manualmente por el contable (control de factura = Manual)."
 
 #. module: purchase
-#: report:purchase.quotation:0
-#: report:purchase.order:0
+#: report:purchase.quotation.cluster:0
+#: report:purchase.order.cluster:0
 msgid "Regards,"
 msgstr "Atentamente,"
 
@@ -1356,7 +1356,7 @@ msgid "On Purchase Order Lines"
 msgstr "En las líneas de la orden de compra"
 
 #. module: purchase
-#: report:purchase.quotation:0
+#: report:purchase.quotation.cluster:0
 msgid "TVA:"
 msgstr "RIF:"
 
@@ -1513,7 +1513,7 @@ msgid "Confirmation"
 msgstr "Confirmación"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "TIN :"
 msgstr "RIF :"
 
@@ -1628,7 +1628,7 @@ msgid "This pricelist will be used, instead of the default one, for purchases fr
 msgstr "Esta tarifa será utilizada en lugar de la por defecto para las compras de la empresa actual"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Fax :"
 msgstr "Fax :"
 
@@ -1684,7 +1684,7 @@ msgid "Error!"
 msgstr "¡Error!"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Net Total :"
 msgstr "Total neto :"
 
@@ -1711,7 +1711,7 @@ msgid "Email composition wizard"
 msgstr "Asistente de redacción de correo electrónico."
 
 #. module: purchase
-#: report:purchase.quotation:0
+#: report:purchase.quotation.cluster:0
 msgid "Tel.:"
 msgstr "Tel.:"
 
@@ -1721,7 +1721,7 @@ msgid "Resend Purchase Order"
 msgstr "Reenviar Orden de Compra"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Net Price"
 msgstr "Precio neto"
 
@@ -1825,7 +1825,7 @@ msgid "Reference Unit of Measure"
 msgstr "Unidad de medida de referencia"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "Validado por"
@@ -1926,7 +1926,7 @@ msgid "Manual Invoices"
 msgstr "Facturas manuales"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Our Order Reference"
 msgstr "Nuestra referencia"
 
@@ -1957,7 +1957,7 @@ msgid "Order Status"
 msgstr "Estado de la orden"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Request for Quotation N°"
 msgstr "Solicitud de presupuesto Nº"
 
@@ -1995,14 +1995,14 @@ msgid "The selected supplier has a minimal quantity set to %s %s, you should not
 msgstr "El proveedor seleccionado tiene la cantidad mínima establecida a %s %s, por lo que no debería comprarle menos."
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 #: field:purchase.order.line,name:0
-#: report:purchase.quotation:0
+#: report:purchase.quotation.cluster:0
 msgid "Description"
 msgstr "Descripción"
 
 #. module: purchase
-#: report:purchase.quotation:0
+#: report:purchase.quotation.cluster:0
 msgid "Expected Delivery address:"
 msgstr "Dirección de entrega prevista:"
 
@@ -2151,12 +2151,12 @@ msgid "Purchase Analysis"
 msgstr "Análisis compra"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Your Order Reference"
 msgstr "Su referencia"
 
 #. module: purchase
-#: report:purchase.order:0
+#: report:purchase.order.cluster:0
 msgid "Purchase Order Confirmation N°"
 msgstr "Confirmación Orden de Compra Nº"
 
