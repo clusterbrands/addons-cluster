@@ -53,6 +53,20 @@ function pos_fiscal_printer_devices(instance,module){
             });
             return ret;
         },
+        message : function(name,params){
+            var ret = new $.Deferred();
+            var callbacks = this.notifications[name] || [];
+            for(var i = 0; i < callbacks.length; i++){
+                callbacks[i](params);
+            }
+
+            this.connection.rpc('/hw_proxy/' + name, params || {}).done(function(result) {
+                ret.resolve(result);
+            }).fail(function(error) {
+                ret.reject(error);
+            });
+            return ret;
+        },
         print_report_x: function(){
             return this.send_command('print_report_x');
         },
