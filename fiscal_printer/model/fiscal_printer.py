@@ -62,9 +62,6 @@ class printer(osv.Model):
     _inherit = "generic.device"
     _name = 'fiscal_printer.printer'
     
-    def _get_cpath(self, cr, uid, context=None):
-        return "/fiscal_printer/http";
-        
     def get_printer(self, cr, uid, json=False, context=None):
         context = context or {}
         printer = {}

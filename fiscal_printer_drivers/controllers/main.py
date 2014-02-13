@@ -34,10 +34,11 @@ from stoqdrivers.printers import base
 from stoqdrivers.enum import PaymentMethodType, TaxType, UnitType
 from serial import SerialException
 from decimal import Decimal
+import openerp.addons.hw_proxy.controllers.main as hw_proxy
 
-class FiscalPrinterController(openerp.addons.web.http.Controller):
+class FiscalPrinterController(hw_proxy.Proxy):
 
-    _cp_path = '/fiscal_printer'
+    #_cp_path = '/fiscal_printer'
 
     def _get_driver(self,printer):      
         fiscal = FiscalPrinterEx(brand=printer.get('brand').get("name"),
