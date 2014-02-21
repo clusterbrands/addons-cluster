@@ -51,9 +51,13 @@ except ImportError:
 
 _logger = logging.getLogger(__name__)
 
-class FiscalPrinterController(hw_proxy.Proxy):
+class FiscalPrinterDriver(Thread):
 
-    #_cp_path = '/fiscal_printer'
+    def __init__(self):
+        Thread.__init__(self)
+        self.queue = Queue()
+        self.lock  = Lock()
+        self.status = {'status':'connecting', 'messages':[]}
 
     def _get_driver(self,printer):      
         fiscal = FiscalPrinterEx(brand=printer.get('brand').get("name"),
@@ -228,25 +232,30 @@ class FiscalPrinterController(hw_proxy.Proxy):
         self._check_printer_params(receipt)
         return self._print_receipt(receipt,printer) 
         
-    @openerp.addons.web.http.jsonrequest
-    def json(self, request,command,device,params):
-        try:
-            values = getattr(self,command)(device,params)
-            response = {"status": 'ok',"values": values}
-            return response
-        except Exception as e:
-            response = {"status":'error',"error": str(e)}
-            return response
+    # @openerp.addons.web.http.jsonrequest
+    # def json(self, request,command,device,params):
+    #     try:
+    #         values = getattr(self,command)(device,params)
+    #         response = {"status": 'ok',"values": values}
+    #         return response
+    #     except Exception as e:
+    #         response = {"status":'error',"error": str(e)}
+    #         return response
         
-    @openerp.addons.web.http.httprequest
-    def http(self, req, command,device,params):
-        try:
-            params = eval(params)
-            device = eval(device)
-            values = getattr(self,command)(device,params)
-            response = {"status": 'ok',"values": values}
-            return json.dumps(response)
-        except Exception as e:
-            response = {"status":'error',"error": str(e)}
-            return json.dumps(response)
+    # @openerp.addons.web.http.httprequest
+    # def http(self, req, command,device,params):
+    #     try:
+    #         params = eval(params)
+    #         device = eval(device)
+    #         values = getattr(self,command)(device,params)
+    #         response = {"status": 'ok',"values": values}
+    #         return json.dumps(response)
+    #     except Exception as e:
+    #         response = {"status":'error',"error": str(e)}
+    #         return json.dumps(response)
 
+driver = FiscalPrinterDriver()
+hw_proxy.drivers['fiscalprinter'] = driver
+
+class FiscalPrinterProxy(hw_proxy.Proxy):
+    pass
