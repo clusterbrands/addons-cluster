@@ -33,6 +33,7 @@ from serial import SerialException
 from decimal import Decimal
 from threading import Thread, Lock
 from Queue import Queue, Empty
+import openerp.addons.hw_proxy.controllers.main as hw_proxy
 
 try:
     from .. import driver
@@ -48,7 +49,7 @@ except ImportError:
     TaxType = None
     UnitType = None
 
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
+_logger = logging.getLogger(__name__)
 
 class FiscalPrinterController(hw_proxy.Proxy):
 
