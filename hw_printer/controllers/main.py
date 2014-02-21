@@ -231,31 +231,13 @@ class FiscalPrinterDriver(Thread):
         receipt = params.get("receipt")
         self._check_printer_params(receipt)
         return self._print_receipt(receipt,printer) 
-        
-    # @openerp.addons.web.http.jsonrequest
-    # def json(self, request,command,device,params):
-    #     try:
-    #         values = getattr(self,command)(device,params)
-    #         response = {"status": 'ok',"values": values}
-    #         return response
-    #     except Exception as e:
-    #         response = {"status":'error',"error": str(e)}
-    #         return response
-        
-    # @openerp.addons.web.http.httprequest
-    # def http(self, req, command,device,params):
-    #     try:
-    #         params = eval(params)
-    #         device = eval(device)
-    #         values = getattr(self,command)(device,params)
-    #         response = {"status": 'ok',"values": values}
-    #         return json.dumps(response)
-    #     except Exception as e:
-    #         response = {"status":'error',"error": str(e)}
-    #         return json.dumps(response)
 
 driver = FiscalPrinterDriver()
 hw_proxy.drivers['fiscalprinter'] = driver
 
 class FiscalPrinterProxy(hw_proxy.Proxy):
-    pass
+    
+    @openerp.addons.web.http.httprequest
+    def get_supported_printers(self, request, params):
+        return json.dumps({})
+
