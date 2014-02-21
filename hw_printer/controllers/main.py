@@ -29,11 +29,25 @@ import openerp
 import pdb
 import json
 from socket import gethostname
-from fiscal import FiscalPrinterEx
-from stoqdrivers.printers import base
-from stoqdrivers.enum import PaymentMethodType, TaxType, UnitType
 from serial import SerialException
 from decimal import Decimal
+from threading import Thread, Lock
+from Queue import Queue, Empty
+
+try:
+    from .. import driver
+    from ..driver import fiscal
+    from fiscal import FiscalPrinterEx
+    from stoqdrivers.printers import base
+    from stoqdrivers.enum import PaymentMethodType, TaxType, UnitType
+except ImportError:
+    fiscal = None
+    FiscalPrinterEx = None
+    base = None
+    PaymentMethodType = None
+    TaxType = None
+    UnitType = None
+
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 
 class FiscalPrinterController(hw_proxy.Proxy):
