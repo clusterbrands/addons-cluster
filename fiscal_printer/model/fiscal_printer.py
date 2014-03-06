@@ -213,8 +213,10 @@ class printer(osv.Model):
 
     def read_serial(self, cr, uid, ids, context=None):
         context = context or {}
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
         response = self.send_command(cr, uid, ids, 'read_printer_serial',
-                                     context=context)
+                                     params, context=context)
         serial = response.get('serial')
         self.write(cr, uid, ids, {'serial': serial}, context=context)
         return True
@@ -228,9 +230,8 @@ class printer(osv.Model):
 
     def default_get(self, cr, uid, fields, context=None):
         context = context or {}
-        response = self.send_command(cr, uid, [],'get_supported_printers',context=context)
-        printers = response
-
+        printers = self.send_command(cr, uid, [],'get_supported_printers',context=context)
+       
         pb_obj = self.pool.get('fiscal_printer.brand')
         pm_obj = self.pool.get('fiscal_printer.model')
         for brand in printers:

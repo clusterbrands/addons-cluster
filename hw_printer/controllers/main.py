@@ -34,16 +34,14 @@ from decimal import Decimal
 from threading import Thread, Lock
 from Queue import Queue, Empty
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
+from .. import driver
+from ..driver import fiscal
+from ..driver.fiscal import FiscalPrinterEx
 
 try:
-    from .. import driver
-    from ..driver import fiscal
-    from fiscal import FiscalPrinterEx
     from stoqdrivers.printers import base
     from stoqdrivers.enum import PaymentMethodType, TaxType, UnitType
 except ImportError:
-    fiscal = None
-    FiscalPrinterEx = None
     base = None
     PaymentMethodType = None
     TaxType = None
@@ -55,9 +53,7 @@ class FiscalPrinterDriver(Thread):
 
     def __init__(self):
         Thread.__init__(self)
-        self.queue = Queue()
-        self.lock  = Lock()
-        self.status = {'status':'connecting', 'messages':[]}
+        self.lock  = Lock()      
 
     def _get_driver(self,printer):      
         fiscal = FiscalPrinterEx(brand=printer.get('brand').get("name"),
@@ -76,14 +72,21 @@ class FiscalPrinterDriver(Thread):
         driver = self._get_driver(printer)
         driver.check_printer_status()
         
-    def read_workstation(self,printer,params):
+    def read_workstation(self):
         return{"workstation":gethostname()}
         
-    def read_printer_serial(self,printer,params):
-        serial =""
-        driver = self._get_driver(printer)
-        serial = driver.get_serial()
-        return {"serial":serial}
+    def read_printer_serial(self, params):
+        serial = ""
+        try:
+            self.lock.acquire()
+            driver = self._get_driver(params.get('printer'))
+            serial = driver.get_serial()
+            self.lock.release()
+            return {"serial":serial}          
+        except Exception as e :
+            self.lock.release()
+            return {"status":"error", "reason":str(e)}
+                                
         
     def read_payment_methods(self, printer, params):
         self.check_printer_serial(printer)
@@ -140,7 +143,7 @@ class FiscalPrinterDriver(Thread):
         driver.set_coupon_footers(footers)
         return {"exec":True}
         
-    def get_supported_printers(self, printer,params): 
+    def get_supported_printers(self): 
         printers = base.get_supported_printers()
         for brand in printers:
             for i in range(0,len(printers[brand])):
@@ -236,8 +239,15 @@ driver = FiscalPrinterDriver()
 hw_proxy.drivers['fiscalprinter'] = driver
 
 class FiscalPrinterProxy(hw_proxy.Proxy):
-    
+
     @openerp.addons.web.http.httprequest
     def get_supported_printers(self, request, params):
-        return json.dumps({})
+        return json.dumps(driver.get_supported_printers())
 
+    @openerp.addons.web.http.httprequest
+    def read_workstation(self, request, params):
+        return json.dumps(driver.read_workstation())
+
+    @openerp.addons.web.http.httprequest
+    def read_printer_serial(self, request, params):
+        return json.dumps(driver.read_printer_serial(eval(params)))

@@ -54,6 +54,6 @@ class generic_device(osv.Model):
                               e.reason.strerror.decode('utf-8'))
 
         response = json.loads(response.read())
-        if response['status'] == 'error':
-            self._print_error("COMMAND ERROR", response['error'])
-        return response['values']
+        if response.get('status'):
+             self._print_error("COMMAND ERROR", response['reason'])
+        return response
