@@ -76,72 +76,129 @@ class FiscalPrinterDriver(Thread):
         return{"workstation":gethostname()}
         
     def read_printer_serial(self, params):
-        serial = ""
-        try:
-            self.lock.acquire()
+        reponse = {}
+        self.lock.acquire()
+        try:            
             driver = self._get_driver(params.get('printer'))
             serial = driver.get_serial()
-            self.lock.release()
-            return {"serial":serial}          
+            response = {"serial":serial}          
         except Exception as e :
-            self.lock.release()
-            return {"status":"error", "reason":str(e)}
-                                
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()  
+        return response
         
-    def read_payment_methods(self, printer, params):
-        self.check_printer_serial(printer)
-        payment_methods = params.get('payment_methods')
-        driver = self._get_driver(printer)
-        payment_methods = driver.get_payment_constants()
-        return ""
+    def read_payment_methods(self, params):
+        response = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            driver = self._get_driver(printer)
+            response = {"payment_methods: ":driver.get_payment_constants()}
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
         
-    def write_payment_methods(self,printer,params):
-        self.check_printer_serial(printer)
-        payment_methods =params.get('payment_methods')
-        driver = self._get_driver(printer)
-        driver.set_payment_methods(payment_methods)
-        return {"exec":True} 
+    def write_payment_methods(self, params):
+        response = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:            
+            self.check_printer_serial(printer)
+            payment_methods = params.get('payment_methods')
+            driver = self._get_driver(printer)
+            driver.set_payment_methods(payment_methods)
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
         
-    def read_tax_rates(self,printer,params):
-        self.check_printer_serial(printer)
-        payment_methods =[]
-        driver = self._get_driver(printer)
-        tax_rates = driver.get_tax_constants()
-        return {"tax_rates":tax_rates}
+    def read_tax_rates(self, params):
+        response = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            driver = self._get_driver(printer)
+            tax_rates = driver.get_tax_constants()
+            response = {"tax_rates":tax_rates}
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
         
-    def write_tax_rates(self,printer,params):
-        self.check_printer_serial(printer)
-        tax_rates = params.get('tax_rates')
-        driver = self._get_driver(printer)
-        driver.set_tax_rates(tax_rates)
+    def write_tax_rates(self, params):
+        response = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            tax_rates = params.get('tax_rates')
+            driver = self._get_driver(printer)
+            driver.set_tax_rates(tax_rates)
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
     
-    def read_headers(self,printer,params):
-        self.check_printer_serial(printer)
+    def read_headers(self, params):
+        response = {}
         headers =[]
-        driver = self._get_driver(printer)
-        headers = driver.get_coupon_headers()
-        return {"headers":headers}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            driver = self._get_driver(printer)
+            headers = driver.get_coupon_headers()
+            response = {"headers":headers}
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
         
-    def write_headers(self,printer,params):
-        self.check_printer_serial(printer)
-        headers = params.get('headers')
-        driver = self._get_driver(printer)
-        driver.set_coupon_headers(headers)
-        return {"exec":True}
+    def write_headers(self, params):
+        response = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            headers = params.get('headers')
+            driver = self._get_driver(printer)
+            driver.set_coupon_headers(headers)
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response    
         
-    def read_footers(self,printer,params):
-        self.check_printer_serial(printer)
+    def read_footers(self, params):
+        response = {}
         footers =[]
-        driver = self._get_driver(printer)
-        footers = driver.get_coupon_footers()
-        return {"footers":footers}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            driver = self._get_driver(printer)
+            footers = driver.get_coupon_footers()
+            response = {"footers":footers}
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
         
-    def write_footers(self,printer,params):
-        self.check_printer_serial(printer)
-        footers = params.get('footers')
-        driver = self._get_driver(printer)
-        driver.set_coupon_footers(footers)
-        return {"exec":True}
+    def write_footers(self, params):
+        response = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            footers = params.get('footers')
+            driver = self._get_driver(printer)
+            driver.set_coupon_footers(footers)
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
         
     def get_supported_printers(self): 
         printers = base.get_supported_printers()
@@ -251,3 +308,35 @@ class FiscalPrinterProxy(hw_proxy.Proxy):
     @openerp.addons.web.http.httprequest
     def read_printer_serial(self, request, params):
         return json.dumps(driver.read_printer_serial(eval(params)))
+
+    @openerp.addons.web.http.httprequest
+    def read_payment_methods(self, request, params):
+        return json.dumps(driver.read_payment_methods(eval(params)))
+
+    @openerp.addons.web.http.httprequest
+    def write_payment_methods(self, request, params):
+        return json.dumps(driver.write_payment_methods(eval(params)))
+
+    @openerp.addons.web.http.httprequest
+    def read_tax_rates(self, request, params):
+        return json.dumps(driver.read_tax_rates(eval(params)))
+
+    @openerp.addons.web.http.httprequest
+    def write_tax_rates(self, request, params):
+        return json.dumps(driver.write_tax_rates(eval(params)))
+
+    @openerp.addons.web.http.httprequest
+    def read_headers(self, request, params):
+        return json.dumps(driver.read_headers(eval(params)))
+
+    @openerp.addons.web.http.httprequest
+    def write_headers(self, request, params):
+        return json.dumps(driver.write_headers(eval(params)))
+
+    @openerp.addons.web.http.httprequest
+    def read_footers(self, request, params):
+        return json.dumps(driver.read_footers(eval(params)))
+
+    @openerp.addons.web.http.httprequest
+    def write_footers(self, request, params):
+        return json.dumps(driver.write_footers(eval(params)))

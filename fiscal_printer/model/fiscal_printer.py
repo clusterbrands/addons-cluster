@@ -86,25 +86,33 @@ class printer(osv.Model):
 
     def read_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}
-        response = self.send_command(cr, uid, ids, 'read_payment_methods',
-                                     context=context)
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        response = self.send_command(cr, uid, ids, 'read_payment_methods', 
+                                     params, context=context)
+        return True
 
     def write_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
         payment_methods = []
         printer = self.browse(cr, uid, ids)[0]
         for pm in printer.payment_method_ids:
             payment_methods.append({'code': str(pm.code),
                                     'description': str(pm.description)})
-        params = {'payment_methods': payment_methods}
+        params.update({'payment_methods': payment_methods})
         response = self.send_command(cr, uid, ids, 
                                      'write_payment_methods', params,
                                      context=context)
+        return True
 
     def read_tax_rates(self, cr, uid, ids, context=None):
         context = context or {}
         tax_rates = {}
-        response = self.send_command(cr, uid, ids, 'read_tax_rates',
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        response = self.send_command(cr, uid, ids, 'read_tax_rates', params, 
                                      context=context)
         tax_rates = response.get('tax_rates')
         obj = self.pool.get('fiscal_printer.tax_rate')
@@ -126,18 +134,22 @@ class printer(osv.Model):
 
     def write_tax_rates(self, cr, uid, ids, context=None):
         context = context or {}
+        params = {}
         tax_rates = []
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
         printer = self.browse(cr, uid, ids)[0]
         for tax in printer.tax_rate_ids:
             tax_rates.append({'code': tax.code, 'value': tax.value})
-
-        params = {'tax_rates': tax_rates}
+        params.update({'tax_rates': tax_rates})
         response = self.send_command(cr, uid, ids, 'write_tax_rates', 
                                      params,context=context)
+        return True
 
     def read_headers(self, cr, uid, ids, context=None):
         context = context or {}
-        response = self.send_command(cr, uid, ids, 'read_headers',
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        response = self.send_command(cr, uid, ids, 'read_headers', params,
                                      context=context)
         headers = response.get('headers')
         obj = self.pool.get('fiscal_printer.header')
@@ -156,6 +168,7 @@ class printer(osv.Model):
 
     def write_headers(self, cr, uid, ids, context=None):
         context = context or {}
+        params = {}
         headers = []
         header_ids = []
         printer = self.browse(cr, uid, ids)[0]
@@ -163,7 +176,8 @@ class printer(osv.Model):
             if (header.value != header.current_value):
                 headers.append(header.value)
                 header_ids.append(header.id)
-        params = {'headers': headers}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        params.update({'headers': headers})
         response = self.send_command(cr, uid, ids, 'write_headers', params,
                                 context=context)
         if (response.get('exec')):
@@ -173,9 +187,13 @@ class printer(osv.Model):
                 obj.write(cr, uid, id, {'current_value': brw.value},
                           context=context)
 
+        return True
+
     def read_footers(self, cr, uid, ids, context=None):
         context = context or {}
-        response = self.send_command(cr, uid, ids, 'read_footers', 
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        response = self.send_command(cr, uid, ids, 'read_footers', params, 
                                      context=context)
         footers = response.get('footers')
         obj = self.pool.get('fiscal_printer.footer')
@@ -196,12 +214,14 @@ class printer(osv.Model):
         context = context or {}
         footers = []
         footer_ids = []
+        params = {}
         printer = self.browse(cr, uid, ids)[0]
         for footer in printer.footer_ids:
             if (footer.value != footer.current_value):
                 footers.append(footer.value)
                 footer_ids.append(footer.id)
-        params = {'footers': footers}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        params.update({'footers': footers})
         response = self.send_command(cr, uid, ids, 'write_footers',
                                      params, context=context)
         if (response.get('exec')):
@@ -210,6 +230,7 @@ class printer(osv.Model):
                 brw = obj.browse(cr, uid, id,context=context)
                 obj.write(cr, uid, id, {'current_value': brw.value}, 
                           context=context)
+        return True
 
     def read_serial(self, cr, uid, ids, context=None):
         context = context or {}
