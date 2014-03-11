@@ -39,7 +39,6 @@ function pos_fiscal_printer_devices(instance,module){
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
-            _.extend(params, {printer: this.printer})
             this.connection.rpc('/hw_proxy/' + name, params || {}).done(function(result) {
                 ret.resolve(result);
             }).fail(function(error) {
@@ -48,13 +47,13 @@ function pos_fiscal_printer_devices(instance,module){
             return ret;
         },
         print_report_x: function(){
-            return this.message('print_report_x');
+            return this.message('print_report_x', {printer: this.printer});
         },
         print_receipt: function(receipt){
-            return this.message('print_receipt',{receipt: receipt});
+            return this.message('print_receipt',{receipt: receipt, printer: this.printer});
         },
         check_printer_status : function(){
-            return this.message('check_printer_status')
+            return this.message('check_printer_status', {printer: this.printer})
         }
     })
 }

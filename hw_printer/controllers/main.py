@@ -314,11 +314,12 @@ class FiscalPrinterDriver(Thread):
             driver.cancel()
             return {"status":"error","error":str(e)}            
        
-    def print_receipt(self, params):
-        receipt = params.get("receipt")
-        printer = params.get("printer")
-        self._check_printer_params(receipt)
-        #return self._print_receipt(receipt,printer) 
+    def print_receipt(self, receipt, printer):
+        try:
+            self._check_printer_params(receipt)
+        except Exception as e:
+            return {"status":"error","error":str(e)}
+        return self._print_receipt(receipt,printer)   
 
 driver = FiscalPrinterDriver()
 hw_proxy.drivers['fiscalprinter'] = driver
@@ -378,8 +379,8 @@ class FiscalPrinterProxy(hw_proxy.Proxy):
         return json.dumps(driver.print_report_x(eval(params)))
 
     @openerp.addons.web.http.jsonrequest
-    def print_receipt(self, request, params):
-        return driver.print_receipt(params)
+    def print_receipt(self, request, receipt, printer):
+        return driver.print_receipt(receipt, printer)
 
     @openerp.addons.web.http.jsonrequest
     def check_printer_status(self, request, params):
