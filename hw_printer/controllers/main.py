@@ -68,7 +68,19 @@ class FiscalPrinterDriver(Thread):
             raise Exception("The connected printer does not match with the configured for this POS")
         return True
     
-    def check_printer_status(self,printer,params):
+    def check_printer_status(self, params):
+        reponse = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:            
+            driver = self._get_driver(printer)
+            driver.check_printer_status()
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()  
+        return response
+
+    def _check_printer_status(self,printer,params):
         driver = self._get_driver(printer)
         driver.check_printer_status()
         
@@ -207,17 +219,32 @@ class FiscalPrinterDriver(Thread):
                 printers[brand][i] = str(printers[brand][i]).split(".")[3]
         return printers
         
-    def has_pending_reduce(self, printer, params):
-        self.check_printer_serial(printer)
-        driver = self._get_driver(printer)
-        res = driver.has_pending_reduce()
-        return {"reduce":res}
+    def has_pending_reduce(self, params):
+        response = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            driver = self._get_driver(printer)
+            response = {"reduce":driver.has_pending_reduce()}
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
 
-    def print_report_x(self, printer, params):
-        self.check_printer_serial(printer)
-        driver = self._get_driver(printer)
-        report_number = driver.summarize()
-        return {"report_number":report_number,"printer_serial":printer.get("serial")}  
+    def print_report_x(self, params):
+        response = {}
+        printer = params.get('printer')
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            driver = self._get_driver(printer)
+            report_number = driver.summarize()
+            return {"report_number":report_number,"printer_serial":printer.get("serial")}  
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
 
     def print_report_z(self, printer, params):
         self.check_printer_serial(printer)
@@ -287,10 +314,11 @@ class FiscalPrinterDriver(Thread):
             driver.cancel()
             return {"status":"error","error":str(e)}            
        
-    def print_receipt(self,printer,params):
+    def print_receipt(self, params):
         receipt = params.get("receipt")
+        printer = params.get("printer")
         self._check_printer_params(receipt)
-        return self._print_receipt(receipt,printer) 
+        #return self._print_receipt(receipt,printer) 
 
 driver = FiscalPrinterDriver()
 hw_proxy.drivers['fiscalprinter'] = driver
@@ -340,3 +368,23 @@ class FiscalPrinterProxy(hw_proxy.Proxy):
     @openerp.addons.web.http.httprequest
     def write_footers(self, request, params):
         return json.dumps(driver.write_footers(eval(params)))
+
+    @openerp.addons.web.http.jsonrequest
+    def print_report_x(self, request, params):
+        return driver.print_report_x(params)
+
+    @openerp.addons.web.http.httprequest
+    def print_report_x(self, request, params):
+        return json.dumps(driver.print_report_x(eval(params)))
+
+    @openerp.addons.web.http.jsonrequest
+    def print_receipt(self, request, params):
+        return driver.print_receipt(params)
+
+    @openerp.addons.web.http.jsonrequest
+    def check_printer_status(self, request, params):
+        return driver.check_printer_status(params)
+
+    @openerp.addons.web.http.httprequest
+    def has_pending_reduce(self, request, params):
+        return json.dumps(driver.has_pending_reduce(eval(params)))

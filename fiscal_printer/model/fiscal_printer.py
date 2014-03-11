@@ -84,6 +84,14 @@ class printer(osv.Model):
                                      context=context)
         return response.get('workstation') or ""
 
+    def has_pending_reduce(self, cr, uid, ids, context=None):
+        context = context or {}
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        response = self.send_command(cr, uid, ids, 'has_pending_reduce', 
+                                     params, context=context)
+        return response.get('reduce')
+
     def read_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}
         params = {}
@@ -309,7 +317,7 @@ class payment_method(osv.Model):
     _name = 'fiscal_printer.payment_method'
     _rec_name = 'code' 
     _columns = {
-        'printer_id': fields.many2one('fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer', ondelete='cascade'),
         # 'account_journal_id': fields.many2one('account.journal',
         #                                       string='Payment Method', domain=[('journal_user', '=', 'True')]),
         'code': fields.char(string='Code', size=2),
@@ -334,7 +342,7 @@ class payment_instrument(osv.Model):
         return {'value': vals}
 
     _columns = {
-        'printer_id': fields.many2one('fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer', ondelete='cascade'),
         'journal_id':  fields.many2one('account.journal',
                                         string='Journal', 
                                         domain=[('journal_user', '=', 'True')]),
@@ -348,7 +356,7 @@ class tax_rate(osv.Model):
 
     _name = 'fiscal_printer.tax_rate'
     _columns = {
-        'printer_id': fields.many2one('fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer', ondelete='cascade'),
         'account_tax_id': fields.many2one('account.tax',
                                           string='Tax', domain=[('type_tax_use', '=', 'sale')]),
         'code': fields.char(string='Tax Code', size=4),
@@ -365,7 +373,7 @@ class measure_unit (osv.Model):
 
     _name = 'fiscal_printer.measure_unit'
     _columns = {
-        'printer_id': fields.many2one('fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer', ondelete='cascade'),
         'product_uom_id': fields.many2one('product.uom',
                                           string='Tax', domain=[('active', '=', 'True')]),
         'Name': fields.char(size=255, string='Name'),
@@ -378,7 +386,7 @@ class header(osv.Model):
 
     _name = 'fiscal_printer.header'
     _columns = {
-        'printer_id': fields.many2one('fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer', ondelete='cascade'),
         'current_value': fields.char(size=255, string='Current Value'),
         'value': fields.char(size=255, string='Value')
     }
@@ -392,7 +400,7 @@ class footer(osv.Model):
 
     _name = 'fiscal_printer.footer'
     _columns = {
-        'printer_id': fields.many2one('fiscal_printer.printer'),
+        'printer_id': fields.many2one('fiscal_printer.printer', ondelete='cascade'),
         'current_value': fields.char(size=255, string='Current Value'),
         'value': fields.char(size=255, string='Value')
     }

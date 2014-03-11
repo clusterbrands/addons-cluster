@@ -23,7 +23,6 @@
 
 function pos_fiscal_printer_devices(instance,module){
     module.ProxyDevice.include({
-        
         init: function(options){
             this._super()
             this.printer = {}
@@ -34,32 +33,13 @@ function pos_fiscal_printer_devices(instance,module){
         get_printer:function(){
             return this.printer;
         },
-        send_command : function(command,params){
-            self = this
-            var ret = new $.Deferred();
-            var callbacks = this.notifications[command] || [];
-            for(var i = 0; i < callbacks.length; i++){
-                callbacks[i](params);
-            }
-
-            this.connection.rpc('/fiscal_printer/json',{
-                command:command,
-                device:this.printer,
-                params: params || {},                            
-            }).done(function(result) {
-                ret.resolve(result);
-            }).fail(function(error) {
-                ret.reject(error);
-            });
-            return ret;
-        },
         message : function(name,params){
             var ret = new $.Deferred();
             var callbacks = this.notifications[name] || [];
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
-
+            _.extend(params, {printer: this.printer})
             this.connection.rpc('/hw_proxy/' + name, params || {}).done(function(result) {
                 ret.resolve(result);
             }).fail(function(error) {
@@ -68,13 +48,13 @@ function pos_fiscal_printer_devices(instance,module){
             return ret;
         },
         print_report_x: function(){
-            return this.send_command('print_report_x');
+            return this.message('print_report_x');
         },
         print_receipt: function(receipt){
-            return this.send_command('print_receipt',{receipt: receipt});
+            return this.message('print_receipt',{receipt: receipt});
         },
         check_printer_status : function(){
-            return this.send_command('check_printer_status')
+            return this.message('check_printer_status')
         }
     })
 }
