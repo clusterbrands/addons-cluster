@@ -116,9 +116,12 @@ function cash_count_screens(instance, module){
         validate:function(){
             var self = this
             this.pos.proxy.print_report_x().done(function(response){
-                if (response.status == "ok"){                
-                    report_number = response.values.report_number;
-                    printer_serial = response.values.printer_serial;
+                if (response.status){
+                    print_error = new module.Alert(self,{title:"Printer Error",msg:response.reason});
+                    print_error.appendTo($('.point-of-sale'));           
+                }else{
+                    report_number = response.report_number;
+                    printer_serial = response.printer_serial;
                     report = self.pos.get('currentXReport'); 
                     report.set('number', report_number);
                     report.set('printer_serial', printer_serial);
@@ -126,10 +129,7 @@ function cash_count_screens(instance, module){
                     context = new instance.web.CompoundContext()
                     model.call('create_from_ui',[report.exportAsJSON()],{context:context}).done(function(id){
                         self.pos_widget.screen_selector.set_current_screen('xreport-receipt');
-                    });
-                }else{
-                    print_error = new module.Alert(self,{title:"Printer Error",msg:response.error});
-                    print_error.appendTo($('.point-of-sale'));
+                    });                    
                 }
             });                
         },

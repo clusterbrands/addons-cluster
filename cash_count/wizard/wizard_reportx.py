@@ -38,7 +38,7 @@ class wizard_reportx(osv.osv_memory):
         obj = self.pool.get("fiscal_printer.printer")
         printer = obj.get_printer(cr, uid, context=context)
 
-        res = printer.send_command("print_report_x")
+        res = printer.print_report_x()
 
         if res:
             data = self.browse(cr, uid, ids[0], context=context)

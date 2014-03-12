@@ -87,7 +87,7 @@ function pos_fiscal_printer_models(instance, module){
             printer = this.pos.proxy.get_printer();
             taxes_ids = product.get('taxes_id');        
             tax_rates = printer.tax_rate_ids;
-            tax = ""       
+            var tax;
             _.each(taxes_ids,function(tax_id){
                 tax = _.detect(tax_rates,function(t){
                             return t.account_tax_id[0] == tax_id
@@ -100,7 +100,7 @@ function pos_fiscal_printer_models(instance, module){
                         return u.product_uom_id[0] == uom_id
                     })            
             order_line = this._super();    
-            order_line.tax_code = tax != "" ? tax.code:tax
+            order_line.tax_code = tax != undefined ? tax.code:""
             order_line.unit_code = unit ? unit.code:""
             return order_line
         }

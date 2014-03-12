@@ -16,10 +16,6 @@ class generic_device(osv.Model):
         shows an error on the screen
         '''
         raise osv.except_osv(error, msg)
-
-    def _get_cpath(self, cr, uid, context=None):
-        self._print_error("NotImplementationError",
-                          _("The method _get_cpath() must be overriden"))
                           
     def _get_device(self, cr, uid, ids,context=None):
         if not ids:
@@ -32,17 +28,13 @@ class generic_device(osv.Model):
             elif isinstance(value,list):
                 fields[field] = self.resolve_2many_commands(cr,uid,field,value)
         return fields
-        
+       
 
     def _make_command(self, cr, uid, ids, command, params, context=None):
         context = context or {}
-        remote_address = context.get('remote_addr') or '127.0.0.1';
-        url = "http://"+remote_address+":8069"
-        url+=  self._get_cpath(cr, uid, context=context)           
-        device = self._get_device(cr, uid, ids, context=context)
-        req_params = {
-            'command': command, 'device': device, 'params': params,
-        }
+        remote_address = context.get('remote_addr') or '127.0.0.1'
+        url = "http://"+remote_address+":8069/hw_proxy/"+command  
+        req_params = {'params':params}
         req_params_str = urllib.urlencode(req_params)
         request = urllib2.Request(url, req_params_str)
         return request
@@ -51,8 +43,7 @@ class generic_device(osv.Model):
 
         context = context or {}
         response = {}
-        request = self._make_command(cr, uid, ids, command, params, 
-                                     context=context)
+        request = self._make_command(cr, uid, ids, command, params, context=context)
         try:
             response = urllib2.urlopen(request)
         except HTTPError as e:
@@ -63,6 +54,6 @@ class generic_device(osv.Model):
                               e.reason.strerror.decode('utf-8'))
 
         response = json.loads(response.read())
-        if response['status'] == 'error':
-            self._print_error("COMMAND ERROR", response['error'])
-        return response['values']
+        if response.get('status'):
+             self._print_error("COMMAND ERROR", response['reason'])
+        return response
