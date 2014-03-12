@@ -232,25 +232,32 @@ class FiscalPrinterDriver(Thread):
         self.lock.release()
         return response
 
-    def print_report_x(self, params):
+    def print_report_x(self, printer):
+        response = {}
+        self.lock.acquire()
+        try:
+            self.check_printer_serial(printer)
+            driver = self._get_driver(printer)
+            report_number = driver.summarize()
+            response  = {"report_number":report_number,"printer_serial":printer.get("serial")}  
+        except Exception as e :
+            response = {"status":"error", "reason":str(e)}
+        self.lock.release()
+        return response
+
+    def print_report_z(self, params):
         response = {}
         printer = params.get('printer')
         self.lock.acquire()
         try:
             self.check_printer_serial(printer)
             driver = self._get_driver(printer)
-            report_number = driver.summarize()
-            return {"report_number":report_number,"printer_serial":printer.get("serial")}  
+            report_number = driver.close_till()
+            return {"report_number":report_number,"printer_serial":printer.get("serial")}
         except Exception as e :
             response = {"status":"error", "reason":str(e)}
         self.lock.release()
-        return response
-
-    def print_report_z(self, printer, params):
-        self.check_printer_serial(printer)
-        driver = self._get_driver(printer)
-        report_number = driver.close_till()
-        return {"report_number":report_number,"printer_serial":printer.get("serial")}     
+        return response     
     
     def _add_items(self,driver,order_lines):
         for product in order_lines:
@@ -371,12 +378,17 @@ class FiscalPrinterProxy(hw_proxy.Proxy):
         return json.dumps(driver.write_footers(eval(params)))
 
     @openerp.addons.web.http.jsonrequest
-    def print_report_x(self, request, params):
-        return driver.print_report_x(params)
+    def print_report_x_json(self, request, printer):
+        return driver.print_report_x(printer)
 
     @openerp.addons.web.http.httprequest
-    def print_report_x(self, request, params):
-        return json.dumps(driver.print_report_x(eval(params)))
+    def print_report_x_http(self, request, params):
+        params = eval(params)
+        return json.dumps(driver.print_report_x(params.get('printer')))
+
+    @openerp.addons.web.http.httprequest
+    def print_report_z(self, request, params):
+        return json.dumps(driver.print_report_z(eval(params)))
 
     @openerp.addons.web.http.jsonrequest
     def print_receipt(self, request, receipt, printer):

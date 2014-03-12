@@ -47,7 +47,7 @@ function pos_fiscal_printer_devices(instance,module){
             return ret;
         },
         print_report_x: function(){
-            return this.message('print_report_x', {printer: this.printer});
+            return this.message('print_report_x_json', {printer: this.printer});
         },
         print_receipt: function(receipt){
             return this.message('print_receipt',{receipt: receipt, printer: this.printer});

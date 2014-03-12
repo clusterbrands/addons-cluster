@@ -77,7 +77,7 @@ class pos_session(osv.Model):
                 getattr(st, 'button_confirm_%s' %
                         st.journal_id.type)(context=context)
 
-        res = printer.send_command("print_report_z")
+        res = printer.print_report_z()
         if res:
             self._confirm_orders(cr, uid, ids, context=context)
             data = {'report_z_number':res.get('report_number'),'state' : 'closed'}

@@ -92,6 +92,22 @@ class printer(osv.Model):
                                      params, context=context)
         return response.get('reduce')
 
+    def print_report_x(self, cr, uid, ids, context=None):
+        context = context or {}
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        response = self.send_command(cr, uid, ids, 'print_report_x_http', 
+                                     params, context=context)
+        return response
+
+    def print_report_z(self, cr, uid, ids, context=None):
+        context = context or {}
+        params = {}
+        params["printer"] = self._get_device(cr, uid, ids, context=context)
+        response = self.send_command(cr, uid, ids, 'print_report_z', 
+                                     params, context=context)
+        return response
+
     def read_payment_methods(self, cr, uid, ids, context=None):
         context = context or {}
         params = {}
