@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>       
+        <record model="ir.ui.view" id="calendar_tree_view">
+            <field name="name">calendar.tree</field>
+            <field name="model">hr.calendar</field>
+            <field name="arch" type="xml">
+                <tree string="Calendar Tree">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="limit" />
+                </tree>
+            </field>       
+        </record>
+        <record model="ir.ui.view" id="calendar_form_view">
+            <field name="name">calendar.form</field>
+            <field name="model">hr.calendar</field>
+            <field name="arch" type="xml">
+                <form string="Session Form" version="7.0">
+                    <sheet>
+                        <group col="2">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="limit" />
+                            <field name="dates" widget="calendar" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

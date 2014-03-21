@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+       <record model="ir.actions.act_window" id="action_view_calendar_tree">
+             <field name="name">Calendar</field>
+             <field name="res_model">hr.calendar</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+         
+        <menuitem 
+            name="Calendars"
+            parent="hr.menu_hr_configuration"
+            id="menur_hr_calendar"
+            action="action_view_calendar_tree" />
+        
+    </data>
+</openerp>
