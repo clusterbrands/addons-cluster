@@ -49,13 +49,17 @@ class hr_calendar (osv.Model):
         'code': fields.char('Code', size=64, required=True),
         'limit': fields.selection([
                                    ('end_of_period', 'End of Period'),
-                                   ('end_of_year', 'End of Year'),
-                                   ('holidays_end_date', 'Holiday Return Date'),
-                                   ('previous_period', 'Previous Period'),
-                                   ('liquidation_date', 'Liquidation Date'),
-                                   ('previous_month', 'Previous Month')
+                                   # ('end_of_year', 'End of Year'),
+                                   # ('holidays_end_date', 'Holiday Return Date'),
+                                   # ('previous_period', 'Previous Period'),
+                                   # ('liquidation_date', 'Liquidation Date'),
+                                   # ('previous_month', 'Previous Month')
                                   ],'Limit', select=True),
         'dates': fields.text('Dates'), 
     }
+
+    _defaults = {  
+        'limit': 'end_of_period',  
+        }
 
 
