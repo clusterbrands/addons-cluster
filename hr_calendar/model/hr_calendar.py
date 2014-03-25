@@ -22,14 +22,28 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++se++++++++++++++++++++++++++++++
 
+import datetime
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
 
 class hr_calendar (osv.Model):
     _name = "hr.calendar"
+
+    def count_dates(self, cr, uid, ids, from_date, to_date, context=None):
+        context = context or {}
+        from_date = datetime.datetime.strptime(from_date, '%Y-%m-%d').date()
+        to_date = datetime.datetime.strptime(to_date, '%Y-%m-%d').date()
+        obj = self.browse(cr, uid, ids, context=context)[0]
+        count = 0.0
+        for date in eval(obj.dates):
+            dt = datetime.datetime.strptime(date, '%m/%d/%Y').date()
+            if (dt >= from_date) and (dt <= to_date):
+                count += 1;
+        return count  
+
     _columns = {
         'name': fields.char('Name', size=255, required=True),
         'code': fields.char('Code', size=64, required=True),
