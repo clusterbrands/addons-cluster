@@ -14,6 +14,5 @@
             parent="hr.menu_hr_configuration"
             id="menur_hr_calendar"
             action="action_view_calendar_tree" />
-        
     </data>
 </openerp>

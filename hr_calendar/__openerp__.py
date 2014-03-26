@@ -46,6 +46,7 @@ Notes:
     'data': [
         'view/hr_calendar_view.xml',
         'view/hr_calendar_action_menu.xml',
+        'security/ir.model.access.csv',
     ],
     'js': [
     ],
