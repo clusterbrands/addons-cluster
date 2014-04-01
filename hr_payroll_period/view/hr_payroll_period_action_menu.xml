@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data> 
+        <record model="ir.actions.act_window" id="action_payroll_period_list">
+             <field name="name">Periods</field>
+             <field name="res_model">hr.payroll.period.schedule</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem 
+            name="Periods Schedule"
+            parent="hr_payroll.payroll_configure"
+            id="payroll_period_configure"
+            action="action_payroll_period_list" />
+    </data>
+</openerp>
