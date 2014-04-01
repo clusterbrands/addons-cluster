@@ -29,10 +29,9 @@ openerp.hr_calendar = function(instance){
         render_value: function() {
             var dates = this.get('value') || [];
             var oldDates = this.$('.calendar').multiDatesPicker('getDates');
+            this.$('.calendar').multiDatesPicker('removeDates',oldDates);
             if (dates.length > 0)
-                this.$('.calendar').multiDatesPicker('addDates',eval(dates));
-            else
-                this.$('.calendar').multiDatesPicker('removeDates',oldDates);
+                this.$('.calendar').multiDatesPicker('addDates',eval(dates));                
         },
     });
     instance.web.form.widgets.add('calendar', 'instance.hr_calendar.Calendar');
