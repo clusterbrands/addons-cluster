@@ -40,16 +40,22 @@ Notes:
 -----
 """,
     'depends': [
+        'account',
+        'hr_payroll',
     ],
     'data': [
         'view/hr_payroll_period_view.xml',
         'view/hr_payroll_period_action_menu.xml',
     ],
     'js': [
+        'static/src/js/hr_payroll_period.js',
+        'static/src/js/backbone-super-min.js',
     ],
     'css': [
+        'static/src/css/hr_payroll_period.css',
     ],
     'qweb': [
+        'static/src/xml/hr_payroll_period.xml',
     ],
     'demo': [
     ],

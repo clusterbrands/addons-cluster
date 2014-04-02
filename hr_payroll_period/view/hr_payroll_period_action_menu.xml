@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data> 
-        <record model="ir.actions.act_window" id="action_payroll_period_list">
-             <field name="name">Periods</field>
+        <record model="ir.actions.act_window" id="action_payroll_period_schedule_list">
+             <field name="name">Payroll Periods Schedule</field>
              <field name="res_model">hr.payroll.period.schedule</field>
              <field name="view_type">form</field>
              <field name="view_mode">tree,form</field>
@@ -12,6 +12,20 @@
             name="Periods Schedule"
             parent="hr_payroll.payroll_configure"
             id="payroll_period_configure"
+            action="action_payroll_period_schedule_list" />
+
+        <record model="ir.actions.act_window" id="action_payroll_period_list">
+             <field name="name">Payroll Periods </field>
+             <field name="res_model">hr.payroll.period</field>
+             <field name="view_id" ref="period_tree_view"/>
+             <field name="view_mode">tree_hr_payroll_period,form</field>
+        </record>
+
+        <menuitem 
+            name="Payroll Periods"
+            parent="hr_payroll.menu_hr_root_payroll"
+            id="payroll_periods"
             action="action_payroll_period_list" />
+
     </data>
 </openerp>

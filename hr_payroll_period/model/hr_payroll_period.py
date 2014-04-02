@@ -79,6 +79,14 @@ class hr_payperiod_schedule(osv.Model):
             })
         return periods
 
+    def _get_fiscal_period(self, cr, uid, from_date, to_date, fiscalyear, context=None):
+        context = context or {}
+        obj = self.pool.get('account.period')
+        c = [('fiscalyear_id','=',fiscalyear),('date_start','<=',to_date)]
+        c.append(('date_stop','>=',to_date))
+        return obj.search(cr, uid, c, context=context)
+
+
     def create_period(self, cr, uid, ids, context=None):
         context = context or {}
         for obj in self.browse(cr, uid, ids, context=context):
@@ -91,17 +99,24 @@ class hr_payperiod_schedule(osv.Model):
             elif obj.type == "monthly":
                 periods = self._get_monthly_periods(start_date)
             p_obj = self.pool.get('hr.payroll.period')
-            p_ids = p_obj.search(cr, uid, [('schedule_id',"=", obj.id)], context= context)
+            p_ids = p_obj.search(cr, uid, [('schedule_id',"=", obj.id)], context=context)
             p_obj.unlink(cr, uid, p_ids, context=context)
             for i in range(0,len(periods)):
-                values = {
-                    'name': str(i+1).rjust(5,'0'),
-                    'type': obj.type,
-                    'schedule_id': obj.id,
-                    'date_start': periods[i].get('date_start'),
-                    'date_end': periods[i].get('date_end'),
-                }
-                p_obj.create(cr, uid, values, context=context)
+                date_start = periods[i].get('date_start')
+                date_end =  periods[i].get('date_end')
+                period_id = self._get_fiscal_period(cr, uid, date_start, date_end, obj.fiscalyear_id.id)
+                if len(period_id) ==  1:
+                    values = {
+                        'name': str(i+1).rjust(5,'0'),
+                        'type': obj.type,
+                        'schedule_id': obj.id,
+                        'date_start': date_start,
+                        'date_end': date_end,
+                        'fiscal_period_id': period_id[0],
+                    }
+                    p_obj.create(cr, uid, values, context=context)
+                else:
+                    osv.except_osv(_('Error!'),_("Fiscal period has not found"))
 
     _columns = {
         'name': fields.char('Description', size=256, required=True),
@@ -112,6 +127,7 @@ class hr_payperiod_schedule(osv.Model):
             ('custom', 'Custom'),
         ],    'Type', select=True, required=True),
         'start_date': fields.date('Initial Period Start Date', required=True),
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'paydate_biz_day': fields.boolean('Pay Date on a Business Day', required=False),
         'period_ids':fields.one2many('hr.payroll.period', 'schedule_id', 'Periods'), 
     }
@@ -128,6 +144,7 @@ class hr_payroll_period(osv.Model):
                                        required=True, ondelete="cascade"),
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date', required=True),
+        'fiscal_period_id': fields.many2one('account.period', 'Fiscal Period', required=True),
         'state': fields.selection([('draft', 'Draft'),
                                    ('actived', 'Active'),
                                    ('confirmed', 'Confirmado'),
@@ -135,6 +152,15 @@ class hr_payroll_period(osv.Model):
                                    ('closed', 'Closed')],
                                   'State', select=True, readonly=True),
     }
+
+    def list_fiscal_periods(self, cr, uid, context=None):
+        ids = self.pool.get('account.period').search(cr,uid,[])
+        return self.pool.get('account.period').name_get(cr, uid, ids, context=context)
+
+    def list_periods_schedules(self, cr, uid, context=None):
+        ids = self.pool.get('hr.payroll.period.schedule').search(cr,uid,[])
+        return self.pool.get('hr.payroll.period.schedule').name_get(cr, uid, ids, context=context)
+
 
     _defaults = {  
         'state': 'draft',  

@@ -9,10 +9,12 @@
                     <field name="name" />
                     <field name="type" />
                     <field name="start_date" />
+                    <field name="fiscalyear_id" />
                     <field name="paydate_biz_day" />
                 </tree>
             </field>       
         </record>
+
         <record model="ir.ui.view" id="period_schedule_form_view">
             <field name="name">period.schedule.form</field>
             <field name="model">hr.payroll.period.schedule</field>
@@ -24,8 +26,9 @@
                     <sheet>
                         <group col="4">
                             <field name="name"/>
-                            <field name="start_date" />
-                            <field name="type"/>                            
+                            <field name="type"/>
+                            <field name="fiscalyear_id" widget="selection"/> 
+                            <field name="start_date" />                      
                             <field name="paydate_biz_day" />
                         </group>
                         <separator string="Periods" />
@@ -34,6 +37,7 @@
                                 <field name="name" />
                                 <field name="date_start" />
                                 <field name="date_end" />
+                                <field name="fiscal_period_id" />
                                 <field name="state" />
                             </tree>
                         </field>
@@ -41,7 +45,8 @@
                 </form>
             </field>
         </record>
-         <record model="ir.ui.view" id="period_form_view">
+
+        <record model="ir.ui.view" id="period_form_view">
             <field name="name">period.form</field>
             <field name="model">hr.payroll.period</field>
             <field name="arch" type="xml">
@@ -53,6 +58,21 @@
                         <field name="date_end" />
                     </group>
                 </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="period_tree_view">
+            <field name="name">period.tree</field>
+            <field name="model">hr.payroll.period</field>
+            <field name="arch" type="xml">
+                <tree string="Period Form">                    
+                    <field name="name"/>
+                    <field name="date_start" />
+                    <field name="date_end" />
+                    <field name="fiscal_period_id" />
+                    <field name="schedule_id" />
+                    <field name="state"/>           
+                </tree>
             </field>
         </record>
     </data>
