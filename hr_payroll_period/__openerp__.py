@@ -46,6 +46,7 @@ Notes:
     'data': [
         'view/hr_payroll_period_view.xml',
         'view/hr_payroll_period_action_menu.xml',
+        'workflow/hr_payroll_period_workflow.xml',
     ],
     'js': [
         'static/src/js/hr_payroll_period.js',

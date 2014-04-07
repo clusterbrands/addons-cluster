@@ -17,7 +17,7 @@
         <record model="ir.actions.act_window" id="action_payroll_period_list">
              <field name="name">Payroll Periods </field>
              <field name="res_model">hr.payroll.period</field>
-             <field name="view_id" ref="period_tree_view"/>
+             <field name="view_type">form</field>
              <field name="view_mode">tree_hr_payroll_period,form</field>
         </record>
 
@@ -25,7 +25,14 @@
             name="Payroll Periods"
             parent="hr_payroll.menu_hr_root_payroll"
             id="payroll_periods"
-            action="action_payroll_period_list" />
+            action="action_payroll_period_list" /> 
 
+        <record id="action_payroll_period_wizard" model="ir.actions.act_window">
+            <field name="res_model">hr.payroll.period.wizard</field>
+            <field name="name">Period</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+        </record>
     </data>
 </openerp>

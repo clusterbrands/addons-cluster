@@ -77,5 +77,29 @@ openerp.hr_payroll_period = function (instance) {
             return self.old_search(compound_domain, self.last_context, self.last_group_by);
         },
 
+        do_activate_record: function (index, id, dataset, view) {
+            this.active_period_id = id;
+            this._super(index, id, dataset, view);
+        },
+
+        //Sobreescribimos este metodo para lanzar el wizard
+        select_record:function (index, view) {
+            var self = this;
+            var model = new instance.web.Model("ir.model.data");
+            var domain = [['name', '=', 'action_payroll_period_wizard']]
+            _.delay(_.bind(function () {
+                model.get_func("search_read")(domain, ['res_id']).pipe(_.bind(function(res){    
+                    instance.session.rpc('/web/action/load', {'action_id': res[0]['res_id']})
+                      .pipe(_.bind(function(result){
+                            var action = result
+                            var additional_context = {'period_id':self.active_period_id}
+                            var ncontext = new instance.web.CompoundContext(additional_context, action.context || {});
+                            action.context = ncontext;
+                            this.do_action(action);
+                      }, this))       
+                }, self))
+            }));
+        },
+
     });
 }

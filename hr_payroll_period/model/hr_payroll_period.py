@@ -31,7 +31,7 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
 
-class hr_payperiod_schedule(osv.Model):
+class period_schedule(osv.Model):
 
     _name = 'hr.payroll.period.schedule'
 
@@ -107,12 +107,13 @@ class hr_payperiod_schedule(osv.Model):
                 period_id = self._get_fiscal_period(cr, uid, date_start, date_end, obj.fiscalyear_id.id)
                 if len(period_id) ==  1:
                     values = {
-                        'name': str(i+1).rjust(5,'0'),
+                        'name': "Period "+str(i+1).rjust(2,'0') + "/" + str(start_date.year),
                         'type': obj.type,
                         'schedule_id': obj.id,
                         'date_start': date_start,
                         'date_end': date_end,
                         'fiscal_period_id': period_id[0],
+                        'state': (i == 0) and 'actived' or 'open',
                     }
                     p_obj.create(cr, uid, values, context=context)
                 else:
@@ -133,24 +134,27 @@ class hr_payperiod_schedule(osv.Model):
     }
 
 
-class hr_payroll_period(osv.Model):
+class period(osv.Model):
 
     _name = 'hr.payroll.period'
 
+    PERIOD_STATES = [
+       ('open', 'Open'),
+       ('actived', 'Active'),
+       ('confirmed', 'Confirmado'),
+       ('paid', 'Paid'),
+       ('closed', 'Closed'),
+    ]
+
     _columns = {
-        'name': fields.char('Description', size=5, required=True),
+        'name': fields.char('Description', size=255, required=True),
         'schedule_id': fields.many2one('hr.payroll.period.schedule',
                                        'Payroll Period Schedule',
                                        required=True, ondelete="cascade"),
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date', required=True),
         'fiscal_period_id': fields.many2one('account.period', 'Fiscal Period', required=True),
-        'state': fields.selection([('draft', 'Draft'),
-                                   ('actived', 'Active'),
-                                   ('confirmed', 'Confirmado'),
-                                   ('paid', 'Paid'),
-                                   ('closed', 'Closed')],
-                                  'State', select=True, readonly=True),
+        'state': fields.selection(PERIOD_STATES, 'State', select=True, readonly=True),
     }
 
     def list_fiscal_periods(self, cr, uid, context=None):
@@ -161,7 +165,18 @@ class hr_payroll_period(osv.Model):
         ids = self.pool.get('hr.payroll.period.schedule').search(cr,uid,[])
         return self.pool.get('hr.payroll.period.schedule').name_get(cr, uid, ids, context=context)
 
+    def wkf_action_actived(self, cr, uid, ids, context=None):
+        pass
+
+    def wkf_action_confirmed(self, cr, uid, ids, context=None):
+        pass
+
+    def wkf_action_paid(self, cr, uid, ids, context=None):
+        pass
+
+    def wkf_action_closed(self, cr, uid, ids, context=None):
+        pass
 
     _defaults = {  
-        'state': 'draft',  
+        'state': 'open',  
     }
