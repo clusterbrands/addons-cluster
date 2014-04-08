@@ -23,7 +23,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+import netsvc
 import datetime
 import calendar
 from datetime import date, timedelta
@@ -114,9 +114,12 @@ class period_schedule(osv.Model):
                         'date_end': date_end,
                         'fiscal_period_id': period_id[0],
                         'employee_category_id': obj.employee_category_id.id,
-                        'state': (i == 0) and 'actived' or 'open',
                     }
-                    p_obj.create(cr, uid, values, context=context)
+                    p_id = p_obj.create(cr, uid, values, context=context)
+                    if i == 0:
+                        wkf_service = netsvc.LocalService('workflow')
+                        wkf_service.trg_validate(uid, 'hr.payroll.period', p_id, 'activate', cr)
+
                 else:
                     osv.except_osv(_('Error!'),_("Fiscal period has not found"))
 
@@ -160,6 +163,10 @@ class period(osv.Model):
         'state': fields.selection(PERIOD_STATES, 'State', select=True, readonly=True),
     }
 
+    _defaults = {  
+        'state': 'open',  
+    }
+
     def list_fiscal_periods(self, cr, uid, context=None):
         ids = self.pool.get('account.period').search(cr,uid,[])
         return self.pool.get('account.period').name_get(cr, uid, ids, context=context)
@@ -169,10 +176,12 @@ class period(osv.Model):
         return self.pool.get('hr.payroll.period.schedule').name_get(cr, uid, ids, context=context)
 
     def wkf_action_actived(self, cr, uid, ids, context=None):
-        pass
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'actived'})
 
     def wkf_action_confirmed(self, cr, uid, ids, context=None):
-        pass
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'confirmed'})
 
     def wkf_action_paid(self, cr, uid, ids, context=None):
         pass
@@ -180,6 +189,4 @@ class period(osv.Model):
     def wkf_action_closed(self, cr, uid, ids, context=None):
         pass
 
-    _defaults = {  
-        'state': 'open',  
-    }
+    

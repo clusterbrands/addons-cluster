@@ -23,6 +23,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import netsvc
 from datetime import datetime, timedelta
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -101,4 +102,21 @@ class wizard_payroll_period(osv.osv_memory):
         return values
 
     def confirm_period(self, cr, uid, ids, context=None):
-        pass
+        context = context or {}
+        obj = self.pool.get('hr.payroll.period')
+        p_id = context.get('period_id')
+        if p_id:
+            wkf_service = netsvc.LocalService('workflow')
+            wkf_service.trg_validate(uid, 'hr.payroll.period', p_id, 'confirm', cr)
+        
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'hr.payroll.period.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'context': context
+        }
+
+
+
