@@ -9,7 +9,7 @@
         </record>
 
         <menuitem 
-            name="Periods Schedule"
+            name="Payroll Periods Schedule"
             parent="hr_payroll.payroll_configure"
             id="payroll_period_configure"
             action="action_payroll_period_schedule_list" />

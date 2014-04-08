@@ -44,7 +44,7 @@ class wizard_payroll_period(osv.osv_memory):
             brw.date_start, OEDATE_FORMAT).date().strftime(OEDATE_FORMAT)
         end = datetime.strptime(
             brw.date_end, OEDATE_FORMAT).date().strftime(OEDATE_FORMAT)
-        dom = [ 
+        dom = [
             '|',
             '&',
             ('date_from', '>=', start),
@@ -56,22 +56,25 @@ class wizard_payroll_period(osv.osv_memory):
         ids = h_obj.search(cr, uid, dom, context=context)
         return ids
 
-
     _columns = {
         'period_id': fields.many2one('hr.payroll.period', 'Payroll Period',
                                      readonly=True),
-        #TODO : import time required to get currect date
+        # TODO : import time required to get currect date
         'start_date': fields.date('Start Date', readonly=True),
         'end_date': fields.date('End Date', readonly=True),
         'holiday_ids': fields.many2many('hr.holidays', 'hr_holidays_pay_period_rel', 'holiday_id', 'period_id', 'Holidays'),
         'schedule_id':  fields.related('period_id', 'schedule_id',
-                                type="many2one",
-                                relation="hr.payroll.period.schedule",
-                                string='Schedule', readonly=True),
+                                       type="many2one",
+                                       relation="hr.payroll.period.schedule",
+                                       string='Schedule', readonly=True),
         'fiscal_period_id':  fields.related('period_id', 'fiscal_period_id',
-                                type="many2one",
-                                relation="account.period",
-                                string='Fiscal Period', readonly=True),
+                                            type="many2one",
+                                            relation="account.period",
+                                            string='Fiscal Period', readonly=True),
+        'employee_category_id':  fields.related('period_id', 'employee_category_id',
+                                            type="many2one",
+                                            relation="hr.employee.category",
+                                            string='Category', readonly=True),
         'state': fields.related('period_id', 'state',
                                 type="selection",
                                 selection=period.PERIOD_STATES,
@@ -89,9 +92,13 @@ class wizard_payroll_period(osv.osv_memory):
                 'period_id': p_id,
                 'fiscal_period_id': brw.fiscal_period_id.id,
                 'schedule_id': brw.schedule_id.id,
+                'employee_category_id': brw.employee_category_id.id,
                 'start_date': brw.date_start,
                 'end_date': brw.date_end,
                 'holiday_ids': self._get_public_holidays(cr, uid, context=context),
                 'state': brw.state,
             })
         return values
+
+    def confirm_period(self, cr, uid, ids, context=None):
+        pass
