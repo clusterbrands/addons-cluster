@@ -94,7 +94,7 @@ class period_schedule(osv.Model):
             start_date = datetime.datetime.strptime(obj.start_date, '%Y-%m-%d').date()
             if obj.type == "weekly":
                 periods = self._get_weekly_periods(start_date) 
-            elif obj.type == "biweekly":
+            elif obj.type == "bi-weekly":
                 periods = self._get_biweekly_periods(start_date)
             elif obj.type == "monthly":
                 periods = self._get_monthly_periods(start_date)
@@ -126,14 +126,18 @@ class period_schedule(osv.Model):
         'name': fields.char('Description', size=256, required=True),
         'type': fields.selection([
             ('weekly', 'Weekly'),
-            ('biweekly', 'Biweekly'),
+            ('bi-weekly', 'Bi-weekly'),
             ('monthly', 'Monthly'),
-            ('custom', 'Custom'),
+            # ('bi-monthly', 'Bi-monthly'),
+            # ('quarterly', 'Quarterly'),
+            # ('semi-annually', 'Semi-annually'), 
+            # ('annually', 'Annually'),                      
         ],    'Type', select=True, required=True),
         'start_date': fields.date('Initial Period Start Date', required=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'paydate_biz_day': fields.boolean('Pay Date on a Business Day', required=False),
         'period_ids':fields.one2many('hr.payroll.period', 'schedule_id', 'Periods'),
+        'contract_ids':fields.one2many('hr.contract', 'schedule_id', 'Contracts', required=False), 
     }
 
 
@@ -157,6 +161,7 @@ class period(osv.Model):
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date', required=True),
         'fiscal_period_id': fields.many2one('account.period', 'Fiscal Period', required=True),
+        'payslip_ids': fields.one2many('hr.payslip', 'payperiod_id', 'Payslips'),
         'state': fields.selection(PERIOD_STATES, 'State', select=True, readonly=True),
     }
 

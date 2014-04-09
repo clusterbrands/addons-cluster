@@ -35,9 +35,9 @@ class wizard_payroll_period(osv.osv_memory):
     _name = 'hr.payroll.period.wizard'
 
     STATUS = [
-       ('step1', 'Step 1: Leaves'),
-       ('step2', 'Step 2: Payslips'),
-       ('step3', 'Step 3: Payments'),
+        ('step1', 'Step 1: Leaves'),
+        ('step2', 'Step 2: Payslips'),
+        ('step3', 'Step 3: Payments'),
     ]
 
     def _get_public_holidays(self, cr, uid, context=None):
@@ -70,7 +70,10 @@ class wizard_payroll_period(osv.osv_memory):
         'start_date': fields.date('Start Date', readonly=True),
         'end_date': fields.date('End Date', readonly=True),
         'holiday_ids': fields.many2many('hr.holidays', 'hr_holidays_pay_period_rel', 'holiday_id', 'period_id', 'Holidays'),
-        'payslip_ids': fields.many2many('hr.payslip', 'hr_payslip_pay_period_rel', 'payslip_id', 'period_id', 'Payslips'),
+        'payslip_ids': fields.related('period_id', 'payslip_ids',
+                                       type="one2many",
+                                       relation="hr.payslip",
+                                       string='Payslips', readonly=True),
         'schedule_id':  fields.related('period_id', 'schedule_id',
                                        type="many2one",
                                        relation="hr.payroll.period.schedule",
@@ -100,6 +103,7 @@ class wizard_payroll_period(osv.osv_memory):
                 'start_date': brw.date_start,
                 'end_date': brw.date_end,
                 'holiday_ids': self._get_public_holidays(cr, uid, context=context),
+                'payslip_ids': [slip.id for slip in brw.payslip_ids],
                 'step': context.get('step') or 'step1',
                 'state': brw.state,
             })
@@ -107,8 +111,8 @@ class wizard_payroll_period(osv.osv_memory):
 
     def show_step2(self, cr, uid, ids, context=None):
         context = context or {}
-        self.write(cr, uid, ids, {'step':'step2'})
-        context.update({'step':'step2'})
+        self.write(cr, uid, ids, {'step': 'step2'})
+        context.update({'step': 'step2'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -120,8 +124,8 @@ class wizard_payroll_period(osv.osv_memory):
 
     def show_step3(self, cr, uid, ids, context=None):
         context = context or {}
-        self.write(cr, uid, ids, {'step':'step3'})
-        context.update({'step':'step3'})
+        self.write(cr, uid, ids, {'step': 'step3'})
+        context.update({'step': 'step3'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -133,8 +137,8 @@ class wizard_payroll_period(osv.osv_memory):
 
     def show_step1(self, cr, uid, ids, context=None):
         context = context or {}
-        self.write(cr, uid, ids, {'step':'step1'})
-        context.update({'step':'step1'})
+        self.write(cr, uid, ids, {'step': 'step1'})
+        context.update({'step': 'step1'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -146,12 +150,26 @@ class wizard_payroll_period(osv.osv_memory):
 
     def generate_payslips(self, cr, uid, ids, context=None):
         context = context or {}
-        import pdb
-        pdb.set_trace()
-        data = self.browse(cr, uid, ids, context=context)
-        obj_emp = self.pool.get('hr.employee')
-        ct_id = data.get('contract_type_id')
-        #emp_ids = obj_emp.search(cr, uid, [('contract_ids','in',(ct_id))])
-
-
+        data = self.browse(cr, uid, ids, context=context)[0]
+        slip_ids = []
+        obj_slip = self.pool.get('hr.payslip')
+        from_date = data.start_date
+        to_date = data.end_date
+        for contract in data.schedule_id.contract_ids:
+            emp = contract.employee_id
+            slip_data = obj_slip.onchange_employee_id(cr, uid, [], from_date, to_date, emp.id, contract_id=False, context=context)
+            res = {
+                'employee_id': emp.id,
+                'name': slip_data['value'].get('name', False),
+                'struct_id': slip_data['value'].get('struct_id', False),
+                'contract_id': slip_data['value'].get('contract_id', False),
+                'input_line_ids': [(0, 0, x) for x in slip_data['value'].get('input_line_ids', False)],
+                'worked_days_line_ids': [(0, 0, x) for x in slip_data['value'].get('worked_days_line_ids', False)],
+                'payperiod_id': data.period_id.id,
+                'date_from': from_date,
+                'date_to': to_date,
+            }
+            slip_ids.append(obj_slip.create(cr, uid, res, context=context))
+            obj_slip.compute_sheet(cr, uid, slip_ids, context=context)
+        return True)
 

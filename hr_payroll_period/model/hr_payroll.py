@@ -23,48 +23,12 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-{
-    'name': 'Payroll Period',
-    'category': 'Generic Modules',
-    'version': '1.0',
-    'author': 'Cluster Brands',
-    'website': 'http://www.clusterbrands.com',
-    'description': """
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
-Module Description
-    
-Main features
--------------
+class hr_payslip(osv.Model): 
+    _inherit = "hr.payslip"
 
-Notes:
------
-""",
-    'depends': [
-        'account',
-        'hr_payroll',
-    ],
-    'data': [
-        'view/hr_contract_view.xml',
-        'view/hr_payroll_period_view.xml',
-        'view/hr_payroll_period_action_menu.xml',
-        'wizard/hr_payroll_period_wizard_view.xml',
-        'workflow/hr_payroll_period_workflow.xml',
-    ],
-    'js': [
-        'static/src/js/hr_payroll_period.js',
-        'static/src/js/backbone-super-min.js',
-    ],
-    'css': [
-        'static/src/css/hr_payroll_period.css',
-    ],
-    'qweb': [
-        'static/src/xml/hr_payroll_period.xml',
-    ],
-    'demo': [
-    ],
-    'test': [
-    ],
-    'installable': True,
-    'active': False,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _columns = {
+        'payperiod_id':fields.many2one('hr.payroll.period', 'Payperiod', required=False),         
+    }
