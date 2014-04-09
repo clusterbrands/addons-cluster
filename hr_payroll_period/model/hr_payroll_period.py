@@ -113,7 +113,6 @@ class period_schedule(osv.Model):
                         'date_start': date_start,
                         'date_end': date_end,
                         'fiscal_period_id': period_id[0],
-                        'employee_category_id': obj.employee_category_id.id,
                     }
                     p_id = p_obj.create(cr, uid, values, context=context)
                     if i == 0:
@@ -135,7 +134,6 @@ class period_schedule(osv.Model):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'paydate_biz_day': fields.boolean('Pay Date on a Business Day', required=False),
         'period_ids':fields.one2many('hr.payroll.period', 'schedule_id', 'Periods'),
-        'employee_category_id':fields.many2one('hr.employee.category', 'Employee Category', required=False), 
     }
 
 
@@ -159,7 +157,6 @@ class period(osv.Model):
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date', required=True),
         'fiscal_period_id': fields.many2one('account.period', 'Fiscal Period', required=True),
-        'employee_category_id':fields.many2one('hr.employee.category', 'Employee Category', required=False), 
         'state': fields.selection(PERIOD_STATES, 'State', select=True, readonly=True),
     }
 
