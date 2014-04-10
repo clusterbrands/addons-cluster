@@ -157,19 +157,31 @@ class wizard_payroll_period(osv.osv_memory):
         to_date = data.end_date
         for contract in data.schedule_id.contract_ids:
             emp = contract.employee_id
-            slip_data = obj_slip.onchange_employee_id(cr, uid, [], from_date, to_date, emp.id, contract_id=False, context=context)
+            dom = [
+                ('employee_id','=', emp.id),
+                ('payperiod_id','=',data.period_id.id)
+            ] 
+            slip_id =  obj_slip.search(cr, uid, dom, context=context)
+            s_id = slip_id and slip_id[0] or 0
+            slip_data = obj_slip.onchange_employee_id(cr, uid, slip_id, from_date, to_date, emp.id, contract_id=False, context=context)
+            journal_id = contract.journal_id.id or data.schedule_id.journal_id.id
             res = {
                 'employee_id': emp.id,
                 'name': slip_data['value'].get('name', False),
                 'struct_id': slip_data['value'].get('struct_id', False),
                 'contract_id': slip_data['value'].get('contract_id', False),
-                'input_line_ids': [(0, 0, x) for x in slip_data['value'].get('input_line_ids', False)],
-                'worked_days_line_ids': [(0, 0, x) for x in slip_data['value'].get('worked_days_line_ids', False)],
+                'input_line_ids': [(0, s_id, x) for x in slip_data['value'].get('input_line_ids', False)],
+                'worked_days_line_ids': [(0, s_id, x) for x in slip_data['value'].get('worked_days_line_ids', False)],
                 'payperiod_id': data.period_id.id,
+                'journal_id': journal_id,
                 'date_from': from_date,
                 'date_to': to_date,
-            }
-            slip_ids.append(obj_slip.create(cr, uid, res, context=context))
+            }            
+            if slip_id:
+                obj_slip.write(cr, uid, s_id, res, context=context)
+                slip_ids.append(s_id)
+            else:
+                slip_ids.append(obj_slip.create(cr, uid, res, context=context))
             obj_slip.compute_sheet(cr, uid, slip_ids, context=context)
-        return True)
+        return True
 

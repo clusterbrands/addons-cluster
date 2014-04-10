@@ -11,6 +11,7 @@
                         <button name="show_step2" string="Step 2: Payslips" type="object" attrs="{'invisible':[('step','=','step2')]}" />
                         <button name="show_step3" string="Step 3: Payments" type="object" attrs="{'invisible':[('step','=','step3')]}" />
                         <button name="generate_payslips" string="Generate Payslips" type="object" class="oe_highlight" attrs="{'invisible':[('step','!=','step2')]}" />
+                        <button name="confirm_payslips" string="Confirm" type="object" class="oe_highlight" states="active" />
                         <field name="state" widget="statusbar"
                           statusbar_visible="actived, confirmed, paid, closed" 
                           statusbar_colors='{"cancel":"red"}'>

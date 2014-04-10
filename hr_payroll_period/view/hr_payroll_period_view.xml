@@ -26,10 +26,11 @@
                     <sheet>
                         <group col="4">
                             <field name="name"/>
+                            <field name="start_date" />
                             <field name="type"/>
-                            <field name="start_date" />     
                             <field name="fiscalyear_id" widget="selection"/> 
-                            <field name="paydate_biz_day" />
+                            <field name="paydate_biz_day" />                            
+                            <field name="journal_id" />     
                         </group>
                         <separator string="Periods" />
                         <field name="period_ids">

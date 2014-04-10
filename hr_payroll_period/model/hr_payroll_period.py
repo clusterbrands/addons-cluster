@@ -136,6 +136,7 @@ class period_schedule(osv.Model):
         'start_date': fields.date('Initial Period Start Date', required=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'paydate_biz_day': fields.boolean('Pay Date on a Business Day', required=False),
+        'journal_id': fields.many2one('account.journal', 'Salary Journal', required=True),
         'period_ids':fields.one2many('hr.payroll.period', 'schedule_id', 'Periods'),
         'contract_ids':fields.one2many('hr.contract', 'schedule_id', 'Contracts', required=False), 
     }
