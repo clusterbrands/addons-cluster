@@ -38,6 +38,7 @@ class wizard_payroll_period(osv.osv_memory):
         ('step1', 'Step 1: Leaves'),
         ('step2', 'Step 2: Payslips'),
         ('step3', 'Step 3: Payments'),
+        ('step4', 'Step 4: Print Reports'),
     ]
 
     def _get_public_holidays(self, cr, uid, context=None):
@@ -69,11 +70,12 @@ class wizard_payroll_period(osv.osv_memory):
         # TODO : import time required to get currect date
         'start_date': fields.date('Start Date', readonly=True),
         'end_date': fields.date('End Date', readonly=True),
+        'employee_payslips': fields.boolean('Employee Payslips', readonly=True),
         'holiday_ids': fields.many2many('hr.holidays', 'hr_holidays_pay_period_rel', 'holiday_id', 'period_id', 'Holidays'),
         'payslip_ids': fields.related('period_id', 'payslip_ids',
-                                       type="one2many",
-                                       relation="hr.payslip",
-                                       string='Payslips', readonly=True),
+                                      type="one2many",
+                                      relation="hr.payslip",
+                                      string='Payslips', readonly=True),
         'schedule_id':  fields.related('period_id', 'schedule_id',
                                        type="many2one",
                                        relation="hr.payroll.period.schedule",
@@ -102,12 +104,26 @@ class wizard_payroll_period(osv.osv_memory):
                 'schedule_id': brw.schedule_id.id,
                 'start_date': brw.date_start,
                 'end_date': brw.date_end,
+                'employee_payslips': brw.employee_payslips,
                 'holiday_ids': self._get_public_holidays(cr, uid, context=context),
                 'payslip_ids': [slip.id for slip in brw.payslip_ids],
                 'step': context.get('step') or 'step1',
                 'state': brw.state,
             })
         return values
+
+    def show_step1(self, cr, uid, ids, context=None):
+        context = context or {}
+        self.write(cr, uid, ids, {'step': 'step1'})
+        context.update({'step': 'step1'})
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'hr.payroll.period.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'inline',
+            'context': context
+        }
 
     def show_step2(self, cr, uid, ids, context=None):
         context = context or {}
@@ -135,10 +151,10 @@ class wizard_payroll_period(osv.osv_memory):
             'context': context
         }
 
-    def show_step1(self, cr, uid, ids, context=None):
+    def show_step4(self, cr, uid, ids, context=None):
         context = context or {}
-        self.write(cr, uid, ids, {'step': 'step1'})
-        context.update({'step': 'step1'})
+        self.write(cr, uid, ids, {'step': 'step4'})
+        context.update({'step': 'step4'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -158,12 +174,13 @@ class wizard_payroll_period(osv.osv_memory):
         for contract in data.schedule_id.contract_ids:
             emp = contract.employee_id
             dom = [
-                ('employee_id','=', emp.id),
-                ('payperiod_id','=',data.period_id.id)
-            ] 
-            slip_id =  obj_slip.search(cr, uid, dom, context=context)
+                ('employee_id', '=', emp.id),
+                ('payperiod_id', '=', data.period_id.id)
+            ]
+            slip_id = obj_slip.search(cr, uid, dom, context=context)
             s_id = slip_id and slip_id[0] or 0
-            slip_data = obj_slip.onchange_employee_id(cr, uid, slip_id, from_date, to_date, emp.id, contract_id=False, context=context)
+            slip_data = obj_slip.onchange_employee_id(
+                cr, uid, slip_id, from_date, to_date, emp.id, contract_id=False, context=context)
             journal_id = contract.journal_id.id or data.schedule_id.journal_id.id
             res = {
                 'employee_id': emp.id,
@@ -176,7 +193,7 @@ class wizard_payroll_period(osv.osv_memory):
                 'journal_id': journal_id,
                 'date_from': from_date,
                 'date_to': to_date,
-            }            
+            }
             if slip_id:
                 obj_slip.write(cr, uid, s_id, res, context=context)
                 slip_ids.append(s_id)
@@ -185,3 +202,38 @@ class wizard_payroll_period(osv.osv_memory):
             obj_slip.compute_sheet(cr, uid, slip_ids, context=context)
         return True
 
+    def confirm_payslips(self, cr, uid, ids, context=None):
+        context = context or {}
+        data = self.browse(cr, uid, ids, context=context)[0]
+        obj_slip = self.pool.get('hr.payslip')
+        wkf_service = netsvc.LocalService('workflow')
+        for slip in data.period_id.payslip_ids:
+            wkf_service.trg_validate(
+                uid, 'hr.payslip', slip.id, 'hr_verify_sheet', cr)
+        wkf_service.trg_validate(
+            uid, 'hr.payroll.period', data.period_id.id, 'confirm', cr)
+        context.update({'step': 'step3'})
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'hr.payroll.period.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'inline',
+            'context': context
+        }
+
+    def print_payslips(self, cr, uid, ids, context=None):
+        context = context or {}
+        data = self.browse(cr, uid, ids, context=context)[0]
+        obj = self.pool.get('hr.payroll.period')
+        obj.write(cr, uid, data.period_id.id, {'employee_payslips': True}, context=context)
+        self.write(cr, uid, ids,  {'employee_payslips': True}, context=context)
+        datas = {
+            'ids': [slip.id for slip in data.period_id.payslip_ids],
+            'model': 'hr_payroll.hr.payslip',
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'payslip',
+            'datas': datas,
+        }

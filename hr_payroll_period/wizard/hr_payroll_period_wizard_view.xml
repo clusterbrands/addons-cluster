@@ -7,11 +7,13 @@
             <field name="arch" type="xml">
                 <form string="Period Form" version="7.0">
                     <header>
-                        <button name="show_step1" string="Step 1: Leaves" type="object" attrs="{'invisible':[('step','=','step1')]}" />
-                        <button name="show_step2" string="Step 2: Payslips" type="object" attrs="{'invisible':[('step','=','step2')]}" />
-                        <button name="show_step3" string="Step 3: Payments" type="object" attrs="{'invisible':[('step','=','step3')]}" />
-                        <button name="generate_payslips" string="Generate Payslips" type="object" class="oe_highlight" attrs="{'invisible':[('step','!=','step2')]}" />
-                        <button name="confirm_payslips" string="Confirm" type="object" class="oe_highlight" states="active" />
+                        <button name="show_step1" string="Step 1: Leaves" type="object" />
+                        <button name="show_step2" string="Step 2: Payslips" type="object" />
+                        <button name="show_step3" string="Step 3: Payments" type="object" 
+                            attrs="{'invisible':[('state','=','actived')]}" />
+                        <button name="show_step4" string="Step 4: Print Reports" type="object" 
+                            states="confirmed" />
+                        <button name="confirm_payslips" string="Confirm" type="object" class="oe_highlight" states="actived"/>
                         <field name="state" widget="statusbar"
                           statusbar_visible="actived, confirmed, paid, closed" 
                           statusbar_colors='{"cancel":"red"}'>
@@ -54,8 +56,21 @@
                             </div>
                             <div attrs="{'invisible': [('step','!=','step2')]}"> 
                                 <separator string="Payslips" />
-                                <field name="payslip_ids" widget="one2many_list">                             
+                                <button name="generate_payslips" string="Generate Payslips" type="object"/>
+                                <field name="payslip_ids" widget="one2many_list">                                                                 
                                 </field>
+                            </div>
+                            <div attrs="{'invisible': [('step','!=','step4')]}"> 
+                                <separator string="Reports" /> 
+                                <group col="4">
+                                    <group col="2">
+                                        <label for="employee_payslips" />
+                                        <div>
+                                            <field name="employee_payslips" nolabel="1" />
+                                            <button string="(Print)" name="print_payslips" class="oe_link oe_edit_only" type="object"/>
+                                        </div>
+                                    </group>
+                                </group>                                            
                             </div>
                     </sheet>
                 </form>
