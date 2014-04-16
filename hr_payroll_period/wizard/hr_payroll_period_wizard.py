@@ -230,10 +230,10 @@ class wizard_payroll_period(osv.osv_memory):
         self.write(cr, uid, ids,  {'employee_payslips': True}, context=context)
         datas = {
             'ids': [slip.id for slip in data.period_id.payslip_ids],
-            'model': 'hr_payroll.hr.payslip',
+            'model': 'hr.payslip',
         }
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'payslip',
+            'report_name': 'payslip.webkit',
             'datas': datas,
         }
