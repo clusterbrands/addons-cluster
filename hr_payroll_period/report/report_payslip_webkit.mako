@@ -6,6 +6,23 @@
 </head>
 <body>
     %for o in objects :
+        <table>
+            <tr>
+                <td style="vertical-align:middle;">
+                    ${ helper.embed_image('png',company.logo,120,55)|n }
+                </td>
+                <td>
+                    <div>
+                        <span style="font-size:16px">
+                            <b>${ company.name }</b>
+                        </span><br/>
+                        <span style="font-size:8px">
+                           RIF: J-40135625-7
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
         <center><h2><u>${("Pay Slip")}</u></h2></center>
         %if o.credit_note!=False:
             <center><h2>${("Credit")}</h2></center>
@@ -106,10 +123,8 @@
                     <td style="border:0px;" colspan="2"></td>
                     <td style="text-align:right;border:0px;"><b>${_("Total to pay")}</b></td>
                     <td style="text-align:right;border:0px;"><b>${formatLang(get_total_net(o.line_ids))}</b></td>
-                </tr>
-                
+                </tr>                
         </table>
-        <br/>
         <br/>
         <table width="100%">
             <tr>
@@ -129,7 +144,6 @@
             </tr>
         </table>
         <br />
-        <!-- <p style="page-break-after:always"></p> -->
     %endfor 
 </body>
 </html>

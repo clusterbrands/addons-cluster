@@ -3,7 +3,7 @@
     <data>
         <record id="hr_webkit_header" model="ir.header_webkit">
             <field name="orientation">Portrait</field>
-            <field name="format">A4</field>
+            <field name="format">Letter</field>
             <field name="html">
 <![CDATA[
     <html>
@@ -26,23 +26,6 @@
             </style>
         </head>
         <body onload="subst()">
-            <table>
-                <tr>
-                    <td style="vertical-align:middle;">
-                        ${ helper.embed_image('png',company.logo,120,55)|n }
-                    </td>
-                    <td>
-                        <div>
-                            <span style="font-size:16px">
-                                <b>${ company.name }</b>
-                            </span><br/>
-                            <span style="font-size:8px">
-                               RIF: J-40135625-7
-                            </span>
-                        </div>
-                    </td>
-                </tr>
-            </table>
             ${_debug or ''|n} </body> 
     </html>
 ]]>

@@ -164,6 +164,7 @@ class period(osv.Model):
         'fiscal_period_id': fields.many2one('account.period', 'Fiscal Period', required=True),
         'payslip_ids': fields.one2many('hr.payslip', 'payperiod_id', 'Payslips'),
         'employee_payslips':fields.boolean('Printed?', required=False), 
+        'payroll_summary':fields.boolean('Printed?', required=False), 
         'state': fields.selection(PERIOD_STATES, 'State', select=True, readonly=True),
     }
 
