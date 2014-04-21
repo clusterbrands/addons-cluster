@@ -104,8 +104,8 @@
                 </tr>
                 <tr>
                     <td style="border:0px;" colspan="2"></td>
-                    <td style="text-align:left;border:0px;"><b>${_("Total to pay")}</b></td>
-                    <td style="text-align:left;border:0px;"><b>${formatLang(get_total_net(o.line_ids))}</b></td>
+                    <td style="text-align:right;border:0px;"><b>${_("Total to pay")}</b></td>
+                    <td style="text-align:right;border:0px;"><b>${formatLang(get_total_net(o.line_ids))}</b></td>
                 </tr>
                 
         </table>
