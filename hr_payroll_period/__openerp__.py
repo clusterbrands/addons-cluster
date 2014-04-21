@@ -46,12 +46,14 @@ Notes:
         'hr_payroll_account',
     ],
     'data': [
-        'view/hr_contract_view.xml',
+        'view/hr_contract_view.xml',   
         'view/hr_payroll_period_view.xml',
-        'report/hr_payroll_period_report.xml',
         'view/hr_payroll_period_action_menu.xml',
         'wizard/hr_payroll_period_wizard_view.xml',
         'workflow/hr_payroll_period_workflow.xml',
+    ],
+    'update_xml': [
+        'report/hr_payroll_period_report.xml',
     ],
     'js': [
         'static/src/js/hr_payroll_period.js',

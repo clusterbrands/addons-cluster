@@ -26,9 +26,10 @@
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
-class hr_payslip(osv.Model): 
+
+class hr_payslip(osv.Model):
     _inherit = "hr.payslip"
 
     _columns = {
-        'payperiod_id':fields.many2one('hr.payroll.period', 'Payperiod', required=False),         
+        'payperiod_id': fields.many2one('hr.payroll.period', 'Payperiod', required=False),
     }
