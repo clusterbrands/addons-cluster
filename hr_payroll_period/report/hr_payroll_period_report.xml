@@ -30,7 +30,7 @@
     </html>
 ]]>
             </field>
-            <field eval="20.0" name="margin_top"/>
+            <field eval="5.0" name="margin_top"/>
             <field eval="5.0" name="margin_bottom"/>
             <field name="css"><![CDATA[
 
@@ -99,6 +99,23 @@
             .list_tabe thead {
                 display:table-header-group;
             }
+
+            .concept_table{
+                border-collapse: collapse;
+                font-size:12px;
+            }
+
+            .concept_table th {
+                border-bottom:1px solid black;
+            } 
+
+            .concept_table td {
+                padding-left:7px;
+                padding-right:3px;
+                padding-top:3px;
+                padding-bottom:3px;
+            }
+
             .sign{
                 text-align:right;
                 font-size:12px;
@@ -134,6 +151,16 @@
             file="hr_payroll_period/report/report_payslip_webkit.mako"
             string="Employee PaySlip"
             report_type="webkit" 
-            webkit_header="hr_webkit_header"/> 
+            webkit_header="hr_webkit_header"/>
+
+        <report
+            auto="False"
+            id="rule_summary_report"
+            model="hr.payslip"
+            name="rule.summary"
+            file="hr_payroll_period/report/report_rule_summary.mako"
+            string="Salary Rule Summary"
+            report_type="webkit" 
+            webkit_header="hr_webkit_header"/>  
     </data>
 </openerp>
