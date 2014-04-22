@@ -71,7 +71,7 @@ class wizard_payroll_period(osv.osv_memory):
         'start_date': fields.date('Start Date', readonly=True),
         'end_date': fields.date('End Date', readonly=True),
         'employee_payslips': fields.boolean('Employee Payslips', readonly=True),
-        'payroll_summary': fields.boolean('Payroll Summary', readonly=True),
+        'rule_summary': fields.boolean('Salary Rule Summary', readonly=True),
         'holiday_ids': fields.many2many('hr.holidays', 'hr_holidays_pay_period_rel', 'holiday_id', 'period_id', 'Holidays'),
         'payslip_ids': fields.related('period_id', 'payslip_ids',
                                       type="one2many",
@@ -106,7 +106,7 @@ class wizard_payroll_period(osv.osv_memory):
                 'start_date': brw.date_start,
                 'end_date': brw.date_end,
                 'employee_payslips': brw.employee_payslips,
-                'payroll_summary': brw.payroll_summary,
+                'rule_summary': brw.rule_summary,
                 'holiday_ids': self._get_public_holidays(cr, uid, context=context),
                 'payslip_ids': [slip.id for slip in brw.payslip_ids],
                 'step': context.get('step') or 'step1',
@@ -239,3 +239,21 @@ class wizard_payroll_period(osv.osv_memory):
             'report_name': 'payslip.webkit',
             'datas': datas,
         }
+
+    def print_rule_summary(self, cr, uid, ids, context=None):
+        context = context or {}
+        data = self.browse(cr, uid, ids, context=context)[0]
+        obj = self.pool.get('hr.payroll.period')
+        obj.write(cr, uid, data.period_id.id, {'rule_summary': True}, context=context)
+        self.write(cr, uid, ids,  {'rule_summary': True}, context=context)
+        datas = {
+            'ids': [slip.id for slip in data.period_id.payslip_ids],
+            'model': 'hr.payslip',
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'rule.summary',
+            'datas': datas,
+        }
+
+
