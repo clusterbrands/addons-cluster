@@ -5,7 +5,7 @@
     </style>
 </head>
 <body>
-    <div align="right">${"Date: "+formatLang(time.strftime('%Y-%m-%d'),date=True)}</div>  
+    <div align="right">${_("Date: ")+formatLang(time.strftime('%Y-%m-%d'),date=True)}</div>  
     <table>
         <tr>
             <td style="vertical-align:middle;">
@@ -17,7 +17,7 @@
                         <b>${ company.name }</b>
                     </span><br/>
                     <span style="font-size:8px">
-                       RIF: J-40135625-7
+                        ${company.partner_id.vat and _("VAT: ")+ get_formatted_vat(company) or '' | entity}
                     </span>
                 </div>
             </td>

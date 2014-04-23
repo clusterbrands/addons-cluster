@@ -33,7 +33,14 @@ class report_rule_sumary(report_sxw.rml_parse):
         super(report_rule_sumary, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_details_by_rule_category': self.get_details_by_rule_category,
+            'get_formatted_vat': self.get_formatted_vat,
         })
+
+    def get_formatted_vat(self, company):
+        vat = company.partner_id.vat
+        if company.country_id.code == "VE":
+            return vat[2]+"-"+vat[3:10]+"-"+vat[11]
+        return vat
 
     def get_details_by_rule_category(self, obj):
         payslip_line = self.pool.get('hr.payslip.line')

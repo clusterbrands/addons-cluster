@@ -32,7 +32,14 @@ class payslip_report(report_sxw.rml_parse):
             'get_allocation_total': self.get_allocation_total,
             'get_deduction_total': self.get_deduction_total,
             'get_total_net': self.get_total_net,
+            'get_formatted_vat': self.get_formatted_vat,
         })
+
+    def get_formatted_vat(self, company):
+        vat = company.partner_id.vat
+        if company.country_id.code == "VE":
+            return vat[2]+"-"+vat[3:10]+"-"+vat[11]
+        return vat
 
     def get_payslip_lines(self, obj):
         payslip_line = self.pool.get('hr.payslip.line')
