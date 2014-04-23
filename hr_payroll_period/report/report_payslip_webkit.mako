@@ -6,12 +6,12 @@
 </head>
 <body>
     %for o in objects :
-        <table>
+        <table style="border-bottom: 1px solid black;" width="100%">
             <tr>
-                <td style="vertical-align:middle;">
+                <td style="vertical-align:middle;" width="20%">
                     ${ helper.embed_image('png',company.logo,120,55)|n }
                 </td>
-                <td>
+                <td width="50%">
                     <div>
                         <span style="font-size:16px">
                             <b>${ company.name }</b>
@@ -21,8 +21,9 @@
                         </span>
                     </div>
                 </td>
+                <td width="30%"></td>
             </tr>
-        </table>
+            </table>
         <center><h2><u>${("Pay Slip")}</u></h2></center>
         %if o.credit_note!=False:
             <center><h2>${("Credit")}</h2></center>

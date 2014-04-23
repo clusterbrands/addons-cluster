@@ -5,24 +5,9 @@
     </style>
 </head>
 <body>
-    <div align="right">${_("Date: ")+formatLang(time.strftime('%Y-%m-%d'),date=True)}</div>  
-    <table>
-        <tr>
-            <td style="vertical-align:middle;">
-                ${ helper.embed_image('png',company.logo,120,55)|n }
-            </td>
-            <td>
-                <div>
-                    <span style="font-size:16px">
-                        <b>${ company.name }</b>
-                    </span><br/>
-                    <span style="font-size:8px">
-                        ${company.partner_id.vat and _("VAT: ")+ get_formatted_vat(company) or '' | entity}
-                    </span>
-                </div>
-            </td>
-        </tr>       
-    </table>        
+    <br />
+    <br />
+    <br />
     <center><h3><u>${_("Salary Rules Summary")}</u></h3></center>
     <br/>
     <table class="concept_table" width="100%">

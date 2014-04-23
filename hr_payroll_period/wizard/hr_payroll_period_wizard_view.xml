@@ -69,11 +69,21 @@
                                             <field name="employee_payslips" nolabel="1" />
                                             <button string="(Print)" name="print_payslips" class="oe_link oe_edit_only" type="object"/>
                                         </div>
+                                        <label for="payslip_details" />
+                                        <div>
+                                            <field name="payslip_details" nolabel="1" />
+                                            <button string="(Print)" name="print_payslip_details" class="oe_link oe_edit_only" type="object"/>
+                                        </div>
                                         <label for="rule_summary" />
                                         <div>
                                             <field name="rule_summary" nolabel="1" />
                                             <button string="(Print)" name="print_rule_summary" class="oe_link oe_edit_only" type="object"/>
                                         </div>
+                                        <label for="payroll_summary" />
+                                        <div>
+                                            <field name="payroll_summary" nolabel="1" />
+                                            <button string="(Print)" name="print_payroll_summary" class="oe_link oe_edit_only" type="object"/>
+                                        </div>                                        
                                     </group>
                                 </group>                                            
                             </div>
