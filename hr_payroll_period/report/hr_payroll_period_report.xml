@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="hr_webkit_header_payslip" model="ir.header_webkit">
+            <field name="orientation">Portrait</field>
+            <field name="format">Letter</field>
+            <field name="html">
+<![CDATA[
+    <html>
+        <head>
+            <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+            <script>
+                function subst() {
+                var vars={};
+                var x=document.location.search.substring(1).split('&');
+                for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+                var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+                for(var i in x) {
+                var y = document.getElementsByClassName(x[i]);
+                for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+                    }
+                }
+            </script>
+            <style type="text/css">
+                ${css}
+            </style>
+        </head>
+        <body onload="subst()">
+            ${_debug or ''|n} </body> 
+    </html>
+]]>
+            </field>
+            <field eval="5.0" name="margin_top"/>
+            <field eval="5.0" name="margin_bottom"/>
+            <field name="css"><![CDATA[
+
+            body {
+            font-family:Verdana;
+            font-size:12px;
+            
+            }
+            
+            
+            .dest_address {
+            margin-right:60%;
+            font-size:12;
+            
+            }
+            .header {
+                border-collapse: collapse;
+                margin-right:0;
+                font-size:12;
+            }
+
+            .header td {
+                padding-left:5px;
+            }
+            
+            .title {
+            font-size:16;
+            font-weight: bold;
+            }
+            
+            .basic_table{
+                border-collapse: collapse;
+            }
+            .basic_table td {
+                font-size:11px;  
+                padding-left:5px;
+                padding-top:3px;
+            }
+            
+            .list_table {
+                border-color:black;
+                text-align:center;
+                border-collapse: collapse; 
+                border-top:1px solid black;      
+            }
+            .list_table td {
+                border-color:gray;
+                border-top:1px solid #ccc;
+                text-align:right;
+                font-size:11px;
+                padding-left:7px;
+                padding-right:3px;
+                padding-top:3px;
+                padding-bottom:3px;
+            }
+            
+            .list_table th {
+                border-bottom:1px solid black;
+                text-align:right;
+                font-size:12px;
+                font-weight:bold;
+                padding-left:7px;
+                padding-right:3px;
+            } 
+            
+            .list_tabe thead {
+                display:table-header-group;
+            }
+
+            .concept_table{
+                border-collapse: collapse;
+                font-size:12px;
+            }
+
+            .concept_table th {
+                border-bottom:1px solid black;
+            } 
+
+            .concept_table td {
+                padding-left:7px;
+                padding-right:3px;
+                padding-top:3px;
+                padding-bottom:3px;
+            }
+
+            .sign{
+                text-align:right;
+                font-size:12px;
+                font-weight:bold;
+                }            
+            .total {
+            width:100%;
+            }
+            .lib {
+            width:10.3%;
+            }
+            .tot {
+            text-align:left;
+            width:15%;
+            }
+            .righttot {
+            width:74%;
+            }
+            .tax {
+            width:50%;
+            } 
+]]>
+            </field>
+            <field name="name">HR Webkit Header Payslip</field>
+        </record>
+
+        <record id="hr_webkit_header" model="ir.header_webkit">
+            <field name="footer_html"><![CDATA[
+                <html>
+                    <head>
+                        <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+                        <script>
+                            function subst() {
+                            var vars={};
+                            var x=document.location.search.substring(1).split('&');
+                            for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+                            var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+                            for(var i in x) {
+                            var y = document.getElementsByClassName(x[i]);
+                            for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+                                }
+                            }
+                        </script>
+                    </head>
+                    <% import datetime %>
+                    <body style="border:0; margin: 0;" onload="subst()">
+                        <table style="border-top: 1px solid black; width: 1080px">
+                            <tr style="border-collapse:collapse;">
+                                <td style="text-align:left;font-size:15px;width:350px;">${formatLang( str(datetime.datetime.today()), date_time=True)}</td>
+                                <td style="text-align:center;font-size:15px;width:350px;">${user.name or ''}</td>
+                                <td style="text-align:right;font-size:15px;width:350px;">Page&nbsp;<span class="page"/></td>
+                                <td style="text-align:left;font-size:15px;width:30px">&nbsp;of&nbsp;<span class="topage"/></td>
+                            </tr>
+                        </table>
+                    </body>
+                </html>]]></field>
+            <field name="orientation">Portrait</field>
+            <field name="format">Letter</field>
+            <field name="html">
+<![CDATA[
+    <html>
+        <head>
+            <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+            <script>
+                function subst() {
+                var vars={};
+                var x=document.location.search.substring(1).split('&');
+                for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+                var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+                for(var i in x) {
+                var y = document.getElementsByClassName(x[i]);
+                for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+                    }
+                }
+            </script>
+            <style type="text/css">
+                ${css}
+            </style>
+
+        </head>
+        <body onload="subst()">
+            <table style="border-bottom: 1px solid black;" width="100%">
+                <tr>
+                    <td style="vertical-align:middle;" width="20%">
+                        ${ helper.embed_image('png',company.logo,120,55)|n }
+                    </td>
+                    <td width="50%">
+                        <div>
+                            <span style="font-size:16px">
+                                <b>${ company.name }</b>
+                            </span><br/>
+                            <span style="font-size:8px">
+                                ${company.partner_id.vat and _("VAT: ")+ get_formatted_vat(company) or '' | entity}
+                            </span>
+                        </div>
+                    </td>
+                    <td width="30%"></td>
+                </tr>
+            </table>
+            ${_debug or ''|n} </body> 
+    </html>
+]]>
+            </field>
+            <field eval="20.0" name="margin_top"/>
+            <field eval="15.0" name="margin_bottom"/>
+            <field name="css"><![CDATA[
+
+            body {
+            font-family:Verdana;
+            font-size:12px;
+            
+            }
+            
+            
+            .dest_address {
+            margin-right:60%;
+            font-size:12;
+            
+            }
+            .header {
+                border-collapse: collapse;
+                margin-right:0;
+                font-size:12;
+            }
+
+            .header td {
+                padding-left:5px;
+            }
+            
+            .title {
+            font-size:16;
+            font-weight: bold;
+            }
+            
+            .basic_table{
+                border-collapse: collapse;
+            }
+            .basic_table td {
+                font-size:11px;  
+                padding-left:5px;
+                padding-top:3px;
+            }
+            
+            .list_table {
+                border-color:black;
+                text-align:center;
+                border-collapse: collapse; 
+                border-top:1px solid black;      
+            }
+            .list_table td {
+                border-color:gray;
+                border-top:1px solid #ccc;
+                text-align:right;
+                font-size:11px;
+                padding-left:7px;
+                padding-right:3px;
+                padding-top:3px;
+                padding-bottom:3px;
+            }
+            
+            .list_table th {
+                border-bottom:1px solid black;
+                text-align:right;
+                font-size:12px;
+                font-weight:bold;
+                padding-left:7px;
+                padding-right:3px;
+            } 
+            
+            .list_tabe thead {
+                display:table-header-group;
+            }
+
+            .concept_table{
+                border-collapse: collapse;
+                font-size:12px;
+            }
+
+            .concept_table th {
+                border-bottom:1px solid black;
+            } 
+
+            .concept_table td {
+                padding-left:7px;
+                padding-right:3px;
+                padding-top:3px;
+                padding-bottom:3px;
+            }
+
+            .sign{
+                text-align:right;
+                font-size:12px;
+                font-weight:bold;
+                }            
+            .total {
+            width:100%;
+            }
+            .lib {
+            width:10.3%;
+            }
+            .tot {
+            text-align:left;
+            width:15%;
+            }
+            .righttot {
+            width:74%;
+            }
+            .tax {
+            width:50%;
+            } 
+]]>
+            </field>
+            <field name="name">HR Webkit Header</field>
+        </record>
+    </data>
+    <data>
+        <report
+            auto="False"
+            id="hr_payroll.payslip_report"
+            model="hr.payslip"
+            name="payslip.webkit"
+            file="hr_payroll_period/report/report_payslip_webkit.mako"
+            string="Employee PaySlip"
+            report_type="webkit" 
+            webkit_header="hr_webkit_header_payslip"/>
+
+        <report
+            auto="False"
+            id="rule_summary_report"
+            model="hr.payslip"
+            name="rule.summary"
+            file="hr_payroll_period/report/report_rule_summary.mako"
+            string="Salary Rule Summary"
+            report_type="webkit" 
+            webkit_header="hr_webkit_header"/>  
+
+        <report
+            auto="False"
+            id="rule_payroll_report"
+            model="hr.payslip"
+            name="payroll.summary"
+            file="hr_payroll_period/report/report_payroll_summary.mako"
+            string="Payroll Summary"
+            report_type="webkit" 
+            webkit_header="hr_webkit_header"/>
+    </data>
+</openerp>

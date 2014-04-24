@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="PayrollPeriodTreeView">
+        <div class="oe_account_quickadd ui-toolbar" style="margin-bottom:0px;">
+            <div class="oe_form_dropdown_section">
+                <h4>Fiscal Period :</h4> 
+                <select class="oe_hr_payroll_period_fiscal_period">                   
+                </select>
+            </div>
+            <div class="oe_form_dropdown_section">
+                <h4>Period Schedule :</h4> 
+                <select class="oe_hr_payroll_period_periods_schedules" >
+                </select>
+            </div>
+        </div>
+    </t>
+</templates>

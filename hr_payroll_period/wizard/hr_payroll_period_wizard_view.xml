@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="payroll_period_wizard">
+            <field name="name">payroll.period.wizard</field>
+            <field name="model">hr.payroll.period.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Period Form" version="7.0">
+                    <header>
+                        <button name="show_step1" string="Step 1: Leaves" type="object" states="actived,confirmed,closed" />
+                        <button name="show_step2" string="Step 2: Payslips" type="object" states="actived,confirmed,closed" />
+                        <button name="show_step3" string="Step 3: Print Reports" type="object" states="confirmed,closed" />
+                        <button name="confirm_payslips" string="Confirm" type="object" class="oe_highlight" states="actived"/>
+                        <button name="close_period" string="Close" type="object" class="oe_highlight" states="confirmed"/>
+                        <field name="state" widget="statusbar"
+                          statusbar_visible="actived, confirmed, closed" 
+                          statusbar_colors='{"cancel":"red"}'>
+                        </field>
+                    </header>
+                    <sheet>
+                        <h1>
+                            <field name="step" nolabel="1" states="actived,confirmed" />
+                        </h1>                                                      
+                            <group col="4">                            
+                                <group col="2">
+                                    <field name="period_id" />
+                                    <field name="start_date" />
+                                    <field name="end_date" />
+                                </group>
+                                <group col="2">           
+                                    <field name="fiscal_period_id" />
+                                    <field name="schedule_id" />                               
+                                </group>
+                            </group>
+                            <div attrs="{'invisible': ['|',('step','!=','step1'),('state','=','open')]}">               
+                                <separator string="Leaves Summary" />
+                                <field name="holiday_ids" widget="one2many_list">
+                                    <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" 
+                                        string="Leaves Summary">
+                                        <field name="employee_id"/>
+                                        <field name="category_id" invisible="1"/>
+                                        <field name="department_id" invisible="1"/>
+                                        <field name="type"/>
+                                        <field name="name"/>
+                                        <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="holiday_status_id"/>
+                                        <field name="manager_id" invisible="1"/>
+                                        <field name="user_id" invisible="1"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </div>
+                            <div attrs="{'invisible': [('step','!=','step2')]}"> 
+                                <separator string="Payslips" />
+                                <button name="generate_payslips" string="Generate Payslips" type="object"/>
+                                <field name="payslip_ids" widget="one2many_list">                                                                 
+                                </field>
+                            </div>
+                            <div attrs="{'invisible': [('step','!=','step3')]}"> 
+                                <separator string="Reports" /> 
+                                <group col="4">
+                                    <group col="2">
+                                        <label for="employee_payslips" />
+                                        <div>
+                                            <field name="employee_payslips" nolabel="1" />
+                                            <button string="(Print)" name="print_payslips" class="oe_link oe_edit_only" type="object"/>
+                                        </div>
+                                        <label for="payslip_details" />
+                                        <div>
+                                            <field name="payslip_details" nolabel="1" />
+                                            <button string="(Print)" name="print_payslip_details" class="oe_link oe_edit_only" type="object"/>
+                                        </div>
+                                        <label for="rule_summary" />
+                                        <div>
+                                            <field name="rule_summary" nolabel="1" />
+                                            <button string="(Print)" name="print_rule_summary" class="oe_link oe_edit_only" type="object"/>
+                                        </div>
+                                        <label for="payroll_summary" />
+                                        <div>
+                                            <field name="payroll_summary" nolabel="1" />
+                                            <button string="(Print)" name="print_payroll_summary" class="oe_link oe_edit_only" type="object"/>
+                                        </div>                                        
+                                    </group>
+                                </group>                                            
+                            </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

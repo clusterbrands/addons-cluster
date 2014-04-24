@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="hr_contract_form_period_schedule" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.pareriod.schedule</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='schedule_pay']" position="after">
+                    <field name="schedule_id"  domain="[('type','=',schedule_pay)]" 
+                        context="{'default_type':schedule_pay}" attrs="{'invisible': [('schedule_pay','=',False)] }" />
+                </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</openerp>

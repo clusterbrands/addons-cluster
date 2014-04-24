@@ -1,0 +1,3 @@
+import report_payslip_webkit
+import report_rule_summary
+import report_payroll_summary
