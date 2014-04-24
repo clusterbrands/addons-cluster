@@ -7,20 +7,19 @@
             <field name="arch" type="xml">
                 <form string="Period Form" version="7.0">
                     <header>
-                        <button name="show_step1" string="Step 1: Leaves" type="object" states="actived,confirmed,paid" />
-                        <button name="show_step2" string="Step 2: Payslips" type="object" states="actived,confirmed,paid" />
-                        <button name="show_step3" string="Step 3: Payments" type="object" states="confirmed,paid" />
-                        <button name="show_step4" string="Step 4: Print Reports" type="object" 
-                            states="confirmed" />
+                        <button name="show_step1" string="Step 1: Leaves" type="object" states="actived,confirmed,closed" />
+                        <button name="show_step2" string="Step 2: Payslips" type="object" states="actived,confirmed,closed" />
+                        <button name="show_step3" string="Step 3: Print Reports" type="object" states="confirmed,closed" />
                         <button name="confirm_payslips" string="Confirm" type="object" class="oe_highlight" states="actived"/>
+                        <button name="close_period" string="Close" type="object" class="oe_highlight" states="confirmed"/>
                         <field name="state" widget="statusbar"
-                          statusbar_visible="actived, confirmed, paid, closed" 
+                          statusbar_visible="actived, confirmed, closed" 
                           statusbar_colors='{"cancel":"red"}'>
                         </field>
                     </header>
                     <sheet>
                         <h1>
-                            <field name="step" nolabel="1" states="actived,confirmed,paid" />
+                            <field name="step" nolabel="1" states="actived,confirmed" />
                         </h1>                                                      
                             <group col="4">                            
                                 <group col="2">
@@ -59,7 +58,7 @@
                                 <field name="payslip_ids" widget="one2many_list">                                                                 
                                 </field>
                             </div>
-                            <div attrs="{'invisible': [('step','!=','step4')]}"> 
+                            <div attrs="{'invisible': [('step','!=','step3')]}"> 
                                 <separator string="Reports" /> 
                                 <group col="4">
                                     <group col="2">

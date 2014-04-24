@@ -28,13 +28,6 @@
             <field name="kind">function</field>
         </record>
 
-        <record model="workflow.activity" id="act_paid">
-            <field name="wkf_id" ref="wkf_payroll_period" />
-            <field name="name">Paid</field>
-            <field name="action">wkf_action_paid()</field>
-            <field name="kind">function</field>
-        </record>
-
         <record model="workflow.activity" id="act_closed">
             <field name="wkf_id" ref="wkf_payroll_period" />
             <field name="name">Closed</field>
@@ -56,23 +49,10 @@
           <field name="signal">confirm</field>          
         </record>
 
-        <record model="workflow.transition" id="trans_confirmed_to_paid">
+        <record model="workflow.transition" id="trans_confirmed_to_closed">
           <field name="act_from" ref="act_confirmed" />
-          <field name="act_to" ref="act_paid" />
-          <field name="signal">pay</field>          
-        </record>
-
-        <record model="workflow.transition" id="trans_confirmed_to_paid">
-          <field name="act_from" ref="act_confirmed" />
-          <field name="act_to" ref="act_paid" />
-          <field name="signal">pay</field>          
-        </record>
-
-        <record model="workflow.transition" id="trans_paid_to_closed">
-          <field name="act_from" ref="act_paid" />
           <field name="act_to" ref="act_closed" />
           <field name="signal">close</field>          
         </record>
-
     </data>
 </openerp>

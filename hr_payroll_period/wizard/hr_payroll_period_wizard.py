@@ -37,8 +37,7 @@ class wizard_payroll_period(osv.osv_memory):
     STATUS = [
         ('step1', 'Step 1: Leaves'),
         ('step2', 'Step 2: Payslips'),
-        ('step3', 'Step 3: Payments'),
-        ('step4', 'Step 4: Print Reports'),
+        ('step3', 'Step 3: Print Reports'),
     ]
 
     def _get_public_holidays(self, cr, uid, context=None):
@@ -71,7 +70,7 @@ class wizard_payroll_period(osv.osv_memory):
         'start_date': fields.date('Start Date', readonly=True),
         'end_date': fields.date('End Date', readonly=True),
         'employee_payslips': fields.boolean('Employee Payslips', readonly=True),
-        'payslip_details':fields.boolean('Payslip Details', readonly=True), 
+        'payslip_details': fields.boolean('Payslip Details', readonly=True),
         'rule_summary': fields.boolean('Salary Rule Summary', readonly=True),
         'payroll_summary': fields.boolean('Payroll Summary', readonly=True),
         'holiday_ids': fields.many2many('hr.holidays', 'hr_holidays_pay_period_rel', 'holiday_id', 'period_id', 'Holidays'),
@@ -148,19 +147,6 @@ class wizard_payroll_period(osv.osv_memory):
         context = context or {}
         self.write(cr, uid, ids, {'step': 'step3'})
         context.update({'step': 'step3'})
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'hr.payroll.period.wizard',
-            'type': 'ir.actions.act_window',
-            'target': 'inline',
-            'context': context
-        }
-
-    def show_step4(self, cr, uid, ids, context=None):
-        context = context or {}
-        self.write(cr, uid, ids, {'step': 'step4'})
-        context.update({'step': 'step4'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -248,7 +234,8 @@ class wizard_payroll_period(osv.osv_memory):
         context = context or {}
         data = self.browse(cr, uid, ids, context=context)[0]
         obj = self.pool.get('hr.payroll.period')
-        obj.write(cr, uid, data.period_id.id, {'rule_summary': True}, context=context)
+        obj.write(cr, uid, data.period_id.id,
+                  {'rule_summary': True}, context=context)
         self.write(cr, uid, ids,  {'rule_summary': True}, context=context)
         datas = {
             'ids': [slip.id for slip in data.period_id.payslip_ids],
@@ -264,7 +251,8 @@ class wizard_payroll_period(osv.osv_memory):
         context = context or {}
         data = self.browse(cr, uid, ids, context=context)[0]
         obj = self.pool.get('hr.payroll.period')
-        obj.write(cr, uid, data.period_id.id, {'payroll_summary': True}, context=context)
+        obj.write(cr, uid, data.period_id.id,
+                  {'payroll_summary': True}, context=context)
         self.write(cr, uid, ids,  {'payroll_summary': True}, context=context)
         datas = {
             'ids': [slip.id for slip in data.period_id.payslip_ids],
@@ -280,7 +268,8 @@ class wizard_payroll_period(osv.osv_memory):
         context = context or {}
         data = self.browse(cr, uid, ids, context=context)[0]
         obj = self.pool.get('hr.payroll.period')
-        obj.write(cr, uid, data.period_id.id, {'payslip_details': True}, context=context)
+        obj.write(cr, uid, data.period_id.id,
+                  {'payslip_details': True}, context=context)
         self.write(cr, uid, ids,  {'payslip_details': True}, context=context)
         datas = {
             'ids': [slip.id for slip in data.period_id.payslip_ids],
@@ -292,3 +281,20 @@ class wizard_payroll_period(osv.osv_memory):
             'datas': datas,
         }
 
+    def close_period(self, cr, uid, ids, context=None):
+        context = context or {}
+        wkf_service = netsvc.LocalService('workflow')
+        pp = self.pool.get('hr.payroll.period')
+        data = self.browse(cr, uid, ids, context=context)[0]
+        p_id = pp.search(cr, uid, [('number', '=', data.period_id.number + 1)])
+        if p_id:
+            wkf_service.trg_validate(uid, 'hr.payroll.period', p_id[0], 'activate', cr)
+        wkf_service.trg_validate(uid, 'hr.payroll.period', data.period_id.id, 'close', cr)
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'hr.payroll.period.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'inline',
+            'context': context
+        }

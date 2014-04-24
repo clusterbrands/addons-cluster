@@ -112,6 +112,7 @@ class period_schedule(osv.Model):
                         'schedule_id': obj.id,
                         'date_start': date_start,
                         'date_end': date_end,
+                        'number': i+1,
                         'fiscal_period_id': period_id[0],
                     }
                     p_id = p_obj.create(cr, uid, values, context=context)
@@ -145,7 +146,7 @@ class period_schedule(osv.Model):
         context = context or {}
         for schedule in self.browse(cr, uid, ids, context=context):
             for period in schedule.period_ids:
-                if period.state in  ['confirmed','paid','closed']:
+                if period.state in  ['confirmed', 'closed']:
                     raise osv.except_osv(_('Warning!'),_('You cannot delete a Period Schedule which is not draft or cancelled!'))
         return super(period_schedule, self).unlink(cr, uid, ids, context)
 
@@ -158,7 +159,6 @@ class period(osv.Model):
        ('open', 'Open'),
        ('actived', 'Active'),
        ('confirmed', 'Confirmado'),
-       ('paid', 'Paid'),
        ('closed', 'Closed'),
     ]
 
@@ -169,6 +169,7 @@ class period(osv.Model):
                                        required=True, ondelete="cascade"),
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date', required=True),
+        'number': fields.integer('Number'),
         'fiscal_period_id': fields.many2one('account.period', 'Fiscal Period', required=True),
         'payslip_ids': fields.one2many('hr.payslip', 'payperiod_id', 'Payslips'),
         'employee_payslips':fields.boolean('Printed?', required=False), 
@@ -184,7 +185,7 @@ class period(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         for pr in self.browse(cr, uid, ids, context=context):
-            if pr.state in  ['confirmed','paid','closed']:
+            if pr.state in  ['confirmed','closed']:
                 raise osv.except_osv(_('Warning!'),_('You cannot delete a period which is not draft or cancelled!'))
         return super(period, self).unlink(cr, uid, ids, context)
 
@@ -204,10 +205,8 @@ class period(osv.Model):
         context = context or {}
         return self.write(cr, uid, ids, {'state':'confirmed'})
 
-    def wkf_action_paid(self, cr, uid, ids, context=None):
-        pass
-
     def wkf_action_closed(self, cr, uid, ids, context=None):
-        pass
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'closed'})
 
     
