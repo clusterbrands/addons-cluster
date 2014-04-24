@@ -141,6 +141,14 @@ class period_schedule(osv.Model):
         'contract_ids':fields.one2many('hr.contract', 'schedule_id', 'Contracts', required=False), 
     }
 
+    def unlink(self, cr, uid, ids, context=None):
+        context = context or {}
+        for schedule in self.browse(cr, uid, ids, context=context):
+            for period in schedule.period_ids:
+                if period.state in  ['confirmed','paid','closed']:
+                    raise osv.except_osv(_('Warning!'),_('You cannot delete a Period Schedule which is not draft or cancelled!'))
+        return super(period_schedule, self).unlink(cr, uid, ids, context)
+
 
 class period(osv.Model):
 
@@ -173,6 +181,12 @@ class period(osv.Model):
     _defaults = {  
         'state': 'open',  
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        for pr in self.browse(cr, uid, ids, context=context):
+            if pr.state in  ['confirmed','paid','closed']:
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a period which is not draft or cancelled!'))
+        return super(period, self).unlink(cr, uid, ids, context)
 
     def list_fiscal_periods(self, cr, uid, context=None):
         ids = self.pool.get('account.period').search(cr,uid,[])

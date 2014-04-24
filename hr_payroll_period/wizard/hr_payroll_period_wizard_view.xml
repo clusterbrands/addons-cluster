@@ -7,10 +7,9 @@
             <field name="arch" type="xml">
                 <form string="Period Form" version="7.0">
                     <header>
-                        <button name="show_step1" string="Step 1: Leaves" type="object" />
-                        <button name="show_step2" string="Step 2: Payslips" type="object" />
-                        <button name="show_step3" string="Step 3: Payments" type="object" 
-                            attrs="{'invisible':[('state','=','actived')]}" />
+                        <button name="show_step1" string="Step 1: Leaves" type="object" states="actived,confirmed,paid" />
+                        <button name="show_step2" string="Step 2: Payslips" type="object" states="actived,confirmed,paid" />
+                        <button name="show_step3" string="Step 3: Payments" type="object" states="confirmed,paid" />
                         <button name="show_step4" string="Step 4: Print Reports" type="object" 
                             states="confirmed" />
                         <button name="confirm_payslips" string="Confirm" type="object" class="oe_highlight" states="actived"/>
@@ -21,7 +20,7 @@
                     </header>
                     <sheet>
                         <h1>
-                            <field name="step" nolabel="1" />
+                            <field name="step" nolabel="1" states="actived,confirmed,paid" />
                         </h1>                                                      
                             <group col="4">                            
                                 <group col="2">
@@ -34,7 +33,7 @@
                                     <field name="schedule_id" />                               
                                 </group>
                             </group>
-                            <div attrs="{'invisible': [('step','!=','step1')]}">               
+                            <div attrs="{'invisible': ['|',('step','!=','step1'),('state','=','open')]}">               
                                 <separator string="Leaves Summary" />
                                 <field name="holiday_ids" widget="one2many_list">
                                     <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" 
