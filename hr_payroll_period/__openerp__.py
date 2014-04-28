@@ -51,6 +51,7 @@ Notes:
         'view/hr_payroll_period_action_menu.xml',
         'wizard/hr_payroll_period_wizard_view.xml',
         'workflow/hr_payroll_period_workflow.xml',
+        'security/ir.model.access.csv',
     ],
     'update_xml': [
         'report/hr_payroll_period_report.xml',
