@@ -64,7 +64,7 @@
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="current_wage"/>
+                    <field name="current_wage" />
                     <field name="wage"/>
                     <field name="wage_difference"/>
                     <field name="wage_difference_percent"/>
@@ -81,20 +81,19 @@
                 <form string="Wage Adjustment" version="7.0">
                     <header>
                         <button name="signal_confirm" type="workflow" states="draft" string="Confirm" class="oe_highlight"/>
-                        <button name="signal_approve" type="workflow" states="confirm" groups="base.group_hr_manager" string="Approve" class="oe_highlight"/>
                         <button name="signal_decline" type="workflow" states="confirm" groups="base.group_hr_manager" string="Decline" class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <group>
-                        <group string="New Contract">
-                            <field name="wage"/>
-                            <field name="effective_date"/>
-                            <field name="wage_difference"/>
-                        </group>
                         <group string="Current Contract">
                             <field name="employee_id" on_change="onchange_employee(employee_id)" />
                             <field name="contract_id" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract(contract_id)" />
                             <field name="current_wage"/>
+                        </group>
+                        <group string="New Contract">
+                            <field name="wage"/>
+                            <field name="effective_date"/>
+                            <field name="wage_difference"/>
                         </group>
                         <group string="Miscellaneous">
                             <field name="department_id"/>
@@ -127,20 +126,19 @@
                 <form string="Wage Adjustment" version="7.0">
                     <header>
                         <button name="signal_confirm" type="workflow" states="draft" string="Confirm" class="oe_highlight"/>
-                        <button name="signal_approve" type="workflow" states="confirm" groups="base.group_hr_manager" string="Approve" class="oe_highlight"/>
                         <button name="signal_decline" type="workflow" states="confirm" groups="base.group_hr_manager" string="Decline" class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <group>
-                        <group string="New Contract">
-                            <field name="wage"/>
-                            <field name="effective_date"/>
-                        </group>
-                        <group string="Current Contract">
+                         <group string="Current Contract">
                             <field name="employee_id" on_change="onchange_employee(employee_id)"/>
                             <field name="contract_id" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract(contract_id)"/>
                             <field name="current_wage"/>
                         </group>
+                        <group string="New Contract">
+                            <field name="wage"/>
+                            <field name="effective_date"/>
+                        </group>                       
                     </group>
                 </form>
             </field>

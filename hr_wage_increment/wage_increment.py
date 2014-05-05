@@ -75,7 +75,7 @@ class wage_increment(osv.osv):
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
-            ('approve', 'Approved'),
+            ('applied', 'Applied'),
             ('decline', 'Declined')
         ], 'State', readonly=True),
         'run_id': fields.many2one('hr.contract.wage.increment.run', 'Batch Run',
@@ -149,9 +149,6 @@ class wage_increment(osv.osv):
         return {'value':res}
 
     _defaults = {
-        # 'contract_id': _get_contract_id,
-        # 'employee_id': _get_employee,
-        # 'effective_date': _get_effective_date,
         'state': 'draft',
     }
 
@@ -162,7 +159,7 @@ class wage_increment(osv.osv):
         wage_incr_ids = self.search(cr, uid, [
             ('contract_id', '=', wage_incr.contract_id.id),
             ('state', 'in', [
-                'draft', 'confirm', 'approved']),
+                'draft', 'confirm']),
             ('id', '!=', wage_incr.id),
         ],
             context=context)
@@ -175,12 +172,6 @@ class wage_increment(osv.osv):
         contract_obj = self.pool.get('hr.contract')
         data = contract_obj.read(
             cr, uid, wage_incr.contract_id.id, ['state', 'date_end'], context=context)
-
-        # if data['state'] in ['draft', 'done']:
-        #     data = self.pool.get('hr.contract').read(
-        #         cr, uid, wage_incr.contract_id.id, ['name'], context=context)
-        #     raise osv.except_osv(
-        #         _('Warning!'), _('The current state of the contract does not permit a wage change: %s') % (data['name']))
 
         if data.get('date_end', False) and data['date_end'] != '':
             dContractEnd = datetime.strptime(
@@ -195,15 +186,32 @@ class wage_increment(osv.osv):
 
         return True
 
-    def action_wage_increment(self, cr, uid, ids, context=None):
+    def try_contract_wage_applied(self, cr, uid, context=None):
+        context = context or {}
+        d = datetime.now().date()
+        current_date = d.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        domain = [('effective_date', '<=', current_date),('state', '=', 'confirm')]
+        ids = self.search(cr, uid, domain, context=context)
+        self.action_wage_increment(cr, uid, ids, context=context)
+        return True
 
+    def try_wage_increment_run_applied(self, cr, uid, run_id, context=None):      
+        context = context or {}
+        run_obj = self.pool.get('hr.contract.wage.increment.run')
+        wi_obj = self.pool.get('hr.contract.wage.increment')
+        run = run_obj.browse(cr, uid, run_id, context=context)
+        dom = [('run_id', '=', run_id),('state', '=', 'applied')]
+        wi_ids = wi_obj.search(cr, uid, dom, context=context)
+        if len(wi_ids) == len(run.increment_ids):
+            wkf = netsvc.LocalService('workflow')
+            wkf.trg_validate(uid, 'hr.contract.wage.increment.run', run_id, 'signal_applied', cr)
+            return True
+        return False
+
+    def action_wage_increment(self, cr, uid, ids, context=None):
+        context = context or {}
         hr_obj = self.pool.get('hr.contract')
 
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
-        # Copy the contract and adjust start/end dates and wage accordingly.
-        #
         for wi in self.browse(cr, uid, ids, context=context):
 
             if wi.wage_difference > -0.01 and wi.wage_difference < 0.01:
@@ -211,63 +219,27 @@ class wage_increment(osv.osv):
 
             self._check_state(cr, uid, wi, context=context)
 
-            default = {
-                'wage': wi.wage,
-                'date_start': wi.effective_date,
-                'name': False,
-                'state': False,
-                'message_ids': False,
-                'trial_date_start': False,
-                'trial_date_end': False,
-            }
-            data = hr_obj.copy_data(
-                cr, uid, wi.contract_id.id, default=default, context=context)
+            data = hr_obj.read(cr, uid, wi.contract_id.id,['notes'], context=context)
             notes = data.get('notes', False)
             if not notes:
                 notes = ''
-            notes = notes + \
-                '\nSupercedes (because of wage adjustment) previous contract: ' + \
-                wi.contract_id.name
+            notes = notes + '\n' + str(datetime.now().date()) + ' wage increment adjustment from ' + str(wi.contract_id.wage) + ' to ' + str(wi.wage)
             data['notes'] = notes
-
-            c_id = hr_obj.create(cr, uid, data, context=context)
-            if c_id:
-                if wi.contract_id.notes:
-                    notes = wi.contract_id.notes
-                else:
-                    notes = ''
-                notes = notes + \
-                    '\nSuperceded (for wage adjustment) by contract: ' + \
-                    wi.contract_id.name
-                vals = {'notes': notes,
-                        'date_end': False}
-                wkf = netsvc.LocalService('workflow')
-
-                # Set the new contract to the appropriate state
-                wkf.trg_validate(
-                    uid, 'hr.contract', c_id, 'signal_confirm', cr)
-
-                # Terminate the current contract (and trigger appropriate state
-                # change)
-                vals['date_end'] = datetime.strptime(
-                    wi.effective_date, '%Y-%m-%d').date() + relativedelta(days=-1)
-                hr_obj.write(cr, uid, wi.contract_id.id, vals, context=context)
-                wkf.trg_validate(
-                    uid, 'hr.contract', wi.contract_id.id, 'signal_done', cr)
-
+            data['wage'] = wi.wage
+            c_id = hr_obj.write(cr, uid, wi.contract_id.id, data, context=context)
+            wkf = netsvc.LocalService('workflow')
+            wkf.trg_validate(uid, 'hr.contract.wage.increment', wi.id, 'signal_applied', cr)
+            if wi.run_id:
+                self.try_wage_increment_run_applied(cr, uid, wi.run_id.id, context=context)
         return
 
     def create(self, cr, uid, vals, context=None):
-
-        contract_id = vals.get('contract_id', False)
-
-        if not contract_id:
-            if context != None:
-                contract_id = context.get('active_id')
-
-        data = self.pool.get(
-            'hr.contract').read(cr, uid, contract_id, ['name', 'date_start'],
-                                context=context)
+        context = context or {}
+        c_obj = self.pool.get('hr.contract')
+        data = c_obj.read(cr, uid, vals['contract_id'],
+                           ['name', 'date_start','wage'],
+                           context=context)
+        vals.update({'current_wage':data['wage']})
 
         # Check that the contract start date is before the effective date
         if vals['effective_date'] <= data['date_start']:
@@ -275,9 +247,9 @@ class wage_increment(osv.osv):
                 _('Error'), _('The effective date of the adjustment must be after the contract start date. Contract: %s.') % (data['name']))
 
         wage_incr_ids = self.search(cr, uid, [
-            ('contract_id', '=', contract_id),
+            ('contract_id', '=', vals['contract_id']),
             ('state', 'in', [
-                'draft', 'confirm', 'approved']),
+                'draft', 'confirm']),
         ],
             context=context)
         if len(wage_incr_ids) > 0:
@@ -292,16 +264,13 @@ class wage_increment(osv.osv):
             self._check_state(cr, uid, wi, context=context)
             self.write(cr, uid, wi.id, {'state': 'confirm'}, context=context)
 
-    def do_signal_approve(self, cr, uid, ids, context=None):
-
-        for i in ids:
-            self.action_wage_increment(cr, uid, [i], context=context)
-            self.write(cr, uid, i, {'state': 'approve'}, context=context)
+    def do_signal_applied(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'applied'}, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
 
         for incr in self.browse(cr, uid, ids, context=context):
-            if incr.state in ['approve']:
+            if incr.state in ['applied']:
                 raise osv.except_osv(_('The record cannot be deleted!'), _(
                     'You may not delete a record that is in a %s state:\nEmployee: %s') % (incr.state, incr.employee_id.name))
 
@@ -335,12 +304,12 @@ class wage_increment_run(osv.osv):
                                          required=False, readonly=False,
                                          states={
                                              'confirm': [('readonly', False)],
-                                             'approve': [('readonly', True)],
+                                             'applied': [('readonly', True)],
                                              'decline': [('readonly', True)]}),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
-            ('approve', 'Approved'),
+            ('applied', 'Applied'),
             ('decline', 'Declined')
         ], 'State', readonly=True),
     }
@@ -366,7 +335,7 @@ class wage_increment_run(osv.osv):
             ids = [ids]
 
         for run in self.browse(cr, uid, ids, context=context):
-            if run.state in ['approve']:
+            if run.state in ['applied']:
                 raise osv.except_osv(_('The adjustment run cannot be deleted!'), _(
                     'You may not delete a wage adjustment that is in the %s state.') % (run.state))
 
@@ -379,16 +348,14 @@ class wage_increment_run(osv.osv):
             [wkf.trg_validate(uid, 'hr.contract.wage.increment', incr.id, signal, cr)
              for incr in run.increment_ids]
             self.write(cr, uid, run.id, {'state': state}, context=context)
-
         return True
 
     def state_confirm(self, cr, uid, ids, context=None):
 
         return self._state(cr, uid, ids, 'signal_confirm', 'confirm', context)
 
-    def state_approve(self, cr, uid, ids, context=None):
-
-        return self._state(cr, uid, ids, 'signal_approve', 'approve', context)
+    def state_applied(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'applied'}, context=context)
 
     def state_decline(self, cr, uid, ids, context=None):
 

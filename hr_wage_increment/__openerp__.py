@@ -39,6 +39,7 @@ Wage Increment Handling
         'wizard/wage_adjustment_by_employees.xml',
         'wage_adjustment_run_workflow.xml',
         'wage_increment_view.xml',
+        'wage_increment_cron.xml',
         'wage_increment_workflow.xml',
     ],
     'demo_xml': [],

@@ -26,11 +26,11 @@
             <field name="action">state_confirm()</field>
         </record>
         
-        <record id="act_run_approve" model="workflow.activity">
+        <record id="act_run_applied" model="workflow.activity">
             <field name="wkf_id" ref="wkf_wage_adjustment_run"/>
-            <field name="name">approve</field>
+            <field name="name">applied</field>
             <field name="kind">function</field>
-            <field name="action">state_approve()</field>
+            <field name="action">state_applied()</field>
             <field name="flow_stop">True</field>
         </record>
         
@@ -51,10 +51,10 @@
             <field name="group_id" ref="base.group_hr_manager"/>
         </record>
         
-        <record id="run_confirm2approve" model="workflow.transition">
+        <record id="run_confirm2applied" model="workflow.transition">
             <field name="act_from" ref="act_run_confirm"/>
-            <field name="act_to" ref="act_run_approve"/>
-            <field name="signal">signal_approve</field>
+            <field name="act_to" ref="act_run_applied"/>
+            <field name="signal">signal_applied</field>
             <field name="group_id" ref="base.group_hr_manager"/>
         </record>
         
