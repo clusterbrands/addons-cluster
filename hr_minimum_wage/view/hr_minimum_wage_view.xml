@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="hr_minimum_wage_tree_view">
+            <field name="name">hr.minimum.wage.tree</field>
+            <field name="model">hr.minimum.wage</field>
+            <field name="arch" type="xml">
+                <tree string="Period Schedule Tree">
+                    <field name="reference" />
+                    <field name="date" />
+                    <field name="amount" />
+                </tree>
+            </field>       
+        </record>
+
+        <record model="ir.ui.view" id="hr_minimum_wage_form_view">
+            <field name="name">hr.minimum.wage.form</field>
+            <field name="model">hr.minimum.wage</field>
+            <field name="arch" type="xml">
+                <form string="Minimum Wage" version="7.0">
+                    <sheet>
+                        <group col="2">
+                            <field name="reference" class="oe_inline"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -28,9 +28,12 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
 class minimum_wage(osv.Model):
-    _name = 'hr.minimun.wage'
+    _name = 'hr.minimum.wage'
 
     _columns = {
-        'amount': fields.float('Amount ', digits=(16, 2), required=True), 
-        'date': fields.date('Date', required=True),         
+        'reference':fields.char('Reference', size=64, required=True), 
+        'date': fields.date('Date', required=True),  
+        'amount': fields.float('Amount ', digits=(16, 2), required=True),             
     }
+
+    _sql_constraints = [('hr_minimum_wage_uniq_date', 'unique (date)', 'The field date must be unique!'),      ]

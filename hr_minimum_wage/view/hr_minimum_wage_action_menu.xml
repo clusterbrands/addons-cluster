@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="action_hr_minimum_wage_list">
+             <field name="name">Minimum Wage</field>
+             <field name="res_model">hr.minimum.wage</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem 
+            name="Minimum Wage"
+            parent="hr.menu_hr_configuration"
+            id="menu_hr_minimum_wage"
+            action="action_hr_minimum_wage_list" /> 
+    </data>
+</openerp>
