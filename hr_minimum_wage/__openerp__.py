@@ -32,12 +32,19 @@
     'description': """
 
 Module Description
-    
+------------------
+    This module allows you to manage the minimum wage in payroll calculations 
+    and its traceability
+
 Main features
 -------------
+    The minimum wage can be referenced by the variable utils.minimum_wage
 
 Notes:
 -----
+    utils.minimum_wage variable refers to the most recent minimum wage, if none
+    exists is assigned the zero value
+
 """,
     'depends': [
         'hr_payroll_extension'
@@ -45,6 +52,7 @@ Notes:
     'data': [
         'view/hr_minimum_wage_view.xml',
         'view/hr_minimum_wage_action_menu.xml',
+        'security/ir.model.access.csv',
     ],
     'js': [
     ],
