@@ -120,8 +120,11 @@ class hr_payslip(osv.Model):
         temp_dict = {}
         utils = self.get_utils_dict(cr, uid, payslip_id, context=context)
         for k, v in utils.iteritems():
-            k_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, v)
-            temp_dict.update({k: k_obj})
+            if isinstance(v, dict):
+                k_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, v)
+                temp_dict.update({k: k_obj})
+            else:
+                temp_dict.update({k: v})
         
         categories_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
         input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)

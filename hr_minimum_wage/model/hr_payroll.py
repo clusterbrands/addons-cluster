@@ -23,40 +23,23 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-{
-    'name': 'Minimun Wage',
-    'category': 'Generic Modules',
-    'version': '1.0',
-    'author': 'Cluster Brands',
-    'website': 'http://www.clusterbrands.com',
-    'description': """
 
-Module Description
-    
-Main features
--------------
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
-Notes:
------
-""",
-    'depends': [
-        'hr_payroll_extension'
-    ],
-    'data': [
-        'view/hr_minimum_wage_view.xml',
-        'view/hr_minimum_wage_action_menu.xml',
-    ],
-    'js': [
-    ],
-    'css': [
-    ],
-    'qweb': [
-    ],
-    'demo': [
-    ],
-    'test': [
-    ],
-    'installable': True,
-    'active': False,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class hr_payslip(osv.Model):
+
+    _inherit = "hr.payslip"
+
+    def get_utils_dict(self, cr, uid, payslip_id, context=None):
+        context = context or {}
+        cr.execute('''SELECT amount, min(date) as date FROM  \
+                      hr_minimum_wage  \
+                      GROUP BY amount''')
+        res = cr.fetchone()
+        amount = 0.0
+        if res:
+            amount = res[0]
+        utils = super(hr_payslip, self).get_utils_dict(cr, uid, payslip_id, context=context)
+        utils.update({'minimum_wage': amount})
+        return utils
