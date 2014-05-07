@@ -35,12 +35,15 @@ Module Description
     
 Main features
 -------------
+    This module allows you to define different calendars that can be used in the
+    payroll compute.
 
 Notes:
 -----
+    The calendars can be referenced by the utils.calendars.CODE variable
 """,
     'depends': [
-        'hr_payroll',
+        'hr_payroll_extension',
         'web_multidatepicker',
     ],
     'data': [

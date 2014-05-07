@@ -30,7 +30,7 @@ from openerp.tools.translate import _
 class hr_payslip(osv.Model):
     _inherit = 'hr.payslip' 
 
-    def get_utils_dict(self, cr, uid, context=None):
+    def get_utils_dict(self, cr, uid, payslip_id, context=None):
         return {}
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
@@ -116,13 +116,19 @@ class hr_payslip(osv.Model):
         inputs = {}
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
-        utils = self.get_utils_dict(cr, uid, context=context)
+
+        temp_dict = {}
+        utils = self.get_utils_dict(cr, uid, payslip_id, context=context)
+        for k, v in utils.iteritems():
+            k_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, v)
+            temp_dict.update({k: k_obj})
+        
         categories_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
         input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)
         worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id, worked_days)
         payslip_obj = Payslips(self.pool, cr, uid, payslip.employee_id.id, payslip)
         rules_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, rules)
-        utils_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, utils)
+        utils_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, temp_dict)
 
         baselocaldict = {'categories': categories_obj, 'rules': rules_obj, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
         baselocaldict.update({'utils': utils_obj})
