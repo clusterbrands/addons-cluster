@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="hr_loan_type_tree_view">
+            <field name="name">hr.loan.type.tree</field>
+            <field name="model">hr.loan.type</field>
+            <field name="arch" type="xml">
+                <tree string="Loan Type Tree">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="max_amount" />
+                    <field name="min_discount" />
+                </tree>
+            </field>       
+        </record>
+
+        <record model="ir.ui.view" id="hr_loan_type_form_view">
+            <field name="name">hr.loan.type.form</field>
+            <field name="model">hr.loan.type</field>
+            <field name="arch" type="xml">
+                <form string="Loan Types" version="7.0">
+                    <sheet>
+                        <group col="4">
+                                <field name="name" />
+                                 <field name="max_amount" />
+                                <field name="code" />                               
+                                <field name="min_discount" />
+                                <field name="affect" widget="many2many_tags" />
+                               <!--  <field name="details" /> -->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
