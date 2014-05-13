@@ -30,6 +30,24 @@ from openerp.tools.translate import _
 class hr_loan(osv.Model):
     _name = "hr.loan"
 
+    _columns = {
+        'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
+        'type_id':fields.many2one('hr.loan.type', 'Type', required=True), 
+        'reason':fields.selection([
+            ('apartment','Apartment'),
+            ('health','Health'),
+            ('studies','Studies')
+            ], 'Reason', select=True),
+        'amount': fields.float('Amount', digits=(16, 2), required=False), 
+        'details': fields.text('Details'),
+        'state':fields.selection([
+            ('draft','Draft'),
+            ('confirm','confirm'),
+            ('paid','Paid'),
+            ('decline', 'Declined')
+            ], 'State', readonly=True),
+    }
+
 class hr_loan_type(osv.Model):
     _name = "hr.loan.type"
 
@@ -38,11 +56,15 @@ class hr_loan_type(osv.Model):
         'code': fields.char('Code', size=55, required=True), 
         'max_amount': fields.float('Max. Amount ', digits=(16, 2), required=False), 
         'min_discount': fields.float('Min. Discount ', digits=(16, 2), required=False), 
-        'affect':fields.selection([
-            ('payroll','Payroll'),
-            ('holidays','Holidays'),
-            ('social_benefits','Social Benefits'),
-            ('eventual','Eventual'),
-             ],    'State'),
+        # 'affect':fields.selection([
+        #     ('payroll','Payroll'),
+        #     ('holidays','Holidays'),
+        #     ('social_benefits','Social Benefits'),
+        #     ('eventual','Eventual'),
+        #      ],    'State'),
+        'affect_payroll':fields.boolean('Payroll', required=False), 
+        'affect_holidays':fields.boolean('Holidays', required=False),
+        'affect_social_benefits':fields.boolean('Social Benefits', required=False),
+        'affect_eventual':fields.boolean('Eventuals', required=False),
         'details': fields.text('Details'), 
     }

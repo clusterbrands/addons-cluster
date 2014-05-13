@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+        <record model="ir.actions.act_window" id="action_hr_loan_list">
+             <field name="name">Loans</field>
+             <field name="res_model">hr.loan</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem 
+            name="Loans"
+            parent="hr.menu_hr_main"
+            id="menu_hr_loan"
+            groups="base.group_hr_manager"
+            action="action_hr_loan_list" /> 
+
         <record model="ir.actions.act_window" id="action_hr_loan_type_list">
              <field name="name">Loan Types</field>
              <field name="res_model">hr.loan.type</field>
              <field name="view_type">form</field>
              <field name="view_mode">tree,form</field>
         </record>
+
         <menuitem 
             name="Loan Types"
             parent="hr.menu_hr_configuration"

@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="hr_loan_tree_view">
+            <field name="name">hr.loan.tree</field>
+            <field name="model">hr.loan</field>
+            <field name="arch" type="xml">
+                <tree string="Loans Tree">
+                    <field name="employee_id" />
+                    <field name="type_id" />
+                    <field name="reason" />
+                    <field name="amount" />
+                </tree>
+            </field>       
+        </record>
+
+        <record model="ir.ui.view" id="hr_loan_form_view">
+            <field name="name">hr.loan.form</field>
+            <field name="model">hr.loan</field>
+            <field name="arch" type="xml">
+                <form string="Loan" version="7.0">
+                     <header>
+                        <button name="signal_confirm" type="workflow" states="draft" string="Confirm" class="oe_highlight"/>
+                        <button name="signal_decline" type="workflow" states="confirm" groups="base.group_hr_manager" string="Decline" 
+                            class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group col="4">
+                            <field name="employee_id" />
+                            <field name="type_id" />
+                            <field name="reason" />
+                            <field name="amount" />
+                            <field name="details" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="hr_loan_type_tree_view">
             <field name="name">hr.loan.type.tree</field>
             <field name="model">hr.loan.type</field>
@@ -21,13 +58,22 @@
                 <form string="Loan Types" version="7.0">
                     <sheet>
                         <group col="4">
-                                <field name="name" />
-                                 <field name="max_amount" />
-                                <field name="code" />                               
-                                <field name="min_discount" />
-                                <field name="affect" widget="many2many_tags" />
-                               <!--  <field name="details" /> -->
+                            <field name="name" />
+                            <field name="code" /> 
+                            <field name="max_amount" />                             
+                            <field name="min_discount" />
                         </group>
+                        <group col="4">
+                            <group col="2" string="Details">
+                                <field name="details" nolabel="1" />
+                            </group>
+                            <group col="2" string="Affect">
+                                <field name="affect_payroll" />
+                                <field name="affect_holidays" />
+                                <field name="affect_social_benefits" />
+                                <field name="affect_eventual" />
+                             </group>
+                        </group>                        
                     </sheet>
                 </form>
             </field>
