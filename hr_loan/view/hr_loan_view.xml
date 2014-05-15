@@ -31,7 +31,6 @@
                             <field name="employee_id" />
                             <field name="type_id" />
                             <field name="reason"  />
-                            <field name="journal_id"  />
                             <field name="amount" />
                             <field name="details" />
                         </group>
@@ -67,6 +66,7 @@
                         </group>
                         <group col="4">
                             <group col="2" string="Accounting">
+                                <field name="journal_id"  />
                                 <field name="debit_account" />
                                 <field name="credit_account" />
                             </group>

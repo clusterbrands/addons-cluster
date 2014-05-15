@@ -38,7 +38,6 @@ class hr_loan(osv.Model):
             ('health','Health'),
             ('studies','Studies')
             ], 'Reason', select=True),
-        'journal_id': fields.many2one('account.journal', 'Payment Method', required=True), 
         'amount': fields.float('Amount', digits=(16, 2), required=False), 
         'details': fields.text('Details'),
         'move_id':fields.many2one('account.move', 'Move', required=False, ondelete='cascade'), 
@@ -105,6 +104,7 @@ class hr_loan_type(osv.Model):
         'code': fields.char('Code', size=55, required=True), 
         'max_amount': fields.float('Max. Amount ', digits=(16, 2), required=False), 
         'min_discount': fields.float('Min. Discount ', digits=(16, 2), required=False), 
+        'journal_id': fields.many2one('account.journal', 'Journal', required=True), 
         'debit_account':fields.many2one('account.account', 'Debit Account', required=True), 
         'credit_account':fields.many2one('account.account', 'Credit Account', required=True), 
         'affect_payroll':fields.boolean('Payroll', required=False), 

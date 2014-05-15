@@ -9,10 +9,14 @@
         </record>
 
         <menuitem 
-            name="Loans"
-            parent="hr.menu_hr_main"
-            id="menu_hr_loan"
-            groups="base.group_hr_manager"
+            id="hr_loan_root_menu" 
+            name="Loans" 
+            parent="hr.menu_hr_root" />
+
+        <menuitem 
+            id="hr_loan_main_menu"
+            name="Loans Requests"
+            parent="hr_loan_root_menu"           
             action="action_hr_loan_list" /> 
 
         <record model="ir.actions.act_window" id="action_hr_loan_type_list">
