@@ -40,7 +40,9 @@ Notes:
 -----
 """,
     'depends': [
-        'hr_payroll'
+        'account',
+        'hr_payroll',
+        'hr_payroll_extension',
     ],
     'data': [
         'view/hr_loan_view.xml',
