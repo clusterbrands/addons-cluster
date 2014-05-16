@@ -21,18 +21,27 @@
             <field name="arch" type="xml">
                 <form string="Loan" version="7.0">
                      <header>
-                        <button name="signal_confirm" type="workflow" states="draft" string="Confirm" class="oe_highlight"/>
-                        <button name="signal_decline" type="workflow" states="confirm" groups="base.group_hr_manager" string="Decline" 
+                        <button name="signal_confirm" type="workflow" states="to_approve" string="Confirm" class="oe_highlight"/>
+                        <button name="signal_decline" type="workflow" states="to_approve, approved" groups="base.group_hr_manager" string="Decline" 
                             class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group col="4">
-                            <field name="employee_id" />
-                            <field name="type_id" />
-                            <field name="reason"  />
-                            <field name="amount" />
-                            <field name="details" />
+                            <group col="2" string="Employee">
+                                <field name="employee_id" on_change="onchange_employee(employee_id)" />
+                                <field name="contract_id" />
+                            </group>
+                            <group col="2" string="Loan">
+                                <field name="type_id" />
+                                <field name="reason"  />
+                                <field name="amount" />
+                                <field name="periods" />
+                                <field name="quota" />
+                            </group>
+                        </group>
+                        <group col="4" string="Details">
+                            <field name="details" nolabel="1" />
                         </group>
                     </sheet>
                 </form>

@@ -30,8 +30,19 @@ from openerp.tools.translate import _
 class hr_loan(osv.Model):
     _name = "hr.loan"
 
+    def _get_loan_quota(self, cr, uid, ids, field_name, args, context=None):
+        context = context or {}
+        res = dict.fromkeys(ids)
+        for loan in self.browse(cr, uid, ids, context=context):
+            if loan.periods:
+                res[loan.id] = (loan.amount / loan.periods) 
+            else:
+                res[loan.id] = 0.0
+        return res
+
     _columns = {
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=True), 
         'type_id':fields.many2one('hr.loan.type', 'Type', required=True), 
         'reason':fields.selection([
             ('apartment','Apartment'),
@@ -39,15 +50,27 @@ class hr_loan(osv.Model):
             ('studies','Studies')
             ], 'Reason', select=True),
         'amount': fields.float('Amount', digits=(16, 2), required=False), 
+        'periods': fields.integer('Periods Numbers'), 
+        'quota': fields.function(_get_loan_quota, method=True, type='float', string='Quota'), 
         'details': fields.text('Details'),
         'move_id':fields.many2one('account.move', 'Move', required=False, ondelete='cascade'), 
         'state':fields.selection([
-            ('draft','Draft'),
-            ('confirm','Confirmed'),
-            ('paid','Paid'),
+            ('to_submit','To Submit'),
+            ('to_approve','To Approve'),
+            ('approved','Approved'),
             ('decline', 'Declined')
             ], 'State', readonly=True),
     }
+
+    def onchange_employee(self, cr, uid, ids, employee_id, context=None):
+        context = context or {}
+        emp_pool = self.pool.get('hr.employee')
+        res = {'contract_id': False}
+        if employee_id:
+            emp = emp_pool.browse(cr, uid, employee_id, context=context)
+            if emp.contract_id:
+                res.update({'contract_id': emp.contract_id.id})
+        return {'value':res}
 
     def do_signal_confirm(self, cr, uid, ids, context=None):
         context = context or {}
