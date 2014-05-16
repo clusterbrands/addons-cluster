@@ -1,0 +1,147 @@
+Release 0.9.14 - 28/07/2011:
+    * Fixed issues with emulator
+
+Release 0.9.13 - 22/07/2011:
+    * Update the emulator and add a Gtk UI
+
+Release 0.9.12 - 06/07/2011:
+    * Better ferencial report support.
+    * Method to check if there is an open coupon.
+    * Pending reduce Z check.
+
+Release 0.9.11 - 08/02/2011:
+    * Discounts as currency and use Decimal instead of float in drivers
+
+Release 0.9.10 - 24/11/2010:
+    * Fixing more issues with FS600/FS2100
+
+Release 0.9.9 - 01/09/2010:
+    * Fixing issues with FS600/FS2100
+    * remove python2.4 dependency
+
+Release 0.9.8.2 - 15/12/2009:
+    * Bugfix release, karmic and dependency updates.
+
+Release 0.9.8 - 14/07/2009:
+    * Added support for dataregis Quick and FiscNet Protocol.
+
+Release 0.9.7 - 15/04/2009:
+    * Added support for bematech MP20 printer.
+    * Fixed invoice translations (#3873)
+
+Release 0.9.6 - 27/01/2009:
+    * Bug 2161: Multiple payment method
+    * Fixed Daruma FS600 (use the same commands as FS2100)
+    * Fix tests
+    * Bug 3816: Refactor Payment Wizard
+    * Fixed python-serial dependency version
+
+Release 0.9.5 - 10/09/2008:
+    * Bug 3776: Added support for Bematech MP2100 printer
+    * Bug Fix: 3771
+    * Bug Fix: 3759
+
+Release 0.9.4 - 29/05/2008:
+    * Bug fix: 3448
+
+Release 0.9.3 - 17/03/2008:
+    * Bug fix: 3418
+
+Release 0.9.2 - 31/01/2008:
+    * Bug fix: 3610
+
+Release 0.9.1 - 09/11/2007:
+
+    * Added an initial Esc/P printer.
+	* Bug fix: 3553
+
+Release 0.9.0 - 30/08/2007:
+
+    * Updated translations
+    * Added template and example
+
+Release 0.8.0 - 16/07/2007:
+
+    * Use kiwi.enum for constants/enums
+    * Restructured directory tree
+    * Support for fetching taxes and payment constants from the device
+    * Much improved Bematech MP25 support
+      Many Daruma FS345 improvements
+    * Updated translations
+
+Release 0.7.0 - 23/05/2007:
+
+    * Updated packages
+    * Use kiwi.enum for constants/enums
+    * Add APIs to read the fiscal memory of couponprinters
+    * Support for extracting information required by
+      Sintegra 60A+60M in Daruma FS345 and Perto Pay 2023
+    * Updated translations
+
+Release 0.6.0 - 23/03/2007:
+
+	* Rewrite most of the Perto Driver
+	* Remove logging in favor of kiwi logging
+	* ABICOMP codec for Daruma FS345
+	* Easier/Simpler printer test format
+	* Service taxes implemented (ISS)
+	* Tax constants added
+	* Simple Testscript to send commands to a printer
+	* Add RPM .spec file
+
+Release 0.5.0 - 24/08/2006:
+
+	* Add debian package
+	* Improve support for canceling coupons.
+	* Require kiwi 1.9.6
+	* Updated translation
+
+Release 0.4.0 - 24/08/2006:
+
+	* Bug fixes: 2502, 2532, 2641
+
+	* Metrologic MC630 Barcode reader support
+	* Test suite implemented
+	* Implementation of a virtual port for drivers which doesn't requires
+	  communication with a real device (eg, VirtualSimple driver).
+
+Release 0.3.1 - 02/07/2006:
+
+	* Bug fixes: 2246, 2531, 2628
+
+	* Include support for driver constants
+	* Fiscal printer API improved
+	* pt_BR translation
+
+Release 0.3.0 - 08/03/2006:
+
+	* Bug fixes: 700, 2153, 2274, 2362, 2369, 2383,
+		     2386, 2408, 2441
+
+	* Exception strings internationalization
+	* Better error management for Bematech MP25 driver
+	* Till cash out support
+	* Better text encoding management on printer command parameters
+	* Bematech DP20C printer support
+	* Custom product unit support
+	* Toledo Prix III scale support
+
+Release 0.2.0 - 22/12/2005:
+
+	* Bug fixes: 2125, 2149, 2158, 2176, 2240, 2248, 
+		     2280, 2284, 2328, 2346
+
+	* Driver capabilities implementation.
+	* Dataregis EP375 support.
+	* PertoPay 2023 support.
+	* Virtual printer implementation.
+
+Release 0.1.0 - 26/09/2005
+
+	* Bug fixes: 2131, 2132, 2133, 2148, 2155, 2156
+
+	* Standard exceptions management implemented.
+	* Daruma FS2100 support.
+	* Support for multiple printer models of the same manufacter.
+	* Installation script implementation.
+	* Support for items cancellation on Daruma FS345.
