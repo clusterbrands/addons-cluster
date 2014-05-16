@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+        <record id="view_hr_loan_filter" model="ir.ui.view">
+            <field name="name">hr.loan.filter</field>
+            <field name="model">hr.loan</field>
+            <field name="arch" type="xml">
+                <search string="Search Loan">
+                    <filter string="To Approve" icon="terp-personal" name="to_approve" domain="[('state','=', 'to_approve')]" help="To Approve"/>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="hr_loan_tree_view">
             <field name="name">hr.loan.tree</field>
             <field name="model">hr.loan</field>
