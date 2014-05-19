@@ -31,8 +31,9 @@
             <field name="arch" type="xml">
                 <form string="Loan" version="7.0">
                      <header>
+                        <button name="signal_submit" type="workflow" states="to_submit" string="Submit" class="oe_highlight"/>
                         <button name="signal_confirm" type="workflow" states="to_approve" string="Confirm" class="oe_highlight"/>
-                        <button name="signal_decline" type="workflow" states="to_approve, approved" groups="base.group_hr_manager" string="Decline" 
+                        <button name="signal_decline" type="workflow" states="to_approve, approved" string="Decline" 
                             class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -47,7 +48,11 @@
                                 <field name="reason"  />
                                 <field name="amount" />
                                 <field name="periods" />
-                                <field name="quota" />
+                                <label for="quota" />
+                                <div>
+                                    <field name="quota" widget="monetary" nolabel="1" />
+                                    <button string="(Update)" name="update_quota" class="oe_link oe_edit_only" type="object"/>
+                                </div>
                             </group>
                         </group>
                         <group col="4" string="Details">

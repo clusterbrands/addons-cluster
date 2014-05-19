@@ -58,9 +58,13 @@ class hr_loan(osv.Model):
             ('to_submit','To Submit'),
             ('to_approve','To Approve'),
             ('approved','Approved'),
-            ('decline', 'Declined')
+            ('declined', 'Declined')
             ], 'State', readonly=True),
     }
+
+    def update_quota(self, cr, uid, ids, context=None):
+        context = context or {}
+        return True
 
     def onchange_employee(self, cr, uid, ids, employee_id, context=None):
         context = context or {}
@@ -71,6 +75,14 @@ class hr_loan(osv.Model):
             if emp.contract_id:
                 res.update({'contract_id': emp.contract_id.id})
         return {'value':res}
+
+    def do_signal_to_approve(self, cr, uid, ids, context=None):
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'to_approve'}, context=context)
+
+    def do_signal_decline(self, cr, uid, ids, context=None):
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'declined'}, context=context)
 
     def do_signal_confirm(self, cr, uid, ids, context=None):
         context = context or {}
