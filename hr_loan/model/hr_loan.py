@@ -42,7 +42,7 @@ class hr_loan(osv.Model):
 
     _columns = {
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'contract_id':fields.many2one('hr.contract', 'Contract', required=True), 
+        'contract_id':fields.many2one('hr.contract', 'Contract'), 
         'type_id':fields.many2one('hr.loan.type', 'Type', required=True), 
         'reason':fields.selection([
             ('apartment','Apartment'),
@@ -79,10 +79,20 @@ class hr_loan(osv.Model):
     def do_signal_to_approve(self, cr, uid, ids, context=None):
         context = context or {}
         return self.write(cr, uid, ids, {'state':'to_approve'}, context=context)
+        
+    def do_signal_approved(self, cr, uid, ids, context=None):
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'approved'}, context=context)
 
     def do_signal_decline(self, cr, uid, ids, context=None):
         context = context or {}
         return self.write(cr, uid, ids, {'state':'declined'}, context=context)
+        
+    def check_contract(self, cr, uid, ids, context=None):
+		for brw in self.browse(cr, uid, ids, context=context):
+			if not brw.contract_id:
+				raise osv.except_osv( _('Error!'), _("You should select a valid contract to approve this loan"))
+		return True
 
     def do_signal_confirm(self, cr, uid, ids, context=None):
         context = context or {}

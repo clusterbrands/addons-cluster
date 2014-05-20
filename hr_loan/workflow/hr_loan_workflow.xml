@@ -27,7 +27,7 @@
             <field name="wkf_id" ref="hr_loan_wkf"/>
             <field name="name">approved</field>
             <field name="kind">function</field>
-            <field name="action">do_signal_approved</field>
+            <field name="action">do_signal_approved()</field>
         </record>
 
         <record id="act_decline" model="workflow.activity">
@@ -49,6 +49,7 @@
             <field name="act_from" ref="act_to_approve"/>
             <field name="act_to" ref="act_approved"/>
             <field name="signal">signal_approve</field>
+            <field name="condition">check_contract()</field>
             <field name="group_id" ref="base.group_hr_manager"/>
         </record>
 

@@ -4,7 +4,7 @@
         <menuitem 
             id="hr_loan_root_menu" 
             name="Loans" 
-            parent="hr.menu_hr_root" />
+            parent="hr.menu_hr_root"/>
 
         <record model="ir.actions.act_window" id="action_hr_loan_list">
              <field name="name">Loans</field>
@@ -16,15 +16,8 @@
         <menuitem 
             id="hr_loan_main_menu"
             name="Loans Requests"
-            parent="hr_loan_root_menu"           
+            parent="hr_loan_root_menu"          
             action="action_hr_loan_list" /> 
-
-        <record model="ir.actions.act_window" id="action_hr_loan_type_list">
-             <field name="name">Loan Types</field>
-             <field name="res_model">hr.loan.type</field>
-             <field name="view_type">form</field>
-             <field name="view_mode">tree,form</field>
-        </record>
 
         <record model="ir.actions.act_window" id="action_hr_loan_tree_to_approve">
              <field name="name">Loans to Approve</field>
@@ -38,8 +31,17 @@
          <menuitem 
             id="hr_loan_to_approve_menu"
             name="Loans Requests to Approve"
-            parent="hr_loan_root_menu"           
+            parent="hr_loan_root_menu"
+            groups="base.group_hr_manager"        
             action="action_hr_loan_tree_to_approve" /> 
+            
+            
+        <record model="ir.actions.act_window" id="action_hr_loan_type_list">
+			<field name="name">Loan Types</field>
+			<field name="res_model">hr.loan.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+        </record>
 
         <menuitem 
             name="Loan Types"

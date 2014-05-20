@@ -32,16 +32,16 @@
                 <form string="Loan" version="7.0">
                      <header>
                         <button name="signal_submit" type="workflow" states="to_submit" string="Submit" class="oe_highlight"/>
-                        <button name="signal_confirm" type="workflow" states="to_approve" string="Confirm" class="oe_highlight"/>
-                        <button name="signal_decline" type="workflow" states="to_approve, approved" string="Decline" 
+                        <button name="signal_approve" type="workflow" states="to_approve" string="Confirm" class="oe_highlight" groups="base.group_hr_manager"/>
+                        <button name="signal_decline" type="workflow" states="to_approve,approved" string="Decline" 
                             class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group col="4">
                             <group col="2" string="Employee">
-                                <field name="employee_id" on_change="onchange_employee(employee_id)" />
-                                <field name="contract_id" />
+                                <field name="employee_id" />
+                                <field name="contract_id" states="to_approve,approved" domain="[('employee_id','=',employee_id)]"  />
                             </group>
                             <group col="2" string="Loan">
                                 <field name="type_id" />

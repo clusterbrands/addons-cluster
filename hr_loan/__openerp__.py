@@ -48,6 +48,7 @@ Notes:
         'view/hr_loan_view.xml',
         'view/hr_loan_action_menu.xml',
         'workflow/hr_loan_workflow.xml',
+        'security/ir.model.access.csv',
     ],
     'js': [
     ],
