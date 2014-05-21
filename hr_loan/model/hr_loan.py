@@ -42,7 +42,8 @@ class hr_loan(osv.Model):
 
     _columns = {
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'contract_id':fields.many2one('hr.contract', 'Contract'), 
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=False),
+        'payroll_period_id': fields.many2one('hr.payroll.period', 'Start Payperiod'),
         'type_id':fields.many2one('hr.loan.type', 'Type', required=True), 
         'reason':fields.selection([
             ('apartment','Apartment'),
@@ -66,15 +67,17 @@ class hr_loan(osv.Model):
         context = context or {}
         return True
 
-    def onchange_employee(self, cr, uid, ids, employee_id, context=None):
-        context = context or {}
-        emp_pool = self.pool.get('hr.employee')
-        res = {'contract_id': False}
-        if employee_id:
-            emp = emp_pool.browse(cr, uid, employee_id, context=context)
-            if emp.contract_id:
-                res.update({'contract_id': emp.contract_id.id})
-        return {'value':res}
+    def onchange_contract(self, cr, uid, ids, contract_id, context=None):
+       	context = context or {}
+       	domain = [('schedule_id','=',False),('state','in',('open','actived'))]
+        obj = self.pool.get('hr.contract')
+        if contract_id:
+            contract = obj.browse(cr, uid, contract_id, context=context)
+            domain[0] = ('schedule_id','=', contract.schedule_id.id)
+            return {'domain':{'payroll_period_id': domain}}
+        else:
+            res = {'payroll_period_id': False}
+            return {'domain':{'payroll_period_id': domain}, 'value': res}
 
     def do_signal_to_approve(self, cr, uid, ids, context=None):
         context = context or {}
@@ -82,20 +85,8 @@ class hr_loan(osv.Model):
         
     def do_signal_approved(self, cr, uid, ids, context=None):
         context = context or {}
-        return self.write(cr, uid, ids, {'state':'approved'}, context=context)
-
-    def do_signal_decline(self, cr, uid, ids, context=None):
-        context = context or {}
-        return self.write(cr, uid, ids, {'state':'declined'}, context=context)
-        
-    def check_contract(self, cr, uid, ids, context=None):
-		for brw in self.browse(cr, uid, ids, context=context):
-			if not brw.contract_id:
-				raise osv.except_osv( _('Error!'), _("You should select a valid contract to approve this loan"))
-		return True
-
-    def do_signal_confirm(self, cr, uid, ids, context=None):
-        context = context or {}
+        import pdb
+        pdb.set_trace()
         line_ids = []
         move_pool = self.pool.get('account.move')
         period_pool = self.pool.get('account.period')
@@ -109,7 +100,7 @@ class hr_loan(osv.Model):
         move = {
             'date': timenow,
             'ref': name,
-            'journal_id': loan.journal_id.id,
+            'journal_id': loan.type_id.journal_id.id,
             'period_id': period_id,
         }
         debit_line = (0, 0, {
@@ -117,7 +108,7 @@ class hr_loan(osv.Model):
             'date': timenow,
             'partner_id': loan.employee_id.address_home_id.id,
             'account_id': loan.type_id.debit_account.id,
-            'journal_id': loan.journal_id.id,
+            'journal_id': loan.type_id.journal_id.id,
             'period_id': period_id,
             'debit': loan.amount,
             'credit': 0.0,
@@ -128,7 +119,7 @@ class hr_loan(osv.Model):
             'date': timenow,
             'partner_id': loan.employee_id.address_home_id.id,
             'account_id': loan.type_id.credit_account.id,
-            'journal_id': loan.journal_id.id,
+            'journal_id': loan.type_id.journal_id.id,
             'period_id': period_id,
             'debit': 0.0,
             'credit': loan.amount,
@@ -138,8 +129,19 @@ class hr_loan(osv.Model):
         move_id = move_pool.create(cr, uid, move, context=context)
         self.write(cr, uid, ids, {'move_id': move_id})
         move_pool.post(cr, uid, [move_id], context=context)
-        return self.write(cr, uid, ids, {'state' : 'confirm'})
+        return self.write(cr, uid, ids, {'state':'approved'}, context=context)
+
+    def do_signal_decline(self, cr, uid, ids, context=None):
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'declined'}, context=context)
         
+    def check_contract_and_period(self, cr, uid, ids, context=None):
+        for brw in self.browse(cr, uid, ids, context=context):
+            if not brw.contract_id:
+                raise osv.except_osv( _('Error!'), _("You should select a valid contract to approve this loan"))
+            if not brw.payroll_period_id:
+                raise osv.except_osv( _('Error!'), _("You should select a valid start 'Payperiod' to approve this loan"))
+		return True
 
 class hr_loan_type(osv.Model):
     _name = "hr.loan.type"

@@ -43,6 +43,7 @@ Notes:
         'account',
         'hr_payroll',
         'hr_payroll_extension',
+        'hr_payroll_period',
     ],
     'data': [
         'view/hr_loan_view.xml',

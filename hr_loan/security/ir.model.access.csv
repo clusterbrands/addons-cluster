@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_loan_user,hr.loan.user,model_hr_loan,base.group_user,1,1,1,1
 access_hr_loan_type_user,hr.loan.type.user,model_hr_loan_type,base.group_user,1,0,0,0
-
+acesss_hr_loan_type_manager,hr.loan.type.manager,model_hr_loan_type,base.group_hr_manager,1,1,1,1
