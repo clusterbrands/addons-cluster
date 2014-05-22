@@ -89,7 +89,6 @@ class hr_loan(osv.Model):
         move_pool = self.pool.get('account.move')
         period_pool = self.pool.get('account.period')
         pp_pool = self.pool.get('hr.payroll.period')
-        #CxP
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Payroll')
         timenow = time.strftime('%Y-%m-%d')
         ctx = dict(context or {}, account_period_prefer_normal=True)
@@ -128,48 +127,6 @@ class hr_loan(osv.Model):
         move.update({'line_id': line_ids})
         move_id = move_pool.create(cr, uid, move, context=context)
         self.write(cr, uid, ids, {'move_id': move_id})
-                
-        #CxC
-        period = loan.payroll_period_id.number
-        period_numbers = [p for p in range(period, period + loan.periods)]
-        domain = [('number','in', period_numbers)]
-        period_ids = pp_pool.search(cr, uid, domain, context=context)
-        if len(period_ids) != loan.periods:
-            raise osv.except_osv( _('Error!'), _("The number of payroll periods defined does no match with the number of payments installments"))
-        i = 1
-        for pr in pp_pool.browse(cr, uid, period_ids, context=context):
-            line_ids = []
-            move = {
-                'date': pr.date_end,
-                'ref': _('Loan for %s Quote %d') % (loan.employee_id.name,i),
-                'journal_id': loan.type_id.journal_id.id,
-                'period_id': pr.fiscal_period_id.id,
-            }
-            debit_line = (0, 0, {
-                'name': 'Payment of Quote '+str(i),
-                'date_maturity': pr.date_end,
-                'partner_id': loan.employee_id.address_home_id.id,
-                'account_id': loan.type_id.credit_account.id,
-                'journal_id': loan.type_id.journal_id.id,
-                'period_id': pr.fiscal_period_id.id,
-                'debit': loan.quota,
-                'credit': 0.0,
-            })            
-            credit_line = (0, 0, {
-                'name': 'Payment of Quote '+str(i),
-                'date_maturity': pr.date_end,
-                'partner_id': loan.employee_id.address_home_id.id,
-                'account_id': loan.type_id.debit_account.id,
-                'journal_id': loan.type_id.journal_id.id,
-                'period_id': pr.fiscal_period_id.id,
-                'debit': 0.0,
-                'credit': loan.quota,
-            })
-            line_ids.append(debit_line)
-            line_ids.append(credit_line)
-            move.update({'line_id': line_ids})
-            move_id = move_pool.create(cr, uid, move, context=context)
-            i+=1
         return self.write(cr, uid, ids, {'state':'approved'}, context=context)
 
     def do_signal_decline(self, cr, uid, ids, context=None):
