@@ -3,3 +3,8 @@
 	max-width: 90%;
 	margin: 0 auto;
 }
+
+.openerp .oe_application .oe_form_sheet .oe_notebook_page 
+.oe_form_field_one2many {
+    overflow-x: auto;
+}
