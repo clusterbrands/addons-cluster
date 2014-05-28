@@ -35,7 +35,37 @@
             groups="base.group_hr_manager"        
             action="action_hr_loan_tree_to_approve" /> 
             
-            
+        
+        <record model="ir.actions.act_window" id="action_hr_loan_balance">
+             <field name="name">Loan Balance</field>
+             <field name="res_model">hr.loan</field>
+             <field name="domain">[('state','=','approved')]</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="act_hr_loan_balance_tree_view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_loan_tree2"/>
+            <field name="act_window_id" ref="action_hr_loan_balance"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="act_hr_loan_payments_form_view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_loan_balance_form_view"/>
+            <field name="act_window_id" ref="action_hr_loan_balance"/>
+        </record>
+
+        <menuitem 
+            id="hr_loan_balance_menu"
+            name="Loan Balance"
+            parent="hr_loan_root_menu"
+            groups="base.group_hr_manager"        
+            action="action_hr_loan_balance" /> 
+        
+        
         <record model="ir.actions.act_window" id="action_hr_loan_type_list">
 			<field name="name">Loan Types</field>
 			<field name="res_model">hr.loan.type</field>
