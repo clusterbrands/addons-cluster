@@ -39,6 +39,14 @@ class hr_loan(osv.Model):
             else:
                 res[loan.id] = 0.0
         return res
+        
+    def _compute_balance(self, cr, uid, ids, field_name, args, context=None):
+        context = context or {}
+        res = dict.fromkeys(ids, 0.0)
+        for loan in self.browse(cr, uid, ids, context=context):
+            for balance in loan.balance_ids:
+                res[record.id] += balance.amount
+        return res
 
     _columns = {
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True, states={'approved': [('readonly', True)]}),
@@ -56,6 +64,7 @@ class hr_loan(osv.Model):
         'details': fields.text('Details', states={'approved': [('readonly', True)]}),
         'move_id':fields.many2one('account.move', 'Move', required=False, ondelete='cascade'),
         'balance_ids' : fields.one2many('hr.loan.balance','loan_id', 'Loan Balance'),
+        'balance': fields.function(_compute_balance, type='float', string='Computed Balance', store=True),
         'state':fields.selection([
             ('to_submit','To Submit'),
             ('to_approve','To Approve'),

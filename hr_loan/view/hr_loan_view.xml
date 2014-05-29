@@ -14,6 +14,7 @@
         <record model="ir.ui.view" id="hr_loan_tree_view">
             <field name="name">hr.loan.tree</field>
             <field name="model">hr.loan</field>
+            <field name="priority" eval="2" />
             <field name="arch" type="xml">
                 <tree string="Loans Tree">
                     <field name="employee_id" />
@@ -28,6 +29,7 @@
         <record model="ir.ui.view" id="hr_loan_form_view">
             <field name="name">hr.loan.form</field>
             <field name="model">hr.loan</field>
+            <field name="priority" eval="2" />
             <field name="arch" type="xml">
                 <form string="Loan" version="7.0">
                      <header>
@@ -79,7 +81,7 @@
         </record>
         
         <record model="ir.ui.view" id="hr_loan_balance_form_view">
-            <field name="name">hr.loan.payment.form</field>
+            <field name="name">hr.loan.balance.form</field>
             <field name="model">hr.loan</field>
             <field name="arch" type="xml">
                 <form string="Loan" version="7.0" create="false">
