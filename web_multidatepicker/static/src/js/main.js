@@ -1,6 +1,6 @@
-openerp.hr_calendar = function(instance){
+openerp.web_multidatepicker = function(instance){
     var QWeb = instance.web.qweb;
-    instance.hr_calendar.Calendar = instance.web.form.AbstractField.extend({
+    instance.web_multidatepicker.Calendar = instance.web.form.AbstractField.extend({
         init: function() {
             this._super.apply(this, arguments);
             this.set("value", "");
@@ -34,5 +34,5 @@ openerp.hr_calendar = function(instance){
                 this.$('.calendar').multiDatesPicker('addDates',eval(dates));                
         },
     });
-    instance.web.form.widgets.add('calendar', 'instance.hr_calendar.Calendar');
+    instance.web.form.widgets.add('calendar', 'instance.web_multidatepicker.Calendar');
 }
