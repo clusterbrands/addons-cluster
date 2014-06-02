@@ -160,7 +160,7 @@ class hr_loan_balance(osv.Model):
         'reference': fields.char('Reference', size=255),
         'date': fields.date('Date', required=True),
         'move_id': fields.many2one('account.move.line', 'Accounting Entry', required=True),
-        'amount': fields.float('Amount', digits=(16, 2), required=True),
+        'amount': fields.related('move_id', 'balance', type='float', string='Amount'),
     }
 
 class hr_loan_type(osv.Model):
