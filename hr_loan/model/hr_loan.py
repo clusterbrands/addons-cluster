@@ -47,7 +47,7 @@ class hr_loan(osv.Model):
             amount = 0
             for balance in loan.balance_ids:
                 amount+= balance.debit - balance.credit
-            res[loan.id] = amount
+            res[loan.id] = loan.amount - amount
         return res
 
     _columns = {

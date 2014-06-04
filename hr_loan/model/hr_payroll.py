@@ -13,7 +13,7 @@ class hr_payslip(osv.Model):
         cr.execute('''SELECT l.id FROM hr_loan AS l
             INNER JOIN hr_payroll_period AS pp ON l.payroll_period_id = pp.id
             WHERE l.employee_id = %s AND l.state = 'approved' AND
-            pp.date_start <= %s AND l.balance != l.amount''', [emp_id, slip.date_from]) 
+            pp.date_start <= %s AND l.balance != 0''', [emp_id, slip.date_from]) 
         return [x[0] for x in cr.fetchall()]
         
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
