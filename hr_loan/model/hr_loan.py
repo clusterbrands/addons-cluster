@@ -44,8 +44,10 @@ class hr_loan(osv.Model):
         context = context or {}
         res = dict.fromkeys(ids, 0.0)
         for loan in self.browse(cr, uid, ids, context=context):
+            amount = 0
             for balance in loan.balance_ids:
-                res[record.id] += balance.amount
+                amount+= balance.debit - balance.credit
+            res[loan.id] = amount
         return res
 
     _columns = {
@@ -64,7 +66,7 @@ class hr_loan(osv.Model):
         'details': fields.text('Details', states={'approved': [('readonly', True)]}),
         'move_id':fields.many2one('account.move', 'Move', required=False, ondelete='cascade'),
         'balance_ids' : fields.one2many('hr.loan.balance','loan_id', 'Loan Balance'),
-        'balance': fields.function(_compute_balance, type='float', string='Computed Balance', store=True),
+        'balance': fields.function(_compute_balance, type='float', string='Balance', store=True),
         'state':fields.selection([
             ('to_submit','To Submit'),
             ('to_approve','To Approve'),
@@ -160,7 +162,9 @@ class hr_loan_balance(osv.Model):
         'reference': fields.char('Reference', size=255),
         'date': fields.date('Date', required=True),
         'move_id': fields.many2one('account.move.line', 'Accounting Entry', required=True),
-        'amount': fields.related('move_id', 'balance', type='float', string='Amount'),
+        'debit': fields.related('move_id', 'debit', type='float', string='Debit'),
+        'credit': fields.related('move_id', 'credit', type='float', string='Debit'),
+        'account_id': fields.related('move_id', 'account_id', type='many2one',relation="account.account", string='Account'),
     }
 
 class hr_loan_type(osv.Model):

@@ -48,7 +48,6 @@ class hr_payslip(osv.Model):
                         'reference': line.name,
                         'date': time.strftime('%Y-%m-%d'),
                         'move_id': line.id,
-                        'amount': abs(line.balance)
                     }
                     balance_pool.create(cr, uid, vals, context=context)
                     
