@@ -29,8 +29,8 @@
                                 <field name="sequence" />
                            <!--  </group> -->
                         </group>
-                        <group string="Optional Products">
-                            <field name="optional_product_ids" nolabel="1" />
+                        <group string="Products">
+                            <field name="product_ids" nolabel="1" />
                         </group>
                         <group string="Applied Products">
                             <field name="applied_product_ids" nolabel="1" />

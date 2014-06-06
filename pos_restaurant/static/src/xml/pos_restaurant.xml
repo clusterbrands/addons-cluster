@@ -1,175 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
-    <t t-name="SummaryWidget">
-        <div align="left" class="pos-sale-ticket">
-            <table>
-                <colgroup>
-                    <col width='75%' />
-                    <col width='25%' />
-                </colgroup>
-                <tr>
-                    <td><t t-esc="widget.product.get('name')"/></td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(widget.product.get('price'))"/>
-                    </td>
-                </tr>
-            </table>            
-        </div>
-        <div align="left" class="pos-sale-ticket" >
-        <t t-foreach="widget.product_properties.toArray()" t-as="property" >
-            <t t-if="property.get('selected_products').length > 0">                
-                <t t-esc="property.get('name')" />:
-                <table>
-                    <colgroup>
-                        <col width='5%' />
-                        <col width='70%' />
-                        <col width='25%' />
-                    </colgroup>
-                    <tr t-foreach="property.get('selected_products')" t-as="product">
-                        <td></td>
-                        <td>
-                           <t t-esc="product.get('name')"/>
-                        </td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(product.get('price'))"/>
-                            <a href='javascript:void(0)' class='delete-payment-line' 
-                                t-att-product_id="product.id" t-att-property_id="property.id">
-                                <img src="/pos_restaurant/static/src/img/delete.png" />
-                            </a>
-                        </td>
-                    </tr>
-                </table>                
-            </t>
-        </t>
-        </div>
-        <div align="left" class="pos-sale-ticket">
-            <table>
-                <colgroup>
-                    <col width='75%' />
-                    <col width='25%' />
-                </colgroup>
-                <tr>
-                    <td>Total:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(widget.getTotal())"/>
-                    </td>
-                </tr>
-            </table>
-        </div>      
-    </t>
-
-    <t t-name="CustomizationWidget">
-        <div align="left" class="pos-sale-ticket">
-            <table>
-                <colgroup>
-                    <col width='70%' />
-                    <col width='5%' />
-                    <col width='9%' />
-                    <col width='5%' />
-                </colgroup>
-                <tr>
-                    <td><b><t t-esc="widget.product.get('name')"/></b></td>
-                    <td rowspan="2" style="text-align:center">
-                        <button style="width:35px;height:35px;margin-top:19px" name="del">-</button>
-                    </td>
-                    <td rowspan="2" style="text-align:center" >
-                        Qty<input name="txtQty" style="text-align:right;width:91%" type="text" 
-                                  t-att-value="widget.orderNames.length"/>
-                    </td>      
-                    <td rowspan="2" style="text-align:center">              
-                        <button style="width:35px;height:35px;margin-top:19px;" name="add">+</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <t t-foreach="widget.product_properties.toArray()" t-as="property" >
-                            <t t-if="property.get('selected_products').length > 0">
-                                <em>
-                                    <t t-foreach="property.get('selected_products')" t-as="product">
-                                        <t t-if="!(product_first &amp;&amp; property_first)">,</t> 
-                                        <t t-esc="product.get('name')"/>                              
-                                    </t>
-                                </em>               
-                            </t>
-                        </t>
-                    </td>
-                </tr>
-            </table>            
-        </div>
-        <br />
-        <div align="left" class="pos-sale-ticket" style="font-size:14px"> 
-            <t t-foreach="widget.orderNames.models" t-as="line">
-                <table>
-                    <colgroup>
-                        <col width='5%' />
-                        <col width='15%' />
-                        <col width='2%' />
-                        <col width='25%' />
-                    </colgroup>
-                    <tr>
-                        <t t-log="line"/>
-                        <td><div style="margin-top:18px">ORDER #:<t t-esc="line_index + 1"/></div></td>
-                        <td>RIF:<input class="rif"  type="text" t-att-value="line.get('rif')" t-att-index="line_index" /></td>
-                        <td></td>
-                        <td>NAME:<input class="name" type="text" t-att-value="line.get('name')" t-att-index="line_index" /></td>
-                    </tr>
-                </table>
-            </t>
-        </div>
-                 
-       
-    </t>
-    
+   
     <t t-name="PropertySelector" t-extend="BasePopup">
         <t t-jquery="span.title" t-operation="inner">
             <t t-esc="widget.current.get('name')" />
         </t>
-        <t t-jquery="div.content" t-operation="inner">
-            <div align="left" style="width:800px;height:450px;">
-                <t t-if="widget.step &lt; widget.last">
-                    <div class='product-list-container'>
-                        <div class="product-list-scroller">
-                           <ol id="products-screen-ol" class="product-list">
-                           </ol>
-                        </div>
-                        <span class="placeholder-ScrollbarWidget" />
-                    </div>
-                </t>
-                <t t-if="widget.step == widget.last-1">
-                    <t t-call="SummaryWidget" />
-                </t>
-                <t t-if="widget.step == widget.last">
-                    <t t-call="CustomizationWidget" />
-                </t>
+        <t t-jquery="div.content" t-operation="replace">
+            <div align="left" class="content container">
+                <ol class="product-list">
+                </ol>
             </div>
-        </t> 
-        <t t-jquery="div.buttonset" t-operation="inner">
-            <t t-if="widget.step &gt; 0">
-                <button name="previous" style="height:80px;width:90px">
-                    <img src='/point_of_sale/static/src/img/icons/png48/go-previous.png' />
-                    <div>Previous</div>
-                </button>
-            </t>
-            <t t-if="widget.step &lt; widget.last">
-                <button name="next" style="height:80px;width:90px">
-                    <img src='/point_of_sale/static/src/img/icons/png48/go-next.png' />
-                    <div>Next</div>
-                </button>
-            </t>   
-            <t t-if="widget.step == widget.last">
-                <button name="done" style="height:80px;width:90px;">
-                    <img src='/point_of_sale/static/src/img/icons/png48/validate.png' />
-                    <div>Done</div>
-                </button>
-            </t> 
         </t>
     </t>
-    <t t-name="CustomProductWidget">
+
+    <t t-name="ProductPropertyWidget">
         <li class='product'>
             <a href="#">
                 <div class="product-img">
-                    <img src='' /> <!-- the product thumbnail -->
+                    <img src='' />
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
                             <t t-esc="widget.format_currency(widget.model.get('price'))"/>
