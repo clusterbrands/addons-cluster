@@ -39,28 +39,40 @@ class hr_loan(osv.Model):
             else:
                 res[loan.id] = 0.0
         return res
+        
+    def _compute_balance(self, cr, uid, ids, field_name, args, context=None):
+        context = context or {}
+        res = dict.fromkeys(ids, 0.0)
+        for loan in self.browse(cr, uid, ids, context=context):
+            amount = 0
+            for balance in loan.balance_ids:
+                amount+= balance.debit - balance.credit
+            res[loan.id] = loan.amount - amount
+        return res
 
     _columns = {
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'contract_id':fields.many2one('hr.contract', 'Contract', required=False),
-        'payroll_period_id': fields.many2one('hr.payroll.period', 'Start Payperiod'),
-        'type_id':fields.many2one('hr.loan.type', 'Type', required=True), 
+        'employee_id':fields.many2one('hr.employee', 'Employee', required=True, states={'approved': [('readonly', True)]}),
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=False, states={'approved': [('readonly', True)]}),
+        'payroll_period_id': fields.many2one('hr.payroll.period', 'Start Payperiod', states={'approved': [('readonly', True)]}),
+        'type_id':fields.many2one('hr.loan.type', 'Type', required=True, states={'approved': [('readonly', True)]}), 
         'reason':fields.selection([
             ('apartment','Apartment'),
             ('health','Health'),
             ('studies','Studies')
-            ], 'Reason', select=True),
-        'amount': fields.float('Amount', digits=(16, 2), required=False), 
-        'periods': fields.integer('Periods Numbers'), 
-        'quota': fields.function(_get_loan_quota, method=True, type='float', string='Quota'), 
-        'details': fields.text('Details'),
+            ], 'Reason', select=True, states={'approved': [('readonly', True)]}),
+        'amount': fields.float('Amount', digits=(16, 2), required=False, states={'approved': [('readonly', True)]}), 
+        'periods': fields.integer('Periods Numbers', states={'approved': [('readonly', True)]}), 
+        'quota': fields.function(_get_loan_quota, method=True, type='float', string='Quota', states={'approved': [('readonly', True)]}), 
+        'details': fields.text('Details', states={'approved': [('readonly', True)]}),
         'move_id':fields.many2one('account.move', 'Move', required=False, ondelete='cascade'),
+        'balance_ids' : fields.one2many('hr.loan.balance','loan_id', 'Loan Balance'),
+        'balance': fields.function(_compute_balance, type='float', string='Balance', store=True),
         'state':fields.selection([
             ('to_submit','To Submit'),
             ('to_approve','To Approve'),
             ('approved','Approved'),
             ('declined', 'Declined')
-            ], 'State', readonly=True),
+            ], 'Status', readonly=True),
     }
 
     def update_quota(self, cr, uid, ids, context=None):
@@ -89,7 +101,6 @@ class hr_loan(osv.Model):
         move_pool = self.pool.get('account.move')
         period_pool = self.pool.get('account.period')
         pp_pool = self.pool.get('hr.payroll.period')
-        #CxP
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Payroll')
         timenow = time.strftime('%Y-%m-%d')
         ctx = dict(context or {}, account_period_prefer_normal=True)
@@ -128,49 +139,8 @@ class hr_loan(osv.Model):
         move.update({'line_id': line_ids})
         move_id = move_pool.create(cr, uid, move, context=context)
         self.write(cr, uid, ids, {'move_id': move_id})
-                
-        #CxC
-        period = loan.payroll_period_id.number
-        period_numbers = [p for p in range(period, period + loan.periods)]
-        domain = [('number','in', period_numbers)]
-        period_ids = pp_pool.search(cr, uid, domain, context=context)
-        if len(period_ids) != loan.periods:
-            raise osv.except_osv( _('Error!'), _("The number of payroll periods defined does no match with the number of payments installments"))
-        i = 1
-        for pr in pp_pool.browse(cr, uid, period_ids, context=context):
-            line_ids = []
-            move = {
-                'date': pr.date_end,
-                'ref': _('Loan for %s Quote %d') % (loan.employee_id.name,i),
-                'journal_id': loan.type_id.journal_id.id,
-                'period_id': pr.fiscal_period_id.id,
-            }
-            debit_line = (0, 0, {
-                'name': 'Payment of Quote '+str(i),
-                'date_maturity': pr.date_end,
-                'partner_id': loan.employee_id.address_home_id.id,
-                'account_id': loan.type_id.credit_account.id,
-                'journal_id': loan.type_id.journal_id.id,
-                'period_id': pr.fiscal_period_id.id,
-                'debit': loan.quota,
-                'credit': 0.0,
-            })            
-            credit_line = (0, 0, {
-                'name': 'Payment of Quote '+str(i),
-                'date_maturity': pr.date_end,
-                'partner_id': loan.employee_id.address_home_id.id,
-                'account_id': loan.type_id.debit_account.id,
-                'journal_id': loan.type_id.journal_id.id,
-                'period_id': pr.fiscal_period_id.id,
-                'debit': 0.0,
-                'credit': loan.quota,
-            })
-            line_ids.append(debit_line)
-            line_ids.append(credit_line)
-            move.update({'line_id': line_ids})
-            move_id = move_pool.create(cr, uid, move, context=context)
-            i+=1
         return self.write(cr, uid, ids, {'state':'approved'}, context=context)
+        
 
     def do_signal_decline(self, cr, uid, ids, context=None):
         context = context or {}
@@ -183,6 +153,19 @@ class hr_loan(osv.Model):
             if not brw.payroll_period_id:
                 raise osv.except_osv( _('Error!'), _("You should select a valid start 'Payperiod' to approve this loan"))
         return True
+        
+class hr_loan_balance(osv.Model):
+    _name = "hr.loan.balance"
+    
+    _columns = {
+        'loan_id': fields.many2one('hr.loan', 'Loan', required=True),
+        'reference': fields.char('Reference', size=255),
+        'date': fields.date('Date', required=True),
+        'move_id': fields.many2one('account.move.line', 'Accounting Entry', required=True),
+        'debit': fields.related('move_id', 'debit', type='float', string='Debit'),
+        'credit': fields.related('move_id', 'credit', type='float', string='Debit'),
+        'account_id': fields.related('move_id', 'account_id', type='many2one',relation="account.account", string='Account'),
+    }
 
 class hr_loan_type(osv.Model):
     _name = "hr.loan.type"
@@ -195,9 +178,6 @@ class hr_loan_type(osv.Model):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True), 
         'debit_account':fields.many2one('account.account', 'Debit Account', required=True), 
         'credit_account':fields.many2one('account.account', 'Credit Account', required=True), 
-        'affect_payroll':fields.boolean('Payroll', required=False), 
-        'affect_holidays':fields.boolean('Holidays', required=False),
-        'affect_social_benefits':fields.boolean('Social Benefits', required=False),
-        'affect_eventual':fields.boolean('Eventuals', required=False),
+        'rule_id': fields.many2one('hr.salary.rule', 'Salary Rule', required=True),
         'details': fields.text('Details'), 
     }

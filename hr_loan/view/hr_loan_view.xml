@@ -14,6 +14,7 @@
         <record model="ir.ui.view" id="hr_loan_tree_view">
             <field name="name">hr.loan.tree</field>
             <field name="model">hr.loan</field>
+            <field name="priority" eval="2" />
             <field name="arch" type="xml">
                 <tree string="Loans Tree">
                     <field name="employee_id" />
@@ -28,6 +29,7 @@
         <record model="ir.ui.view" id="hr_loan_form_view">
             <field name="name">hr.loan.form</field>
             <field name="model">hr.loan</field>
+            <field name="priority" eval="2" />
             <field name="arch" type="xml">
                 <form string="Loan" version="7.0">
                      <header>
@@ -64,6 +66,86 @@
                 </form>
             </field>
         </record>
+        
+         <record model="ir.ui.view" id="hr_loan_tree2_view">
+            <field name="name">hr.loan.tree2</field>
+            <field name="model">hr.loan</field>
+            <field name="arch" type="xml">
+                <tree string="Loans Tree" create="false">
+                    <field name="employee_id" />
+                    <field name="type_id" />
+                    <field name="amount" />
+                    <field name="state" />
+                </tree>
+            </field>       
+        </record>
+        
+        <record model="ir.ui.view" id="hr_loan_form2_view">
+            <field name="name">hr.loan.form2</field>
+            <field name="model">hr.loan</field>
+            <field name="arch" type="xml">
+                <form string="Loan" version="7.0" create="false">
+                    <sheet>
+                        <group col="4">
+                            <group col="2" string="Employee">
+                                <field name="employee_id" />
+                                <field name="contract_id" />
+                                <field name="payroll_period_id" />
+                                <field name="state" invisible="1" />
+                            </group>
+                            <group col="2" string="Loan">
+                                <field name="type_id" />
+                                <field name="reason"  />
+                                <field name="amount" />
+                                <field name="periods" />
+                                <field name="quota" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Loan Balance">
+                                <field name="balance_ids">
+                                    <tree>
+                                        <field name="reference" />
+                                        <field name="date" />
+                                        <field name="account_id" />
+                                        <field name="debit" />
+                                        <field name="credit" /> 
+                                        <field name="move_id" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="balance" class="oe_subtotal_footer_separator" widget="monetary" />
+                        </group>
+                        <field name="details" nolabel="1" />
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="hr_loan_balance_form_view">
+            <field name="name">hr.loan.balance.form</field>
+            <field name="model">hr.loan.balance</field>
+            <field name="arch" type="xml">
+                <form string="Loan" version="7.0" create="false">
+                    <sheet>
+                        <group col="4">
+                           <group col="2" string="">
+                               <field name="reference" />
+                               <field name="date" />
+                           </group>
+                           <group col="2">
+                               <field name="move_id" />
+                               <field name="account_id" />
+                               <field name="debit" />
+                               <field name="credit" />
+                           </group>                      
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="hr_loan_type_tree_view">
             <field name="name">hr.loan.type.tree</field>
@@ -87,7 +169,8 @@
                         <group col="4">
                             <field name="name" />
                             <field name="code" /> 
-                            <field name="max_amount" />                             
+                            <field name="rule_id" /> 
+                            <field name="max_amount" />                           
                             <field name="min_discount" />
                         </group>
                         <group col="4">
@@ -96,16 +179,10 @@
                                 <field name="debit_account" />
                                 <field name="credit_account" />
                             </group>
-                            <group col="2" string="Affect">
-                                <field name="affect_payroll" />
-                                <field name="affect_holidays" />
-                                <field name="affect_social_benefits" />
-                                <field name="affect_eventual" />
-                             </group>
-                        </group>
-                        <group col="4" string="Details">
-                            <field name="details" nolabel="1" />
-                        </group>                        
+                            <group col="4" string="Details">
+                                <field name="details" nolabel="1" />
+                            </group>   
+                        </group>                                             
                     </sheet>
                 </form>
             </field>
