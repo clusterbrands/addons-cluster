@@ -32,10 +32,12 @@
             <field name="priority" eval="2" />
             <field name="arch" type="xml">
                 <form string="Loan" version="7.0">
-                     <header>
+                    <header>
                         <button name="signal_submit" type="workflow" states="to_submit" string="Submit" class="oe_highlight"/>
                         <button name="signal_approve" type="workflow" states="to_approve" string="Confirm" class="oe_highlight" groups="base.group_hr_manager"/>
-                        <button name="signal_decline" type="workflow" states="to_approve,approved" string="Decline" 
+                        <button name="signal_decline" type="workflow" states="to_approve" string="Decline" 
+                            class="oe_highlight"/>
+                         <button name="signal_to_submit" type="workflow" states="declined" string="Sent to Draft" 
                             class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -45,7 +47,9 @@
                                 <field name="employee_id" />
                                 <field name="contract_id" on_change="onchange_contract(contract_id)" 
                                  states="to_approve,approved" domain="[('employee_id','=',employee_id)]"  />
-                                 <field name="payroll_period_id" states="to_approve,approved"/>
+                                <field name="payroll_period_id" on_change="onchange_payroll_period(payroll_period_id)" 
+                                 states="to_approve,approved"/>
+                                <field name="payroll_period_date" />
                             </group>
                             <group col="2" string="Loan">
                                 <field name="type_id" />

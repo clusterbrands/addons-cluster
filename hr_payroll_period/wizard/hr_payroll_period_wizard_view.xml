@@ -5,13 +5,15 @@
             <field name="name">payroll.period.wizard</field>
             <field name="model">hr.payroll.period.wizard</field>
             <field name="arch" type="xml">
-                <form string="Period Form" version="7.0">
+                <form string="Period Form" version="7.0">                   
                     <header>
                         <button name="show_step1" string="Step 1: Leaves" type="object" states="actived,confirmed,closed" />
                         <button name="show_step2" string="Step 2: Payslips" type="object" states="actived,confirmed,closed" />
                         <button name="show_step3" string="Step 3: Print Reports" type="object" states="confirmed,closed" />
-                        <button name="confirm_payslips" string="Confirm" type="object" class="oe_highlight" states="actived"/>
-                        <button name="close_period" string="Close" type="object" class="oe_highlight" states="confirmed"/>
+                        <button name="confirm_payslips" string="Confirm" type="object" class="oe_highlight" 
+                            attrs="{'invisible': ['|',('step','!=','step2'),('state','!=','actived')]}" />
+                        <button name="close_period" string="Close" type="object" class="oe_highlight" 
+                            attrs="{'invisible': ['|',('step','!=','step3'),'|',('payroll_summary','=',False),'|',('rule_summary','=',False),'|',('employee_payslips','=',False),('payslip_details','=',False)]}" />
                         <field name="state" widget="statusbar"
                           statusbar_visible="actived, confirmed, closed" 
                           statusbar_colors='{"cancel":"red"}'>
@@ -19,7 +21,7 @@
                     </header>
                     <sheet>
                         <h1>
-                            <field name="step" nolabel="1" states="actived,confirmed" />
+                           <field name="step" nolabel="1" states="actived,confirmed" />
                         </h1>                                                      
                             <group col="4">                            
                                 <group col="2">
