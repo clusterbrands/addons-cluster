@@ -16,18 +16,22 @@ class hr_payslip(osv.Model):
             pp.date_start <= %s AND l.balance != 0''', [emp_id, slip.date_from]) 
         return [x[0] for x in cr.fetchall()]
         
-    def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
+    def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):        
         context = context or {}
         res = super(hr_payslip, self).get_payslip_lines(cr, uid, contract_ids, payslip_id, context=context)
         slip_obj = self.pool.get('hr.payslip')
         loan_obj = self.pool.get('hr.loan')
         slip = slip_obj.browse(cr, uid, payslip_id, context=context)
         emp_id = slip.employee_id.id
+        struct_id = slip.employee_id.contract_id.struct_id
         loan_ids = self._get_loan_ids(cr, uid, payslip_id, emp_id, context=context)
         for loan in loan_obj.browse(cr, uid, loan_ids, context=context):
-            rule = next(r for r in res if r['salary_rule_id'] == loan.type_id.rule_id.id)
-            rule['amount'] = loan.quota
-            rule['name'] += _(' Quota ') + str(len(loan.balance_ids)+ 1) + '/' + str(loan.periods) 
+            try:
+                rule = next(r for r in res if r['salary_rule_id'] == loan.type_id.rule_id.id)
+                rule['amount'] = loan.quota * -1
+                rule['name'] += _(' Quota ') + str(len(loan.balance_ids)+ 1) + '/' + str(loan.periods) 
+            except StopIteration as e:           
+                raise osv.except_osv(_('Config Error'),_("The salary structure '"+ struct_id.name + "' has no contains salary rules for payment of Loans"))
         return res
     
     def process_sheet(self, cr, uid, ids, context=None):

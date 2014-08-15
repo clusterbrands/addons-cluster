@@ -30,6 +30,8 @@ from openerp.tools.translate import _
 class hr_loan(osv.Model):
     _name = "hr.loan"
 
+    _rec_name = 'employee_name'
+
     def _get_loan_quota(self, cr, uid, ids, field_name, args, context=None):
         context = context or {}
         res = dict.fromkeys(ids)
@@ -52,9 +54,11 @@ class hr_loan(osv.Model):
 
     _columns = {
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True, states={'approved': [('readonly', True)]}),
+        'employee_name': fields.related('employee_id', 'name', type='text', string='Employee ', readonly=True), 
         'contract_id':fields.many2one('hr.contract', 'Contract', required=False, states={'approved': [('readonly', True)]}),
         'payroll_period_id': fields.many2one('hr.payroll.period', 'Start Payperiod', states={'approved': [('readonly', True)]}),
-        'payroll_period_date': fields.related('payroll_period_id', 'date_start', type='date', string='Start Date', readonly=True), 
+        'payperiod_date_start': fields.related('payroll_period_id', 'date_start', type='date', string='Start Date', readonly=True), 
+        'payperiod_date_end': fields.related('payroll_period_id', 'date_end', type='date', string='End Date', readonly=True), 
         'type_id':fields.many2one('hr.loan.type', 'Type', required=True, states={'approved': [('readonly', True)]}), 
         'reason':fields.selection([
             ('apartment','Apartment'),
@@ -104,9 +108,15 @@ class hr_loan(osv.Model):
         obj = self.pool.get('hr.payroll.period')
         if payroll_period_id:
             period = obj.browse(cr, uid, payroll_period_id, context=context)
-            res = {'payroll_period_date': period.date_start}
+            res = {
+                'payperiod_date_start': period.date_start,
+                'payperiod_date_end': period.date_end
+            }
         else:
-            res = {'payroll_period_date': False}
+            res = {
+                'payperiod_date_start': False,
+                'payperiod_date_end': False,
+            }
         return {'value': res}
 
     def do_signal_to_draft(self, cr, uid, ids, context=None):

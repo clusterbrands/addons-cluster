@@ -49,7 +49,8 @@
                                  states="to_approve,approved" domain="[('employee_id','=',employee_id)]"  />
                                 <field name="payroll_period_id" on_change="onchange_payroll_period(payroll_period_id)" 
                                  states="to_approve,approved"/>
-                                <field name="payroll_period_date" />
+                                <field name="payperiod_date_start" />
+                                <field name="payperiod_date_end" />
                             </group>
                             <group col="2" string="Loan">
                                 <field name="type_id" />
