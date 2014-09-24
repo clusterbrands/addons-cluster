@@ -46,6 +46,7 @@ Notes:
         'hr_payroll_period',
     ],
     'data': [
+        'data/loan_sequence.xml',
         'view/hr_loan_view.xml',
         'view/hr_loan_action_menu.xml',
         'workflow/hr_loan_workflow.xml',

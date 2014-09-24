@@ -30,8 +30,6 @@ from openerp.tools.translate import _
 class hr_loan(osv.Model):
     _name = "hr.loan"
 
-    _rec_name = 'employee_name'
-
     def _get_loan_quota(self, cr, uid, ids, field_name, args, context=None):
         context = context or {}
         res = dict.fromkeys(ids)
@@ -52,9 +50,15 @@ class hr_loan(osv.Model):
             res[loan.id] = loan.amount - amount
         return res
 
+    def create(self, cr, uid, vals, context=None):
+        context = context or {}
+        vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'hr.loan') or '/'
+        loan =  super(hr_loan, self).create(cr, uid, vals, context=context)
+        return loan
+
     _columns = {
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=True, states={'approved': [('readonly', True)]}),
-        'employee_name': fields.related('employee_id', 'name', type='text', string='Employee ', readonly=True), 
+        'name': fields.char('Loan Reference', size=64, required=True, select=True),
+        'employee_id':fields.many2one('hr.employee', 'Employee', required=True, states={'approved': [('readonly', True)]}),        
         'contract_id':fields.many2one('hr.contract', 'Contract', required=False, states={'approved': [('readonly', True)]}),
         'payroll_period_id': fields.many2one('hr.payroll.period', 'Start Payperiod', states={'approved': [('readonly', True)]}),
         'payperiod_date_start': fields.related('payroll_period_id', 'date_start', type='date', string='Start Date', readonly=True), 
