@@ -38,6 +38,7 @@ class fiscal_book_purchase(report_sxw.rml_parse):
          tax = '8%'
       elif fbl.vat_additional_tax:
          tax = '22%'
-      return tax
+      return tax 
+ 
 
 report_sxw.report_sxw('report.fiscal.book.purchase','fiscal.book','addons/purchase_reports/report/fiscal_book_purchase.rml',parser=fiscal_book_purchase)
