@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <report auto="False" id="purchase.report_purchase_quotation" model="purchase.order" 
-                name="purchase.quotation.cluster" rml="purchase_reports/report/request_quotation.rml"
-                string="Request for Quotation"/>
-        <report auto="False" id="purchase.report_purchase_order" model="purchase.order"
-                name="purchase.order.cluster" rml="purchase_reports/report/order.rml"
-                usage="default" string="Purchase Order"/>
+         <report auto="False" id="purchase.report_purchase_quotation" model="purchase.order" 
+                 name="purchase.quotation.cluster" rml="purchase_reports/report/request_quotation.rml"
+                 string="Request for Quotation"/>
+         
+         <report auto="False" id="purchase.report_purchase_order" model="purchase.order"
+                 name="purchase.order.cluster" rml="purchase_reports/report/order.rml"
+                 usage="default" string="Purchase Order"/>
+
+         <report id="l10n_ve_fiscal_book.report_fiscal_book_purchase" string="Purchase Book Report" model="fiscal.book" 
+                 name="fiscal.book.purchase" rml="purchase_reports/report/fiscal_book_purchase_report.rml" 
+                 auto="True" menu="False" header="False"/>
     </data>
 </openerp>
