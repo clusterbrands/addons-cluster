@@ -11,9 +11,9 @@
     <template pageSize="(29.7cm, 21.0cm)" title="Fiscal Book" author="Katherine Zaoral" allowSplitting="20" showBoundary="0">
         <pageTemplate id="first">
             <pageGraphics>
-                <place x="2cm" y="16.5cm" width="29.7cm" height="3.33cm">
+                <place x="1.5cm" y="16.5cm" width="29.7cm" height="3.33cm">
                     <!--    REPORT HEADER   -->
-                    <blockTable colWidths="12.64cm,5.14cm,7.19cm" style="HEADER-REPORT-TABLE">
+                    <blockTable colWidths="12.64cm,6.14cm,7.8cm" style="HEADER-REPORT-TABLE">
                        <tr>
                            [[ setLang(my_fb.company_id.partner_id.lang) ]]
                            <td>
@@ -34,7 +34,184 @@
                     </blockTable>
                     <spacer length="0.5cm"/>
                 </place>
-              
+
+                <place x="1.5cm" y="14.5cm" width="29.7cm" height="3.33cm">
+                    <section>
+                        <blockTable colWidths="288.0, 37.0, 130.0, 305.0" style="HEADER-BOOK-TABLE" blockAlignment="LEFT">
+                            <tr>
+                                <td>
+                                    <blockTable colWidths="288.0" style="HEADER-BOOK-TABLE">
+                                        <tr>
+                                            <td vAlign="MIDDLE"><para style="HEADER">DATOS DE LA FACTURA O/Y DOCUMENTO</para></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <blockTable colWidths="15.0, 15.0, 23.0, 31.0, 36.0, 80.0, 25.0, 63.0" style="HEADER-BOOK-TABLE">
+                                                    <tr>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">Linea</para></td>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">T. Doc.</para></td>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">Fecha Doc.</para></td>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">Numero Control</para></td>
+                                                        <!--<td vAlign="MIDDLE"><para style="HEADER">Numero de Documento</para></td>-->
+                                                        <td vAlign="MIDDLE"><para style="HEADER">Factura Afectada</para></td>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">Razon Social</para></td>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">RIF</para></td>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">Liquidación de Aduana</para>
+                                                            <section>
+                                                            <blockTable colWidths="23.0, 40.0" style="HEADER-BOOK-TABLE">
+                                                                <tr>
+                                                                    <td><para style="HEADER">Fecha Nac.</para></td>
+                                                                    <td><para style="HEADER">Declaración</para></td>
+                                                                </tr>
+                                                            </blockTable>
+                                                            </section>
+                                                        </td>
+                                                    </tr>
+                                                </blockTable>
+                                            </td>
+                                        </tr>
+                                    </blockTable>
+                                </td>
+                                <td>
+                                    <blockTable colWidths="37.0" style="HEADER-BOOK-TABLE">
+                                        <tr>
+                                            <td vAlign="MIDDLE"><para style="HEADER">TOTALES</para></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <blockTable colWidths="37.0" style="HEADER-BOOK-TABLE" rowHeights="12">
+                                                    <tr>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">Compras Gravadas incluyendo IVA</para></td>
+                                                    </tr>
+                                                </blockTable>
+                                            </td>
+                                        </tr>
+                                    </blockTable>
+                                </td>
+                                <td>
+                                    <blockTable colWidths="130.0" style="HEADER-BOOK-TABLE">
+                                        <tr>
+                                            <td vAlign="MIDDLE"><para style="HEADER">COMPRAS IMPORTACION</para></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <blockTable colWidths="40.0, 90.0" style="HEADER-BOOK-TABLE">
+                                                    <tr>
+                                                        <td>
+                                                            <blockTable colWidths="40.0" style="HEADER-BOOK-TABLE">
+                                                                <tr>
+                                                                    <td><para style="HEADER">No Gravado</para></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <blockTable colWidths="20.0, 20.0" style="HEADER-BOOK-TABLE">
+                                                                            <tr>
+                                                                                <td><para style="HEADER">SDCF</para></td>
+                                                                                <td><para style="HEADER">Exento</para></td>
+                                                                            </tr>
+                                                                        </blockTable>
+                                                                    </td>
+                                                                </tr>
+                                                            </blockTable>
+                                                        </td>
+                                                        <td>
+                                                            <blockTable colWidths="90.0" style="HEADER-BOOK-TABLE">
+                                                                <tr>
+                                                                    <td><para style="HEADER">Compras o Servicios Gravados</para></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <blockTable colWidths="35.0, 20.0, 35.0" style="HEADER-BOOK-TABLE">
+                                                                            <tr>
+                                                                                <td><para style="HEADER">Base Imponible</para></td>
+                                                                                <td><para style="HEADER">Alícuota</para></td>
+                                                                                <td><para style="HEADER">IVA</para></td>
+                                                                            </tr>
+                                                                        </blockTable>
+                                                                    </td>
+                                                                </tr>
+                                                            </blockTable>
+                                                        </td>                                                       
+                                                    </tr>
+                                                </blockTable>
+                                            </td>
+                                        </tr>
+                                    </blockTable>
+                                </td>
+                                <td>
+                                    <blockTable colWidths="305.0" style="HEADER-BOOK-TABLE">
+                                        <tr>
+                                            <td vAlign="MIDDLE"><para style="HEADER">COMPRAS INTERNAS</para></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <blockTable colWidths="40.0, 90.0, 175.0" style="HEADER-BOOK-TABLE">
+                                                    <tr>
+                                                        <td>
+                                                            <blockTable colWidths="40.0" style="HEADER-BOOK-TABLE">
+                                                                <tr>
+                                                                    <td><para style="HEADER">No Gravado</para></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <blockTable colWidths="20.0, 20.0" style="HEADER-BOOK-TABLE">
+                                                                            <tr>
+                                                                                <td><para style="HEADER">SDCF</para></td>
+                                                                                <td><para style="HEADER">Exento</para></td>
+                                                                            </tr>
+                                                                        </blockTable>
+                                                                    </td>
+                                                                </tr>
+                                                            </blockTable>
+                                                        </td>
+                                                        <td>
+                                                            <blockTable colWidths="90.0" style="HEADER-BOOK-TABLE">
+                                                                <tr>
+                                                                    <td><para style="HEADER">Compras o Servicios Gravados</para></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <blockTable colWidths="35.0, 20.0, 35.0" style="HEADER-BOOK-TABLE">
+                                                                            <tr>
+                                                                                <td><para style="HEADER">Base Imponible</para></td>
+                                                                                <td><para style="HEADER">Alícuota</para></td>
+                                                                                <td><para style="HEADER">IVA</para></td>
+                                                                            </tr>
+                                                                        </blockTable>
+                                                                    </td>
+                                                                </tr>
+                                                            </blockTable>
+                                                        </td>                                                        
+                                                        <td>
+                                                            <blockTable colWidths="175.0" style="HEADER-BOOK-TABLE">
+                                                                <tr>
+                                                                    <td><para style="HEADER">Retenciones</para></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <blockTable colWidths="35.0, 35.0, 35.0, 35.0, 35.0" style="HEADER-BOOK-TABLE">
+                                                                            <tr>
+                                                                                <td><para style="HEADER">Fecha Factura Afect.</para></td>
+                                                                                <td><para style="HEADER">Nro Retención</para></td>
+                                                                                <td><para style="HEADER">Débito Fiscal Base</para></td>
+                                                                                <td><para style="HEADER">Retención %</para></td>
+                                                                                <td><para style="HEADER">Monto Retenido</para></td>
+                                                                            </tr>
+                                                                        </blockTable>
+                                                                    </td>
+                                                                </tr>
+                                                            </blockTable>
+                                                        </td>
+                                                    </tr>
+                                                </blockTable>
+                                            </td>
+                                        </tr>
+                                    </blockTable>
+                                </td>
+                            </tr>
+                        </blockTable>
+                    </section>        
+                </place>          
                 
                 <!--    PAGE FOOTER    -->
                 <setFont name="Times-Roman" size="10"/>
