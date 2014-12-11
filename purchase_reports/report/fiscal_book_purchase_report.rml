@@ -37,21 +37,22 @@
 
                 <place x="1.5cm" y="14.5cm" width="29.7cm" height="3.33cm">
                     <section>
-                        <blockTable colWidths="288.0, 37.0, 130.0, 175.0" style="HEADER-BOOK-TABLE" blockAlignment="LEFT">
+                        <blockTable colWidths="324.0, 37.0, 130.0, 175.0" style="HEADER-BOOK-TABLE" blockAlignment="LEFT">
                             <tr>
                                 <td>
-                                    <blockTable colWidths="288.0" style="HEADER-BOOK-TABLE">
+                                    <blockTable colWidths="324.0" style="HEADER-BOOK-TABLE">
                                         <tr>
                                             <td vAlign="MIDDLE"><para style="HEADER">DATOS DE LA FACTURA O/Y DOCUMENTO</para></td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <blockTable colWidths="15.0, 15.0, 23.0, 31.0, 36.0, 80.0, 25.0, 63.0" style="HEADER-BOOK-TABLE">
+                                                <blockTable colWidths="15.0, 15.0, 23.0, 31.0, 36.0, 36.0, 80.0, 25.0, 63.0" style="HEADER-BOOK-TABLE">
                                                     <tr>
                                                         <td vAlign="MIDDLE"><para style="HEADER">Linea</para></td>
                                                         <td vAlign="MIDDLE"><para style="HEADER">T. Doc.</para></td>
                                                         <td vAlign="MIDDLE"><para style="HEADER">Fecha Doc.</para></td>
                                                         <td vAlign="MIDDLE"><para style="HEADER">Numero Control</para></td>
+                                                        <td vAlign="MIDDLE"><para style="HEADER">Numero de Documento</para></td>
                                                         <td vAlign="MIDDLE"><para style="HEADER">Factura Afectada</para></td>
                                                         <td vAlign="MIDDLE"><para style="HEADER">Razon Social</para></td>
                                                         <td vAlign="MIDDLE"><para style="HEADER">RIF</para></td>
@@ -185,7 +186,7 @@
                 <setFont name="Times-Roman" size="8"/>
                 <lines>2.0cm 2.0cm 27.7cm 2.0cm</lines>
             </pageGraphics>
-            <frame id="first" x1="0.26cm" y1="3.5cm" width="24.7cm" height="13.9cm"/>
+            <frame id="first" x1="0.90cm" y1="3.5cm" width="24.7cm" height="13.9cm"/>
         </pageTemplate>
     </template>
 
@@ -250,7 +251,7 @@
              <section>
                 <para>[[repeatIn( my_fb.fbl_ids,'my_fbl')]]</para>
                 <blockTable style="CONTENT-BOOK-TABLE" blockAlignment="LEFT"
-                    colWidths="15.0, 15.0, 23.0, 31.0, 36.0, 80.0, 25.0, 23.0, 40.0,
+                    colWidths="15.0, 15.0, 23.0, 31.0, 36.0, 36.0, 80.0, 25.0, 23.0, 40.0,
                            37.0,
                            20.0, 20.0,    35.0, 20.0, 35.0,
                            35.0, 35.0, 35.0, 35.0, 35.0">     
@@ -260,7 +261,7 @@
                         <td vAlign="MIDDLE"><para style="HEADER">[[ my_fbl.doc_type                                     # T. Doc. ]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER-LEFT">[[ my_fbl.emission_date                                # Fecha Doc.]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER-LEFT">[[ my_fbl.ctrl_number                                  # Numero Control ]]</para></td>
-                        <!--<td vAlign="MIDDLE"><para style="HEADER">[[ my_fbl.invoice_number                               # Numero de Doc ]]</para></td> -->
+                        <td vAlign="MIDDLE"><para style="HEADER-LEFT">[[ my_fbl.invoice_number                               # Numero de Doc ]]</para></td> 
                         <td vAlign="MIDDLE"><para style="HEADER-LEFT">[[ my_fbl.affected_invoice                             # Factura Afectada ]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER-LEFT">[[ my_fbl.partner_name                                 # Razon Social ]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER-LEFT">[[ my_fbl.partner_vat                                  # RIF ]]</para></td>
@@ -294,7 +295,7 @@
 
             <section>
                 <blockTable style="CONTENT-BOOK-TABLE" blockAlignment="LEFT"
-                    colWidths="15.0, 15.0, 23.0, 31.0, 36.0, 80.0, 25.0, 23.0, 40.0,
+                    colWidths="15.0, 15.0, 23.0, 31.0, 36.0, 36.0, 80.0, 25.0, 23.0, 40.0,
                            37.0,
                            20.0, 20.0,    35.0, 20.0, 35.0,
                            35.0, 35.0, 35.0, 35.0, 35.0">
@@ -304,7 +305,7 @@
                         <td vAlign="MIDDLE"><para style="HEADER">[[ ''                                                  # T. Doc. ]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER">[[ ''                                                  # Fecha Doc.]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER">[[ ''                                                  # Numero Control ]]</para></td>
-                        <!--<td vAlign="MIDDLE"><para style="HEADER">[[ ''                                                  # Numero de Doc ]]</para></td>-->
+                        <td vAlign="MIDDLE"><para style="HEADER">[[ ''                                                  # Numero de Doc ]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER">[[ ''                                                  # Factura Afectada ]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER">[[ 'TOTALES'                                           # Razon Social ]]</para></td>
                         <td vAlign="MIDDLE"><para style="HEADER">[[ ''                                                  # RIF ]]</para></td>
