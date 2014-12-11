@@ -11,7 +11,8 @@
     <template pageSize="(29.7cm, 21.0cm)" title="Fiscal Book" author="Katherine Zaoral" allowSplitting="20" showBoundary="0">
         <pageTemplate id="first">
             <pageGraphics>
-                <place x="1.5cm" y="16.5cm" width="29.7cm" height="3.33cm">
+                <image x="1.5cm" y="18.2cm" width="5.0cm">[[company.logo and company.logo or removeParentNode('image')]]</image>
+                <place x="1.5cm" y="15.0cm" width="29.7cm" height="3.33cm">
                     <!--    REPORT HEADER   -->
                     <blockTable colWidths="10.64cm,8.14cm,7.8cm" style="HEADER-REPORT-TABLE">
                        <tr>
@@ -35,7 +36,7 @@
                     <spacer length="0.5cm"/>
                 </place>
 
-                <place x="1.5cm" y="14.5cm" width="29.7cm" height="3.33cm">
+                <place x="1.5cm" y="13.0cm" width="29.7cm" height="3.33cm">
                     <section>
                         <blockTable colWidths="324.0, 37.0, 130.0, 175.0" style="HEADER-BOOK-TABLE" blockAlignment="LEFT">
                             <tr>
@@ -186,7 +187,7 @@
                 <setFont name="Times-Roman" size="8"/>
                 <lines>2.0cm 2.0cm 27.7cm 2.0cm</lines>
             </pageGraphics>
-            <frame id="first" x1="0.90cm" y1="3.5cm" width="24.7cm" height="13.9cm"/>
+            <frame id="first" x1="0.90cm" y1="2.0cm" width="24.7cm" height="13.9cm"/>
         </pageTemplate>
     </template>
 
@@ -340,7 +341,7 @@
             </section>
             <!-- ************ LEYENDA************ -->
             <section>
-                <blockTable colWidths="750.0">
+                <blockTable colWidths="720.0">
                     <tr>
                         <td><para style="CONTENIDOLEFT">LEYENDA. F:Factura, ND:Nota de Débito, NC:Nota de Crédito, E:Expediente, A:Documento Anulado.</para></td>
                     </tr>
