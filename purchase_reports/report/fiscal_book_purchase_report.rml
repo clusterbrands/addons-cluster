@@ -391,15 +391,15 @@
                     </tr>
                     <tr>
                         <td><para style="CONTENIDOLEFT">[['RETENCIONES PERIODOS ANTERIORES']]</para></td>
-                        <td><para style="CONTENIDO">[[ formatLang(my_fb.get_previous_wh_sum) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.get_previous_wh_sum) ]]</para></td>
                     </tr>
                     <tr>
                         <td><para style="CONTENIDOLEFT">[['RETENCIONES DEL PERIODO']]</para></td>
-                        <td><para style="CONTENIDO">[[ formatLang(my_fb.get_wh_sum) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.get_wh_sum) ]]</para></td>
                     </tr>
                     <tr>
                         <td><para style="CONTENIDOLEFT_BOLD">[['TOTAL RETENCIONES']]</para></td>
-                        <td><para style="CONTENIDO">[[ formatLang(my_fb.get_total_wh_sum) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.get_total_wh_sum) ]]</para></td>
                     </tr>
                 </blockTable>
             </section>
@@ -416,49 +416,49 @@
                     </tr>
                     <tr>
                         <td><para style="HEADERLEFT">IMPORTACIONES NO GRAVADAS Y/O SIN DERECHO A CREDITO FISCAL</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.imex_sdcf_vat_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">0.0</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.imex_sdcf_vat_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">0.0</para></td>
                     </tr>
                     <tr>
                         <td><para style="HEADERLEFT">IMPORTACIONES GRAVADAS POR ALÍCUOTA GENERAL</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.imex_general_vat_base_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.imex_general_vat_tax_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.imex_general_vat_base_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.imex_general_vat_tax_sum or 0.0) ]]</para></td>
                     </tr>
                     <tr>
                         <td><para style="HEADERLEFT">IMPORTACIONES GRAVADAS POR ALÍCUOTA GENERAL MAS ALÍCUOTA ADICIONAL</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.imex_additional_vat_base_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.imex_additional_vat_tax_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.imex_additional_vat_base_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.imex_additional_vat_tax_sum or 0.0) ]]</para></td>
                     </tr>
                     <tr>
                         <td><para style="HEADERLEFT">IMPORTACIONES GRAVADAS POR ALÍCUOTA REDUCIDA</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.imex_reduced_vat_base_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.imex_reduced_vat_tax_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.imex_reduced_vat_base_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.imex_reduced_vat_tax_sum or 0.0) ]]</para></td>
                     </tr>
 
                     <tr>
                         <td><para style="HEADERLEFT">COMPRAS NO GRAVADAS Y/O SIN DERECHO A CREDITO FISCAL</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.do_sdcf_and_exempt_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">[[ formatLang(0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.do_sdcf_and_exempt_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(0.0) ]]</para></td>
                     </tr>
                     <tr>
                         <td><para style="HEADERLEFT">COMPRAS GRAVADAS POR ALÍCUOTA GENERAL</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.do_general_vat_base_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.do_general_vat_tax_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.do_general_vat_base_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.do_general_vat_tax_sum or 0.0) ]]</para></td>
                     </tr>
                     <tr>
                         <td><para style="HEADERLEFT">COMPRAS INTERNAS GRAVADAS POR ALÍCUOTA GENERAL MAS ALÍCUOTA ADICIONAL</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.do_additional_vat_base_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.do_additional_vat_tax_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.do_additional_vat_base_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.do_additional_vat_tax_sum or 0.0) ]]</para></td>
                     </tr>
                     <tr>
                         <td><para style="HEADERLEFT">COMPRAS INTERNAS GRAVADAS POR ALÍCUOTA REDUCIDA</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.do_reduced_vat_base_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.do_reduced_vat_tax_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.do_reduced_vat_base_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.do_reduced_vat_tax_sum or 0.0) ]]</para></td>
                     </tr>
                     <tr>
                         <td><para style="CONTENIDOLEFT_BOLD">TOTAL COMPRAS Y CRÉDITOS FISCAL PARA EFECTOS DE DETERMINACION</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.get_total_tax_credit_debit_base_sum or 0.0) ]]</para></td>
-                        <td><para style="HEADER">[[ formatLang(my_fb.get_total_tax_credit_debit_tax_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.get_total_tax_credit_debit_base_sum or 0.0) ]]</para></td>
+                        <td><para style="HEADER-RIGHT">[[ formatLang(my_fb.get_total_tax_credit_debit_tax_sum or 0.0) ]]</para></td>
                     </tr>
                 </blockTable>
             </section>       
