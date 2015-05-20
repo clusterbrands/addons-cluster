@@ -17,7 +17,7 @@
                             <td><para style="TITLE_CENTER_NAME">
                                 <font>[[ (company.name and company.name or 'NOMBRE DE COMPANIA NO DISPONIBLE')]]</font>
                                 </para>
-                                <para style="VAT"><font>VAT:[[get_vat_by_country(data['form'])[2:12] ]]</font></para>
+                                <para style="VAT"><font>RIF:[[get_vat_by_country(data['form'])[2:14] ]]</font></para>
                             </td>
                         </tr>
                         <tr>
