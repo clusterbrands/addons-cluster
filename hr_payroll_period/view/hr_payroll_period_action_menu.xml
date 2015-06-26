@@ -34,5 +34,17 @@
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
+
+        <menuitem 
+            name="Avanced"
+            parent="hr_payroll.menu_hr_root_payroll"
+            id="menu_hr_avanced"/> 
+
+        <menuitem action="hr_payroll.action_view_hr_payslip_form" id="hr_payroll.menu_department_tree" 
+            parent="menu_hr_avanced" groups="base.group_hr_user"/> 
+
+        <menuitem action="hr_payroll.action_hr_payslip_run_tree" id="hr_payroll.menu_hr_payslip_run" 
+            parent="menu_hr_avanced"/>
+
     </data>
 </openerp>

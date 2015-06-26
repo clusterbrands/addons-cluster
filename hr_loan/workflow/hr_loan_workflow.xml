@@ -12,7 +12,7 @@
             <field name="wkf_id" ref="hr_loan_wkf"/>
             <field name="name">to_submit</field>
             <field name="kind">function</field>
-            <field name="action">write({'state': 'to_submit'})</field>
+            <field name="action">do_signal_to_draft()</field>
             <field name="flow_start">True</field>
         </record>
 
@@ -28,6 +28,7 @@
             <field name="name">approved</field>
             <field name="kind">function</field>
             <field name="action">do_signal_approved()</field>
+             <field name="flow_stop">True</field>
         </record>
 
         <record id="act_decline" model="workflow.activity">
@@ -35,7 +36,6 @@
             <field name="name">decline</field>
             <field name="kind">function</field>
             <field name="action">do_signal_decline()</field>
-            <field name="flow_stop">True</field>
         </record>
 
         <!-- Workflow transitions -->
@@ -59,10 +59,17 @@
             <field name="signal">signal_decline</field>
         </record>
 
-        <record id="approved2decline" model="workflow.transition">
+        <!--<record id="approved2decline" model="workflow.transition">
             <field name="act_from" ref="act_approved"/>
             <field name="act_to" ref="act_decline"/>
             <field name="signal">signal_decline</field>
+            <field name="group_id" ref="base.group_hr_manager"/>
+        </record> -->
+
+        <record id="decline2to_submit" model="workflow.transition">
+            <field name="act_from" ref="act_decline"/>
+            <field name="act_to" ref="act_to_submit"/>
+            <field name="signal">signal_to_submit</field>
             <field name="group_id" ref="base.group_hr_manager"/>
         </record>
 

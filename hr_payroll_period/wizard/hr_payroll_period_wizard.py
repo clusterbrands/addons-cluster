@@ -69,10 +69,10 @@ class wizard_payroll_period(osv.osv_memory):
         # TODO : import time required to get currect date
         'start_date': fields.date('Start Date', readonly=True),
         'end_date': fields.date('End Date', readonly=True),
-        'employee_payslips': fields.boolean('Employee Payslips', readonly=True),
-        'payslip_details': fields.boolean('Payslip Details', readonly=True),
-        'rule_summary': fields.boolean('Salary Rule Summary', readonly=True),
-        'payroll_summary': fields.boolean('Payroll Summary', readonly=True),
+        'employee_payslips': fields.boolean('Employee Payslips', readonly=False),
+        'payslip_details': fields.boolean('Payslip Details', readonly=False),
+        'rule_summary': fields.boolean('Salary Rule Summary', readonly=False),
+        'payroll_summary': fields.boolean('Payroll Summary', readonly=False),
         'holiday_ids': fields.many2many('hr.holidays', 'hr_holidays_pay_period_rel', 'holiday_id', 'period_id', 'Holidays'),
         'payslip_ids': fields.related('period_id', 'payslip_ids',
                                       type="one2many",
@@ -90,7 +90,7 @@ class wizard_payroll_period(osv.osv_memory):
         'state': fields.related('period_id', 'state',
                                 type="selection",
                                 selection=period.PERIOD_STATES,
-                                string='State'),
+                                string='State'),        
     }
 
     def default_get(self, cr, uid, fields_list, context=None):

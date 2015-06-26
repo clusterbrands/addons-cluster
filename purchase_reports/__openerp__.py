@@ -43,9 +43,10 @@ Main features
 
 """,
     'depends': [
+        'l10n_ve_fiscal_book',
         'purchase',
     ],
-    'data': [
+    'data': [        
         'purchase_report.xml',
     ],
     'js': [

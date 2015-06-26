@@ -28,9 +28,12 @@
                             <field name="name"/>
                             <field name="start_date" />
                             <field name="type"/>
-                            <field name="fiscalyear_id" widget="selection"/> 
-                            <field name="paydate_biz_day" />                            
-                            <field name="journal_id" />     
+                            <field name="fiscalyear_id" widget="selection"/>                                             
+                            <field name="journal_id" />
+                            <field name="period_id" 
+                                domain="[('schedule_id','=',id)]"
+                                on_change="onchange_period_id(period_id)"/> 
+                            <field name="paydate_biz_day" />               
                         </group>
                         <separator string="Periods" />
                         <field name="period_ids">

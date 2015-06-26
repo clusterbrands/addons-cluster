@@ -115,10 +115,10 @@ class period_schedule(osv.Model):
                         'number': i+1,
                         'fiscal_period_id': period_id[0],
                     }
-                    p_id = p_obj.create(cr, uid, values, context=context)
-                    if i == 0:
-                        wkf_service = netsvc.LocalService('workflow')
-                        wkf_service.trg_validate(uid, 'hr.payroll.period', p_id, 'activate', cr)
+                    p_obj.create(cr, uid, values, context=context)
+                    # if i == 0:
+                    #     wkf_service = netsvc.LocalService('workflow')
+                    #     wkf_service.trg_validate(uid, 'hr.payroll.period', p_id, 'activate', cr)
 
                 else:
                     osv.except_osv(_('Error!'),_("Fiscal period has not found"))
@@ -138,9 +138,28 @@ class period_schedule(osv.Model):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'paydate_biz_day': fields.boolean('Pay Date on a Business Day', required=False),
         'journal_id': fields.many2one('account.journal', 'Salary Journal', required=True),
+        'period_id': fields.many2one('hr.payroll.period','Start Period'),
         'period_ids':fields.one2many('hr.payroll.period', 'schedule_id', 'Periods'),
         'contract_ids':fields.one2many('hr.contract', 'schedule_id', 'Contracts', required=False), 
     }
+
+    def onchange_period_id(self, cr, uid, ids, period_id, context=None):
+        context = context or {}
+        if period_id:
+            schedule = self.browse(cr, uid, ids, context=context)[0]
+            period_pool = self.pool.get('hr.payroll.period')
+            dom = [('state', 'in', ('confirmed','closed')),('schedule_id','=',schedule.id)]
+            p_ids = period_pool.search(cr, uid, dom, context=context)
+            if p_ids:
+                 raise osv.except_osv(_('Warning!'),_('You can not change the initial period when the planning is in execution'))
+            else:
+                wkf_service = netsvc.LocalService('workflow')
+                dom = [('state', '=', 'actived'),('schedule_id','=',schedule.id)]
+                act_id = period_pool.search(cr, uid, dom, context=context)
+                if act_id:            
+                    wkf_service.trg_validate(uid, 'hr.payroll.period', act_id[0], 'inactivate', cr)
+                wkf_service.trg_validate(uid, 'hr.payroll.period', period_id, 'activate', cr)
+        return {}          
 
     def unlink(self, cr, uid, ids, context=None):
         context = context or {}
@@ -196,6 +215,10 @@ class period(osv.Model):
     def list_periods_schedules(self, cr, uid, context=None):
         ids = self.pool.get('hr.payroll.period.schedule').search(cr,uid,[])
         return self.pool.get('hr.payroll.period.schedule').name_get(cr, uid, ids, context=context)
+
+    def wkf_action_open(self, cr, uid, ids, context=None):
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'open'})
 
     def wkf_action_actived(self, cr, uid, ids, context=None):
         context = context or {}

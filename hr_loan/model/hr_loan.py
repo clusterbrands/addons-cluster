@@ -50,10 +50,19 @@ class hr_loan(osv.Model):
             res[loan.id] = loan.amount - amount
         return res
 
+    def create(self, cr, uid, vals, context=None):
+        context = context or {}
+        vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'hr.loan') or '/'
+        loan =  super(hr_loan, self).create(cr, uid, vals, context=context)
+        return loan
+
     _columns = {
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=True, states={'approved': [('readonly', True)]}),
+        'name': fields.char('Loan Reference', size=64, required=True, select=True),
+        'employee_id':fields.many2one('hr.employee', 'Employee', required=True, states={'approved': [('readonly', True)]}),        
         'contract_id':fields.many2one('hr.contract', 'Contract', required=False, states={'approved': [('readonly', True)]}),
         'payroll_period_id': fields.many2one('hr.payroll.period', 'Start Payperiod', states={'approved': [('readonly', True)]}),
+        'payperiod_date_start': fields.related('payroll_period_id', 'date_start', type='date', string='Start Date', readonly=True), 
+        'payperiod_date_end': fields.related('payroll_period_id', 'date_end', type='date', string='End Date', readonly=True), 
         'type_id':fields.many2one('hr.loan.type', 'Type', required=True, states={'approved': [('readonly', True)]}), 
         'reason':fields.selection([
             ('apartment','Apartment'),
@@ -62,7 +71,7 @@ class hr_loan(osv.Model):
             ], 'Reason', select=True, states={'approved': [('readonly', True)]}),
         'amount': fields.float('Amount', digits=(16, 2), required=False, states={'approved': [('readonly', True)]}), 
         'periods': fields.integer('Periods Numbers', states={'approved': [('readonly', True)]}), 
-        'quota': fields.function(_get_loan_quota, method=True, type='float', string='Quota', states={'approved': [('readonly', True)]}), 
+        'quota': fields.function(_get_loan_quota, method=True, type='float', string='Quota', states={'approved': [('readonly', True)]}),
         'details': fields.text('Details', states={'approved': [('readonly', True)]}),
         'move_id':fields.many2one('account.move', 'Move', required=False, ondelete='cascade'),
         'balance_ids' : fields.one2many('hr.loan.balance','loan_id', 'Loan Balance'),
@@ -74,6 +83,13 @@ class hr_loan(osv.Model):
             ('declined', 'Declined')
             ], 'Status', readonly=True),
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        context = context or {}
+        for loan in self.browse(cr, uid, ids, context=context):
+            if loan.move_id:
+                raise osv.except_osv( _('Error!'), _("The loan can not be deleted without first canceling the associated account movement"))
+        return super(hr_loan, self).unlink(cr, uid, ids, context)
 
     def update_quota(self, cr, uid, ids, context=None):
         context = context or {}
@@ -90,6 +106,26 @@ class hr_loan(osv.Model):
         else:
             res = {'payroll_period_id': False}
             return {'domain':{'payroll_period_id': domain}, 'value': res}
+
+    def onchange_payroll_period(self, cr, uid, ids, payroll_period_id, context=None):
+        context = context or {}
+        obj = self.pool.get('hr.payroll.period')
+        if payroll_period_id:
+            period = obj.browse(cr, uid, payroll_period_id, context=context)
+            res = {
+                'payperiod_date_start': period.date_start,
+                'payperiod_date_end': period.date_end
+            }
+        else:
+            res = {
+                'payperiod_date_start': False,
+                'payperiod_date_end': False,
+            }
+        return {'value': res}
+
+    def do_signal_to_draft(self, cr, uid, ids, context=None):
+        context = context or {}
+        return self.write(cr, uid, ids, {'state':'to_submit'}, context=context)
 
     def do_signal_to_approve(self, cr, uid, ids, context=None):
         context = context or {}
