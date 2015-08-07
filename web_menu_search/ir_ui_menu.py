@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import osv, fields
 
 class ir_ui_menu(osv.osv):
     _inherit = 'ir.ui.menu'

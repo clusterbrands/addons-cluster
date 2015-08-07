@@ -1,10 +1,10 @@
-from osv import osv
-from tools.translate import _
-from report import report_sxw
+from openerp.osv import osv
+from openerp.tools.translate import _
+from openerp.report import report_sxw
 from openerp.addons.account_financial_report.report.parser import account_balance 
 from openerp.tools.safe_eval import safe_eval as eval
-from netsvc import Service
-del Service._services['report.afr.2cols']
+#from openerp.netsvc import Service
+#del Service._services['report.afr.2cols']
 
 class account_balance_cluster(account_balance):
 
@@ -22,7 +22,7 @@ class account_balance_cluster(account_balance):
             lines2.append(line)
          return lines2
 
-report_sxw.report_sxw('report.afr.2cols',
+report_sxw.report_sxw('report.afr.2cols2',
                       'wizard.report',
                       'account_financial_report_cluster/report/balance_full_2_cols.rml',
                       parser=account_balance_cluster,
