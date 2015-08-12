@@ -23,7 +23,8 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import openerp.netsvc
+#import openerp.netsvc
+from openerp import workflow
 from datetime import datetime, timedelta
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -198,11 +199,11 @@ class wizard_payroll_period(osv.osv_memory):
         context = context or {}
         data = self.browse(cr, uid, ids, context=context)[0]
         obj_slip = self.pool.get('hr.payslip')
-        wkf_service = netsvc.LocalService('workflow')
+        #wkf_service = netsvc.LocalService('workflow')
         for slip in data.period_id.payslip_ids:
-            wkf_service.trg_validate(
+            workflow.trg_validate(
                 uid, 'hr.payslip', slip.id, 'hr_verify_sheet', cr)
-        wkf_service.trg_validate(
+        workflow.trg_validate(
             uid, 'hr.payroll.period', data.period_id.id, 'confirm', cr)
         context.update({'step': 'step3'})
         return {
@@ -288,8 +289,8 @@ class wizard_payroll_period(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)[0]
         p_id = pp.search(cr, uid, [('number', '=', data.period_id.number + 1)])
         if p_id:
-            wkf_service.trg_validate(uid, 'hr.payroll.period', p_id[0], 'activate', cr)
-        wkf_service.trg_validate(uid, 'hr.payroll.period', data.period_id.id, 'close', cr)
+            workflow.trg_validate(uid, 'hr.payroll.period', p_id[0], 'activate', cr)
+        workflow.trg_validate(uid, 'hr.payroll.period', data.period_id.id, 'close', cr)
         return {
             'view_type': 'form',
             'view_mode': 'form',

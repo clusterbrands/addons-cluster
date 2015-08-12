@@ -23,13 +23,13 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import openerp.netsvc
+#import openerp.netsvc
 import datetime
 import calendar
 from datetime import date, timedelta
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-
+from openerp import workflow
 
 class period_schedule(osv.Model):
 
@@ -153,12 +153,11 @@ class period_schedule(osv.Model):
             if p_ids:
                  raise osv.except_osv(_('Warning!'),_('You can not change the initial period when the planning is in execution'))
             else:
-                wkf_service = netsvc.LocalService('workflow')
                 dom = [('state', '=', 'actived'),('schedule_id','=',schedule.id)]
                 act_id = period_pool.search(cr, uid, dom, context=context)
-                if act_id:            
-                    wkf_service.trg_validate(uid, 'hr.payroll.period', act_id[0], 'inactivate', cr)
-                wkf_service.trg_validate(uid, 'hr.payroll.period', period_id, 'activate', cr)
+                if act_id:
+                    workflow.trg_validate(uid, 'hr.payroll.period', act_id[0], 'inactivate', cr)
+                workflow.trg_validate(uid, 'hr.payroll.period', period_id, 'activate', cr)
         return {}          
 
     def unlink(self, cr, uid, ids, context=None):
