@@ -60,9 +60,6 @@ Notes:
     'qweb': [
         'static/src/xml/hr_payroll_period.xml',
     ],
-    'js': [
-    	'static/src/js/backbone-super-min.js',
-    ],
     'demo': [
     ],
     'test': [
