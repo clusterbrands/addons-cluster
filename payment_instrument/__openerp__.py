@@ -56,19 +56,7 @@ Note:
         'view/account_view.xml',
         'view/payment_instrument_view.xml',
         'view/point_of_sale_view.xml',
-    ],
-    'js': [
-        'static/src/js/backbone-super-min.js',
-        'static/src/js/models.js',
-        'static/src/js/screens.js',
-        'static/src/js/widgets.js',
-        'static/src/js/main.js',
-    ],
-    'css': [
-        'static/src/css/pos.css',
-    ],
-    'qweb': [
-        'static/src/xml/payment_instrument.xml'
+    	'views/payment_instrument.xml',
     ],
     'demo': [
     ],

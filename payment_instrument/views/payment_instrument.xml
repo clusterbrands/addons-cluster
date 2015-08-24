@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+    	<template id="assets_backend" name="payment_instrument assets" inherit_id="web.assets_backend">
+        	<xpath expr="." position="inside">
+            	<link rel="stylesheet" href="/payment_instrument/static/src/css/payment_instrument.css"/>
+                <script type="text/javascript" src="/payment_instrument/static/src/js/backbone-super-min.js"></script>
+                <script type="text/javascript" src="/payment_instrument/static/src/js/models.js"></script>
+                <script type="text/javascript" src="/payment_instrument/static/src/js/screens.js"></script>
+                <script type="text/javascript" src="/payment_instrument/static/src/js/widgets.js"></script>
+                <script type="text/javascript" src="/payment_instrument/static/src/js/main.js"></script> 
+            </xpath>
+        </template>
+    </data>
+</openerp>
+
