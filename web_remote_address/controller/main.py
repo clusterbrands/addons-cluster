@@ -1,17 +1,18 @@
 from openerp.addons.web import controllers
-
+from openerp import http
+from openerp.http import request
 
 class Session(controllers.main.Session):
 
-    def session_info(self, req):
+    def session_info(self):
 
-        req.session.ensure_valid()
-        context = req.session.get_context() if req.session._uid else {}
-        context.update({'remote_addr': req.httprequest.environ['REMOTE_ADDR']})
+        request.session.ensure_valid()
+        context = request.session.get_context() if request.session._uid else {}
+        context.update({'remote_addr': request.httprequest.environ['REMOTE_ADDR']})
         return {
-            "session_id": req.session_id,
-            "uid": req.session._uid,
+            "session_id": request.session_id,
+            "uid": request.session._uid,
             "user_context": context,
-            "db": req.session._db,
-            "username": req.session._login,
+            "db": request.session._db,
+            "username": request.session._login,
         }
