@@ -9,6 +9,7 @@
                     <group string="Configuration (Qweb)" col="2">
                         <field name="qweb_header"/>
                         <field name="qweb_footer"/>
+                    	<field name="qweb_style"/>
                     </group>
                 </xpath>
             </field>

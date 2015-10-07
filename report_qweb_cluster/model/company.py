@@ -30,7 +30,7 @@ class res_company(osv.osv):
     _inherit = "res.company"
 
     def _get_default_header(self, cr, uid, context):
-		res ="""<div class="header">
+		res ="""<div t-name="custom_header" class="header">
     <div class="row">
         <div class="col-xs-3">
         	<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" class="company-logo"/>
@@ -53,7 +53,7 @@ class res_company(osv.osv):
 		return res
 
     def _get_default_footer(self, cr, uid, context):
-		res ="""<div class="footer">
+		res ="""<div t-name="custom_footer" class="footer">
     <div class="text-center" style="border-top: 1px solid black;">
         <ul t-if="not company.custom_footer" class="list-inline">
             <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
@@ -81,6 +81,7 @@ class res_company(osv.osv):
     _columns = {
     	'qweb_header': fields.text('Report Header', help="Custom Header for all reports"), 
 		'qweb_footer': fields.text('Report Footer', help="Custom Footer for all reports"),
+		'qweb_style' : fields.text('Report Style', help="Custom Style")
     }
 
     _defaults = {
