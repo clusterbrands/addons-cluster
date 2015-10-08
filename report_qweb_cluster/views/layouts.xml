@@ -30,7 +30,9 @@
 </template>
 
 <template id="report_qweb_cluster.style">
-	<t t-raw="company.qweb_style" />
+	<t t-if="company">
+	  <t t-raw="company.qweb_style" />
+	</t>
 </template>
 
 <template id="external_layout_header_cluster">
