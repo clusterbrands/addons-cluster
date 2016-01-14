@@ -31,24 +31,30 @@ class res_company(osv.osv):
 
     def _get_default_header(self, cr, uid, context):
 		res ="""<div t-name="custom_header" class="header">
-    <div class="row">
-        <div class="col-xs-3">
-        	<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" class="company-logo"/>
-        </div>
-        <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
-     </div>
-     <div class="row zero_min_height">
-        <div class="col-xs-12">
-        	<div style="border-bottom: 1px solid black;"></div>
-        </div>
-     </div>
-     <div class="row">
-    	 <div class="col-xs-3">
-        	 <div t-field="company.partner_id" 
-                  t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
-                  style="border-bottom: 1px solid black;"/>
+    <div class="header-left">   
+        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" class="company-logo" />
+        <h5 t-if="company.name" t-field="company.name" class="company-name" />
+        <h6 t-if="company.partner_id.vat"  class="vat">
+         RIF: <t t-esc="company.partner_id.vat[2]+'-'+company.partner_id.vat[3:12]"/>
+        </h6>   
+    </div>
+   <div class="header-right">
+         <div class="col-3">
+              <i class="fa fa-map-marker fa-2x"></i>
+              <div t-field="company.partner_id" t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'></div>
          </div>
-     </div>
+         <div class="col-3">
+              <i class="fa fa-phone fa-2x"></i>
+              <ul  class="list-inline">
+                   <li t-if="company.phone">TEL: <span t-field="company.phone" /></li>
+                   <li t-if="company.fax">FAX: <span t-field="company.fax" /></li>
+              </ul>
+         </div>
+         <div class="col-3">
+             <i class="fa fa-globe fa-2x"></i>
+             <p t-if="company.website" t-field="company.website" />
+         </div>
+   </div>
 </div>"""
 		return res
 
@@ -74,9 +80,51 @@ class res_company(osv.osv):
             <li><span class="topage"/></li>
         </ul>
     </div>
-</div>
-"""
+</div>"""
 		return res
+
+    def _get_default_style(self, cr, uid, context):
+        res = """.header {
+   overflow:hidden;
+}
+
+.company-logo {
+     width: 150px;
+}
+
+.company-name {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.vat {
+   margin: 5px 0;
+}
+
+.header-left {
+    float:left;
+    width:40%;
+}
+
+.header-right {
+   float:left;
+   width:60%;
+}
+.col-3 {
+    font-size: 12px;
+    float:left;
+    width:25%;
+}
+
+.col-3:first-child {
+   width: 50%;
+}
+
+.col-3 .fa {
+     color: black;
+     margin-bottom:10px;
+}"""
+        return res
 
     _columns = {
     	'qweb_header': fields.text('Report Header', help="Custom Header for all reports"), 
@@ -87,4 +135,5 @@ class res_company(osv.osv):
     _defaults = {
     	'qweb_header': _get_default_header,
     	'qweb_footer': _get_default_footer,
+		'qweb_style' : _get_default_style,
     }
