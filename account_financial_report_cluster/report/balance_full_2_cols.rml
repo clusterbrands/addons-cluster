@@ -83,7 +83,6 @@
     </stylesheet>
     <images/>
     <story>
-        <h1>Hola mundo</h1>
         <para>[[setLang(user.lang)]]</para>
         <blockTable colWidths="2.5cm,9.5cm,3.5cm,3.5cm" style="BODY" repeatRows="1">
             <tr noRowsplits="1">
