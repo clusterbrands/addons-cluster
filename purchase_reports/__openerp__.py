@@ -48,7 +48,10 @@ Main features
         'report_qweb_cluster',
     ],
     'data': [        
-        'purchase_report.xml',
+        #'purchase_report.xml',
+        'views/layouts.xml',
+        'views/report_purchasequotation.xml',
+        'views/report_purchaseorder.xml',
     ],
     'js': [
     ],
