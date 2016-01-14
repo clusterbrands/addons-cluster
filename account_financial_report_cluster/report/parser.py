@@ -1,10 +1,10 @@
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.report import report_sxw
-from openerp.addons.account_financial_report.report.parser import AccountBalance 
+from openerp.addons.account_financial_report.report.parser import account_balance 
 from openerp.tools.safe_eval import safe_eval as eval
 
-class account_balance_cluster(AccountBalance):
+class account_balance_cluster(account_balance):
 
     def __init__(self, cr, uid, name, context):
         super(account_balance_cluster, self).__init__(cr, uid, name, context)
