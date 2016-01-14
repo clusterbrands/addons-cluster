@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_purchasequotation_document_cluster" inherit_id="purchase.report_purchasequotation_document">
+        <xpath expr="//div[@class='row mt32 mb32']" position="replace">
+            <div class="col-2 flex-end document-headers">
+                <h5>Supplier</h5>
+                <h1>Request for Quotation</h1>
+            </div>
+            <div class="col-2 flex-center document-info">
+                <div class="supplier-info">
+                    <div t-if="o.dest_address_id">
+                        <div t-field="o.dest_address_id" 
+                             t-field-options='{"widget": "contact", "fields": ["address", "name", "email"], "no_marker": true}'/>
+                    </div>
+                    <div t-if="not o.dest_address_id and o.picking_type_id.warehouse_id">
+                        <span t-field="o.picking_type_id.warehouse_id.name"/>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                            t-field-options='{"widget": "contact", "fields": ["address", "email"], "no_marker": true}'/>
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>Invoice No</td>
+                        <td>:</td>
+                        <td><span t-field="o.name"/></td>
+                    </tr>
+                    <tr>
+                        <td>Invoice Date</td>
+                        <td>:</td>
+                        <td><span t-field="o.date_order" t-field-options='{"format": "d/m/y"}'/></td>
+                    </tr>
+                    <tr>
+                        <td>Account No</td>
+                        <td>:</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+        <xpath expr="//div/h2" position="replace" />
+        <xpath expr="//div/p" position="replace">
+            <div class="col-2">
+                <div class="notes">
+                    <h5>TERMS / CONDITIONS</h5>
+                    <p t-field="o.notes"/>
+                </div>
+                <h5><span t-field="user.signature"/></h5>
+            </div>
+        </xpath>
+        <xpath expr="//div[1]/span[1]" position="replace" />
+        <xpath expr="//div[1]/span[1]" position="replace" />
+        </template>
+    </data>
+</openerp>
+
+

@@ -45,6 +45,7 @@ Main features
     'depends': [
         'l10n_ve_fiscal_book',
         'purchase',
+        'report_qweb_cluster',
     ],
     'data': [        
         'purchase_report.xml',
