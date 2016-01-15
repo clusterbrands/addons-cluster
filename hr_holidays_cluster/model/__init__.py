@@ -1,0 +1,2 @@
+import hr_holidays
+import hr_contract
