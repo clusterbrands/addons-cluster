@@ -23,40 +23,11 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-{
-    'name': 'HR Contract Cluster Brands',
-    'category': 'Generic Modules',
-    'version': '1.0',
-    'author': 'Cluster Brands',
-    'website': 'http://www.clusterbrands.com',
-    'description': """
+from openerp.osv import fields, osv
 
-Module Description
-    
-Main features
--------------
-    Contract customizations for Cluster Brands
-Notes:
------
-""",
-    'depends': [
-        'hr_contract',
-    ],
-    'data': [
-        'view/hr_view.xml',
-        'view/hr_contract_view.xml',
-    ],
-    'js': [
-    ],
-    'css': [
-    ],
-    'qweb': [
-    ],
-    'demo': [
-    ],
-    'test': [
-    ],
-    'installable': True,
-    'active': False,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class hr_employee(osv.osv):
+    _inherit = "hr.employee"
+    _columns = {
+    	'entry_date': fields.date("Entry Date"),
+    }
