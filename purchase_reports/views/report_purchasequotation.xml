@@ -4,8 +4,8 @@
         <template id="report_purchasequotation_document_cluster" inherit_id="purchase.report_purchasequotation_document">
         <xpath expr="//div[@class='row mt32 mb32']" position="replace">
             <div class="col-2 flex-end document-headers">
-                <h5>Supplier</h5>
-                <h1>Request for Quotation</h1>
+                <h5>Proveedor</h5>
+                <h1>Solicitud de Presupuesto</h1>
             </div>
             <div class="col-2 flex-center document-info">
                 <div class="supplier-info">
@@ -21,17 +21,17 @@
                 </div>
                 <table>
                     <tr>
-                        <td>Invoice No</td>
+                        <td>Factura Nro</td>
                         <td>:</td>
                         <td><span t-field="o.name"/></td>
                     </tr>
                     <tr>
-                        <td>Invoice Date</td>
+                        <td>Fecha Factura</td>
                         <td>:</td>
                         <td><span t-field="o.date_order" t-field-options='{"format": "d/m/y"}'/></td>
                     </tr>
                     <tr>
-                        <td>Account No</td>
+                        <td>Cuenta Nro</td>
                         <td>:</td>
                         <td></td>
                     </tr>
@@ -40,13 +40,15 @@
         </xpath>
         <xpath expr="//div/h2" position="replace" />
         <xpath expr="//div/p" position="replace">
-            <div class="col-2">
+            <div class="col-2 flex-center">
                 <div class="notes">
-                    <h5>TERMS / CONDITIONS</h5>
+                    <h5>TERMINOS / CONDICIONES</h5>
                     <p t-field="o.notes"/>
                 </div>
-                <h5><span t-field="user.signature"/></h5>
-            </div>
+                <div class="user-signature">
+                    <h5><span t-field="user.signature"/></h5>
+                </div>
+            </div>     
         </xpath>
         <xpath expr="//div[1]/span[1]" position="replace" />
         <xpath expr="//div[1]/span[1]" position="replace" />

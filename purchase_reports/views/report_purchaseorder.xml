@@ -4,8 +4,8 @@
     	<template id="report_purchaseorder_document_cluster" inherit_id="purchase.report_purchaseorder_document">
             <xpath expr="//div[@class='row']" position="replace">
                 <div class="col-2 flex-end document-headers company-border-color">
-                    <h5 class="company-color">Supplier</h5>
-                    <h1>Purchase Order</h1>
+                    <h5 class="company-color">Proveedor</h5>
+                    <h1>Orden de Compra</h1>
                 </div>
                 <div class="col-2 flex-center document-info">
                     <div class="supplier-info">
@@ -21,17 +21,17 @@
                     </div>
                     <table>
                         <tr>
-                            <td class="company-color">Invoice No</td>
+                            <td class="company-color">Factura Nro</td>
                             <td>:</td>
                             <td><span t-field="o.name"/></td>
                         </tr>
                         <tr>
-                            <td class="company-color">Invoice Date</td>
+                            <td class="company-color">Fecha Factura</td>
                             <td>:</td>
                             <td><span t-field="o.date_order" t-field-options='{"format": "d/m/y"}'/></td>
                         </tr>
                         <tr>
-                            <td class="company-color">Account No</td>
+                            <td class="company-color">Cuenta Nro</td>
                             <td>:</td>
                             <td></td>
                         </tr>
@@ -40,7 +40,7 @@
                 <div class="total">
                     <table class="company-bg-color">
                         <tr>
-                            <td>TOTAL DUE</td>
+                            <td>TOTAL A PAGAR</td>
                             <td>:</td>
                             <td><span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
                         </tr>
@@ -50,13 +50,15 @@
             <xpath expr="//div/h2" position="replace" />
             <xpath expr="//div[@class='row mt32 mb32']" position="replace"></xpath>
             <xpath expr="//div/p" position="replace">
-            <div class="col-2">
+            <div class="col-2 flex-center">
                 <div class="notes">
-                    <h5>TERMS / CONDITIONS</h5>
+                    <h5>TERMINOS / CONDICIONES</h5>
                     <p t-field="o.notes"/>
                 </div>
-                <h5><span t-field="user.signature"/></h5>
-            </div>
+                <div class="user-signature">
+                    <h5><span t-field="user.signature"/></h5>
+                </div>
+            </div>            
         </xpath>
         </template>
     </data>

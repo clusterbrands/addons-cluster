@@ -146,6 +146,14 @@
                 justify-content: space-between;
             }
 
+            .notes { 
+                width: 50%;
+            }
+
+            .user-signature span {
+                float:right;
+            }
+
             .flex-end {
                 -webkit-align-items: flex-end;
                 -webkit-box-align: end;
