@@ -18,7 +18,7 @@ class account_balance_cluster(account_balance):
                 continue
             if line['total'] and line['label'] == False and form['partial_sumarize'] == False and  line.has_key('level'):
                 continue
-        lines2.append(line)
+        	lines2.append(line)
         return lines2
 
 report_sxw.report_sxw('report.afr.rml.2cols2',

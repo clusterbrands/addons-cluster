@@ -9,57 +9,53 @@
                 </div>
                 <div class="col-2 flex-center document-info">
                     <div class="supplier-info">
-                        <div t-if="o.dest_address_id">
-                            <div t-field="o.dest_address_id" 
-                                 t-field-options='{"widget": "contact", "fields": ["address", "name", "email"], "no_marker": true}'/>
+                        <div t-if="o.partner_id">
+                            <span class="supplier-name" t-field="o.partner_id.name"/>
+                            <div t-if="o.partner_id.vat">VAT: <span  t-esc="company.partner_id.vat[2]+'-'+company.partner_id.vat[3:12]" class="supplier-vat"/></div>
+                            <div t-field="o.partner_id" 
+                                 t-field-options='{"widget": "contact", "fields": ["address", "phone", "email"], "no_marker": true}'/>
                         </div>
-                        <div t-if="not o.dest_address_id and o.picking_type_id.warehouse_id">
+                        <div t-if="not o.partner_id and o.picking_type_id.warehouse_id">
                             <span t-field="o.picking_type_id.warehouse_id.name"/>
                             <div t-field="o.picking_type_id.warehouse_id.partner_id"
-                                t-field-options='{"widget": "contact", "fields": ["address", "email"], "no_marker": true}'/>
+                                t-field-options='{"widget": "contact", "fields": ["address", "phone", "email"], "no_marker": true}'/>
                         </div>
                     </div>
                     <table>
                         <tr>
-                            <td class="company-color">Factura Nro</td>
+                            <td class="company-color">Documento Nro</td>
                             <td>:</td>
                             <td><span t-field="o.name"/></td>
                         </tr>
                         <tr>
-                            <td class="company-color">Fecha Factura</td>
+                            <td class="company-color">Fecha Documento</td>
                             <td>:</td>
-                            <td><span t-field="o.date_order" t-field-options='{"format": "d/m/y"}'/></td>
-                        </tr>
-                        <tr>
-                            <td class="company-color">Cuenta Nro</td>
-                            <td>:</td>
-                            <td></td>
+                            <td><span t-field="o.date_order" t-field-options='{"format": "d/MM/y"}'/></td>
                         </tr>
                     </table>
-                </div>
-                <div class="total">
-                    <table class="company-bg-color">
-                        <tr>
-                            <td>TOTAL A PAGAR</td>
-                            <td>:</td>
-                            <td><span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></td>
-                        </tr>
-                    </table>
-                </div>
+                </div>               
             </xpath>
             <xpath expr="//div/h2" position="replace" />
-            <xpath expr="//div[@class='row mt32 mb32']" position="replace"></xpath>
-            <xpath expr="//div/p" position="replace">
-            <div class="col-2 flex-center">
-                <div class="notes">
-                    <h5>TERMINOS / CONDICIONES</h5>
-                    <p t-field="o.notes"/>
-                </div>
-                <div class="user-signature">
-                    <h5><span t-field="user.signature"/></h5>
-                </div>
-            </div>            
-        </xpath>
+            <xpath expr="//div[@class='row mt32 mb32']" position="replace"></xpath>            
+            <xpath expr="//div/p" position="replace">            
+                <div class="col-2 flex-center">
+                    <div class="notes">
+                        <h5>TERMINOS / CONDICIONES</h5>
+                        <p t-field="o.notes"/>
+                    </div>
+                    <div class="user-signature">
+                        <h5><span t-field="user.signature"/></h5>
+                    </div>
+                </div>            
+            </xpath>
+            <xpath expr="//table[@class='table table-condensed']/thead/tr" position="replace">
+                <th><strong>Description</strong></th>
+                <th><strong>Taxes</strong></th>
+                <th class="text-center"><strong>Date Req.</strong></th>
+                <th class="text-center"><strong>Qty</strong></th>
+                <th class="text-center"><strong>Unit Price</strong></th>
+                <th class="text-center"><strong>Net Price</strong></th>
+            </xpath>
         </template>
     </data>
 </openerp>

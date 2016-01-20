@@ -57,14 +57,17 @@
                 text-align: right;
             }
 
-            .page .supplier-info > div > span {
-                display: inline-block;
+            .page .supplier-name {
                 font-weight: 700;
-                margin-bottom: 10px;
+            }
+
+            .page .supplier-vat {
+                display: inline-block;
+                margin-bottom:10px;
             }
 
             .page .supplier-info address .css_editable_mode_hidden {
-                margin-bottom: 10px;
+                margin-bottom: 0;
             }
 
             .page .total {
