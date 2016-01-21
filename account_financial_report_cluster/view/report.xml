@@ -4,13 +4,13 @@
         
         <report 
             auto="False"
-            id="account_financial_report.2_col_report"
-            menu="True"
+            id="account_financial_report.2_col_report_rml"
             model="wizard.report"
-            name="afr.2cols"
+            name="afr.rml.2cols2"
+            usage="default"
             rml="account_financial_report_cluster/report/balance_full_2_cols.rml"
             string="Balance 2 Columnas"
-            header="False"
-        />
+            multi="True"
+        /> 
     </data>
 </openerp>

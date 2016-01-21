@@ -33,6 +33,8 @@ from serial import SerialException
 from decimal import Decimal
 from threading import Thread, Lock
 from Queue import Queue, Empty
+from openerp import http
+from openerp.http import request
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 from .. import driver
 from ..driver import fiscal
@@ -332,72 +334,72 @@ driver = FiscalPrinterDriver()
 hw_proxy.drivers['fiscalprinter'] = driver
 
 class FiscalPrinterProxy(hw_proxy.Proxy):
-
-    @openerp.addons.web.http.httprequest
-    def get_supported_printers(self, request, params):
+   
+    @http.route('/hw_proxy/get_supported_printers', type='http', auth='none', cors='*')
+    def get_supported_printers(self, params):
         return json.dumps(driver.get_supported_printers())
 
-    @openerp.addons.web.http.httprequest
-    def read_workstation(self, request, params):
+    @http.route('/hw_proxy/read_workstation', type='http', auth='none', cors='*')
+    def read_workstation(self, params):
         return json.dumps(driver.read_workstation())
 
-    @openerp.addons.web.http.httprequest
-    def read_printer_serial(self, request, params):
+    @http.route('/hw_proxy/read_printer_serial', type='http', auth='none', cors='*')
+    def read_printer_serial(self, params):
         return json.dumps(driver.read_printer_serial(eval(params)))
 
-    @openerp.addons.web.http.httprequest
-    def read_payment_methods(self, request, params):
+    @http.route('/hw_proxy/read_payment_methods', type='http', auth='none', cors='*')
+    def read_payment_methods(self, params):
         return json.dumps(driver.read_payment_methods(eval(params)))
 
-    @openerp.addons.web.http.httprequest
-    def write_payment_methods(self, request, params):
+    @http.route('/hw_proxy/write_payment_methods', type='http', auth='none', cors='*')
+    def write_payment_methods(self, params):
         return json.dumps(driver.write_payment_methods(eval(params)))
 
-    @openerp.addons.web.http.httprequest
-    def read_tax_rates(self, request, params):
+    @http.route('/hw_proxy/read_tax_rates', type='http', auth='none', cors='*')
+    def read_tax_rates(self, params):
         return json.dumps(driver.read_tax_rates(eval(params)))
 
-    @openerp.addons.web.http.httprequest
-    def write_tax_rates(self, request, params):
+    @http.route('/hw_proxy/write_tax_rates', type='http', auth='none', cors='*')
+    def write_tax_rates(self, params):
         return json.dumps(driver.write_tax_rates(eval(params)))
 
-    @openerp.addons.web.http.httprequest
-    def read_headers(self, request, params):
+    @http.route('/hw_proxy/read_headers', type='http', auth='none', cors='*')
+    def read_headers(self, params):
         return json.dumps(driver.read_headers(eval(params)))
 
-    @openerp.addons.web.http.httprequest
-    def write_headers(self, request, params):
+    @http.route('/hw_proxy/write_headers', type='http', auth='none', cors='*')
+    def write_headers(self, params):
         return json.dumps(driver.write_headers(eval(params)))
 
-    @openerp.addons.web.http.httprequest
-    def read_footers(self, request, params):
+    @http.route('/hw_proxy/read_footers', type='http', auth='none', cors='*')
+    def read_footers(self, params):
         return json.dumps(driver.read_footers(eval(params)))
 
-    @openerp.addons.web.http.httprequest
-    def write_footers(self, request, params):
+    @http.route('/hw_proxy/write_footers', type='http', auth='none', cors='*')
+    def write_footers(self, params):
         return json.dumps(driver.write_footers(eval(params)))
 
-    @openerp.addons.web.http.jsonrequest
-    def print_report_x_json(self, request, printer):
+    @http.route('/hw_proxy/print_report_x', type='json', auth='none', cors='*')
+    def print_report_x_json(self, printer):
         return driver.print_report_x(printer)
 
-    @openerp.addons.web.http.httprequest
-    def print_report_x_http(self, request, params):
+    @http.route('/hw_proxy/print_report_x', type='http', auth='none', cors='*')
+    def print_report_x_http(self, params):
         params = eval(params)
         return json.dumps(driver.print_report_x(params.get('printer')))
 
-    @openerp.addons.web.http.httprequest
-    def print_report_z(self, request, params):
+    @http.route('/hw_proxy/print_report_z', type='http', auth='none', cors='*')
+    def print_report_z(self, params):
         return json.dumps(driver.print_report_z(eval(params)))
 
-    @openerp.addons.web.http.jsonrequest
-    def print_receipt(self, request, receipt, printer):
+    @http.route('/hw_proxy/print_receipt', type='json', auth='none', cors='*')
+    def print_receipt(self, receipt, printer):
         return driver.print_receipt(receipt, printer)
 
-    @openerp.addons.web.http.jsonrequest
-    def check_printer_status(self, request, params):
+    @http.route('/hw_proxy/check_printer_status', type='json', auth='none', cors='*')
+    def check_printer_status(self, params):
         return driver.check_printer_status(params)
 
-    @openerp.addons.web.http.httprequest
-    def has_pending_reduce(self, request, params):
+    @http.route('/hw_proxy/has_pending_reduce', type='http', auth='none', cors='*')
+    def has_pending_reduce(self, params):
         return json.dumps(driver.has_pending_reduce(eval(params)))

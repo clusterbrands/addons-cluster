@@ -38,7 +38,7 @@ function payment_instrument_screens(instance,module){
             this.onClickBtnCancel();
         }
     });
-
+    /*
     module.InstrumentSelectorPopup = module.BasePopup.extend({
         template:"InstrumentSelectorPopup",
         events:{
@@ -74,6 +74,6 @@ function payment_instrument_screens(instance,module){
             this.close();
             this.hide();
         },
-    });
+    });*/
 
 }

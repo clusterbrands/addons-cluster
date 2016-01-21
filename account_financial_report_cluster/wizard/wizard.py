@@ -24,8 +24,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 
 class wizard_report(osv.osv_memory):
@@ -45,3 +45,9 @@ class wizard_report(osv.osv_memory):
          res['value'].update({'hide_views': afr_brw.hide_views or False})
          res['value'].update({'partial_sumarize': afr_brw.partial_sumarize or False})
          return res
+
+    def print_report(self, cr, uid, ids, data, context=None):
+        res =  super(wizard_report, self).print_report(cr, uid, ids, data, context)
+        if res.get('report_name') == 'afr.rml.2cols':
+           res.update({'report_name' : 'afr.rml.2cols2'})
+        return res

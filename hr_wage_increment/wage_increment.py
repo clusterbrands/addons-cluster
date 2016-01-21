@@ -22,11 +22,11 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-import netsvc
+from openerp import netsvc
 import openerp.addons.decimal_precision as dp
-from osv import fields, osv
+from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from tools.translate import _
+from openerp.tools.translate import _
 
 
 class wage_increment(osv.osv):

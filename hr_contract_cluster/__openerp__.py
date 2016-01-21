@@ -43,6 +43,7 @@ Notes:
         'hr_contract',
     ],
     'data': [
+        'view/hr_view.xml',
         'view/hr_contract_view.xml',
     ],
     'js': [

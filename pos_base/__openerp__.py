@@ -44,17 +44,7 @@ Main features
         'point_of_sale'
     ],
     'data': [
-    ],
-    'js': [
-        'static/src/js/backbone-super-min.js',
-        'static/src/js/screens.js',
-        'static/src/js/main.js',
-    ],
-    'css': [
-        'static/src/css/pos.css',
-    ],
-    'qweb': [
-        'static/src/xml/pos_base.xml',
+		'views/pos_base.xml',
     ],
     'demo': [
     ],

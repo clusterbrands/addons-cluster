@@ -49,19 +49,13 @@ Notes:
         'view/hr_contract_view.xml',   
         'view/hr_payroll_period_view.xml',
         'view/hr_payroll_period_action_menu.xml',
+        'views/hr_payroll_period.xml',
         'wizard/hr_payroll_period_wizard_view.xml',
         'workflow/hr_payroll_period_workflow.xml',
         'security/ir.model.access.csv',
     ],
     'update_xml': [
         'report/hr_payroll_period_report.xml',
-    ],
-    'js': [
-        'static/src/js/hr_payroll_period.js',
-        'static/src/js/backbone-super-min.js',
-    ],
-    'css': [
-        'static/src/css/hr_payroll_period.css',
     ],
     'qweb': [
         'static/src/xml/hr_payroll_period.xml',

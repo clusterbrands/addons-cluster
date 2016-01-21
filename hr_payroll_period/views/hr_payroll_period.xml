@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+      <template id="assets_backend" name="hr_payroll_period assets" inherit_id="web.assets_backend">
+          <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/hr_payroll_period/static/src/css/hr_payroll_period.css"/>
+                <script type="text/javascript" src="/hr_payroll_period/static/src/js/hr_payroll_period.js"></script>
+                <script type="text/javascript" src="/hr_payroll_period/static/src/js/backbone-super-min.js"></script>
+          </xpath>
+       </template>
+   </data>
+</openerp>

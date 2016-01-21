@@ -42,11 +42,7 @@ Notes:
     'depends': [
     ],
     'data': [
-    ],
-    'js': [
-        'static/src/lib/backbone-super-min.js',
-        'static/src/lib/jquery-ui.multidatespicker.js',
-        'static/src/js/main.js',
+    	'views/web_multidatepicker.xml',
     ],
     'css': [
     ],

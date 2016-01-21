@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="edit_holiday_status_form_cluster">
+		    <field name="name">hr.holidays.status.form.cluster</field>
+		    <field name="model">hr.holidays.status</field>
+		    <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+		    <field name="arch" type="xml">
+		        <xpath expr="//field[@name='limit']" position="after">
+		        	<field name="holidays_leave"/>
+		        </xpath>
+		    </field>
+		</record>
+	</data>
+</openerp>

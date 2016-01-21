@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_qweb_cluster.layout" inherit_id="web.layout">
+    <!-- Add report style -->
+    <xpath expr="//head" position="inside">
+        <style type="text/css">
+            <t t-call="report_qweb_cluster.style"/>
+        </style>
+    </xpath>
+</template>
+
+<template id="report_qweb_cluster.html_container">
+    <t t-set="body_classname" t-value="'container'"/>
+    <t t-call="report_qweb_cluster.layout">
+        <t t-raw="0"/>
+    </t>
+</template>
+
+<template id="report_qweb_cluster.style">
+.header .company-logo {
+	width:45px;
+}
+</template>
+
+<template id="report_qweb_cluster.external_layout_header" inherit_id="report.external_layout_header">
+
+	<xpath expr="//div[@class='header']" position="replace">
+		<t t-raw="company.qweb_header"/>
+	</xpath>
+</template>
+
+<template id="report_qweb_cluster.external_layout_footer" inherit_id="report.external_layout_footer">
+	<xpath expr="//div[@class='footer']" position="replace">
+		<t t-raw="company.qweb_footer"/>
+	</xpath>
+</template>
+
+</data>
+</openerp>
+

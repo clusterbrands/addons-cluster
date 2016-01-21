@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="purchase_reports.layout" inherit_id="web.layout">
+            <!-- Add report style -->
+            <xpath expr="//head" position="inside">
+                <style type="text/css">
+                    <t t-call="purchase_reports.style"/>
+                </style>
+            </xpath>
+        </template>
+
+        <template id="purchase_reports.html_container">
+            <t t-set="body_classname" t-value="'container'"/>
+            <t t-call="purchase_reports.layout">
+                <t t-raw="0"/>
+            </t>
+        </template>
+
+        <template id="purchase_reports.style">
+            .page .document-headers {
+                border-bottom: 1px solid;
+                margin-top: 60px;
+                padding: 5px 0;
+            }
+
+            .page .document-headers h1 {
+                font-size: 32px;
+                font-weight: 700;
+                margin: 0;
+                text-transform: uppercase;
+            }
+            
+            .page .document-headers h5 {
+                font-size: 18px;
+                font-weight: 700;
+                margin: 0;
+                text-transform: uppercase;
+            }
+
+            .page .document-info {
+                margin: 30px 0;
+            }
+
+            .page .document-info table tr td {
+                font-weight: 700;
+                font-size: 13px;
+            }
+
+            .page .document-info table tr td:first-child {
+                min-width :150px;
+                text-transform: uppercase;
+            }
+
+            .page .document-info table tr td:last-child {
+                min-width :150px;
+                text-align: right;
+            }
+
+            .page .supplier-name {
+                font-weight: 700;
+            }
+
+            .page .supplier-vat {
+                display: inline-block;
+                margin-bottom:10px;
+            }
+
+            .page .supplier-info address .css_editable_mode_hidden {
+                margin-bottom: 0;
+            }
+
+            .page .total {
+                float: right;
+                margin-bottom: 40px;
+            }
+
+
+            .page .total table tr td {
+                font-weight: 700;
+                font-size: 16px;
+            }
+
+            .page .total table tr td:first-child {
+                min-width :150px;
+                text-transform: uppercase;
+            }
+
+            .page .total table tr td:last-child {
+                min-width :150px;
+                text-align: right;
+            }
+
+            .page .table-condensed {
+                border-collapse: separate;
+            }
+           
+            .page .table-condensed th {
+                padding: 5px 0;
+                text-transform: uppercase;
+                border-bottom: 2px solid #333 !important;
+            }
+
+            .page .table-condensed > tbody > tr > td {
+                border-top: none;
+                background: rgb(224, 224, 224);
+                border: 4px solid #fff;
+                padding: 10px;
+                text-transform: uppercase;
+                font-size: 12px;
+            }
+
+            .page .table-condensed > tbody > tr:first-child td {
+               border-top: 10px solid #fff;
+            }
+
+            .page .table-condensed > tbody > tr > td:first-child {
+                border-left: none;
+            }
+
+            .page .table-condensed > tbody > tr > td:last-child {
+                border-right: none;
+            }
+
+           .table-condensed .border-black td {
+                border-top: none !important;
+            }
+
+            table {
+                margin-bottom: 5px;
+            }
+
+            .company-color {
+                color: @color;
+            }
+
+            .col-2{
+                display: -ms-flexbox;
+                display: -webkit-flex;
+                display: -webkit-box;
+                display: flex;
+                -webkit-flex-direction: row;
+                -webkit-box-direction: row;
+                -ms-flex-direction: row;
+                flex-direction: row;
+                -webkit-justify-content: space-between;
+                -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                justify-content: space-between;
+            }
+
+            .notes { 
+                width: 50%;
+            }
+
+            .user-signature span {
+                float:right;
+            }
+
+            .flex-end {
+                -webkit-align-items: flex-end;
+                -webkit-box-align: end;
+                -ms-flex-align: end;
+                align-items: flex-end;
+            }
+
+            .flex-center {
+                -webkit-align-items: center;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+            }
+        </template>
+    </data>
+</openerp>

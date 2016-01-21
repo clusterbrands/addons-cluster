@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_qweb_cluster.layout" inherit_id="web.layout">
+    <!-- Add report style -->
+    <xpath expr="//head" position="inside">
+        <style type="text/css">
+            <t t-call="report_qweb_cluster.style"/>
+        </style>
+    </xpath>
+</template>
+
+<template id="report_qweb_cluster.html_container">
+    <t t-set="body_classname" t-value="'container'"/>
+    <t t-call="report_qweb_cluster.layout">
+        <t t-raw="0"/>
+    </t>
+</template>
+
+<template id="report.external_layout">
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+	<t t-call="report_qweb_cluster.external_layout_header_cluster" />
+    <t t-raw="0" />
+    <t t-call="report_qweb_cluster.external_layout_footer_cluster" />
+</template>
+
+<template id="report_qweb_cluster.style">
+	<t t-if="company">
+	  <t t-raw="company.qweb_style" />
+	</t>
+</template>
+
+<template id="external_layout_header_cluster">
+	<t t-raw="custom_header" />
+</template>
+
+<template id="external_layout_footer_cluster">
+    <t t-raw="custom_footer" />
+</template>
+
+</data>
+</openerp>
+
