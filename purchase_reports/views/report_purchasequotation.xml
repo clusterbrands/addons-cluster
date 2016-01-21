@@ -10,8 +10,7 @@
             <div class="col-2 flex-center document-info">
                 <div class="supplier-info">
                     <div t-if="o.partner_id">
-                        <b><span class="supplier-name" t-field="o.partner_id.name"/></b>
-                        <span>VAT: <t t-field="o.partner_id.vat" class="supplier-vat"/></t>
+                        <b><span class="supplier-name" t-field="o.partner_id.name"/></b>                        
                         <div t-field="o.partner_id" 
                              t-field-options='{"widget": "contact", "fields": ["address", "email"], "no_marker": true}'/>
                     </div>
