@@ -18,8 +18,6 @@ class account_balance_cluster(AccountBalance):
                 continue
             if line['total'] and line['label'] == False and form['partial_sumarize'] == False and  line.has_key('level'):
                 continue
-            import pdb
-            pdb.set_trace()
             lines2.append(line)
         return lines2
 
