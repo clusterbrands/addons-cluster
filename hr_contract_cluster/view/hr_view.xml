@@ -7,6 +7,7 @@
 		    <field name="arch" type="xml">
 		        <xpath expr="//field[@name='medic_exam']" position="before">
 		        	<field name="entry_date" />
+		        	<field name="seniority" />
 		        </xpath>
 		    </field>
 		</record>

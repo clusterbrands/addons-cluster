@@ -25,7 +25,6 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 from openerp.osv import fields, osv
 
-
 class hr_contract(osv.Model):
     _inherit = 'hr.contract'
     _columns = {
