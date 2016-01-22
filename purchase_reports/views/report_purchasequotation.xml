@@ -3,14 +3,15 @@
     <data>
         <template id="report_purchasequotation_document_cluster" inherit_id="purchase.report_purchasequotation_document">
         <xpath expr="//div[@class='row mt32 mb32']" position="replace">
-            <div class="col-2 flex-end document-headers">
-                <h5>Proveedor</h5>
+            <div class="col-2 flex-end document-headers company-border-color">
+                <h5 class="company-color">Proveedor</h5>
                 <h1>Solicitud de Presupuesto</h1>
             </div>
             <div class="col-2 flex-center document-info">
                 <div class="supplier-info">
                     <div t-if="o.partner_id">
-                        <b><span class="supplier-name" t-field="o.partner_id.name"/></b>                        
+                        <b><span class="supplier-name" t-field="o.partner_id.name"/></b>
+                        <b class="inline">VAT: <span  t-field="o.partner_id.vat" class="supplier-vat"/></b>                     
                         <div t-field="o.partner_id" 
                              t-field-options='{"widget": "contact", "fields": ["address", "email"], "no_marker": true}'/>
                     </div>
@@ -22,12 +23,12 @@
                 </div>
                 <table>
                     <tr>
-                        <td>Documento Nro</td>
+                        <td class="company-color">Documento Nro</td>
                         <td>:</td>
                         <td><span t-field="o.name"/></td>
                     </tr>
                     <tr>
-                        <td>Fecha Documento</td>
+                        <td class="company-color">Fecha Documento</td>
                         <td>:</td>
                         <td><span t-field="o.date_order" t-field-options='{"format": "d/MM/y"}'/></td>
                     </tr>
