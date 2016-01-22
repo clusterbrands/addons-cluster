@@ -11,6 +11,7 @@
                     <div class="supplier-info">
                         <div t-if="o.partner_id">
                             <b><span class="supplier-name" t-field="o.partner_id.name"/></b>
+                             <div t-if="o.partner_id.vat">VAT: <span  t-esc="o.partner_id.vat[2]+'-'+o.partner_id.vat[3:12]" class="supplier-vat"/></div>
                             <div t-field="o.partner_id" 
                                  t-field-options='{"widget": "contact", "fields": ["address", "phone", "email"], "no_marker": true}'/>
                         </div>

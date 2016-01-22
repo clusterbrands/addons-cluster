@@ -116,6 +116,7 @@
 
             .page .table-condensed > tbody > tr > td:first-child {
                 border-left: none;
+                text-align: justify;
             }
 
             .page .table-condensed > tbody > tr > td:last-child {
@@ -150,11 +151,15 @@
             }
 
             .notes { 
-                width: 50%;
+                width: 60%;
+            }
+
+            .user-signature {
+                width:40%;
             }
 
             .user-signature span {
-                float:right;
+                /*float:right;*/
             }
 
             .flex-end {
@@ -169,6 +174,10 @@
                 -webkit-box-align: center;
                 -ms-flex-align: center;
                 align-items: center;
+            }
+
+            .inline {
+                display: inline;
             }
         </template>
     </data>
