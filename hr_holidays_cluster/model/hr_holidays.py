@@ -31,9 +31,27 @@ class hr_holidays(osv.osv):
 
 	_columns = {
 		'holidays_leave': fields.boolean('Holidays Leave'),
+		'salary_rule_id': fields.many2one('hr.salary.rule', 'Salary Rule', help="Rule of salary to calculate the number of days of enjoyment according to LOTTT"), 
 	}
 
 	_sql_constraints = [
         ('holidays_leave_unique', 'unique(holidays_leave)', 
          "A holidays leave already exists!"),
     ]
+
+class hr_holidays(osv.osv):
+	_inherit = 'hr.holidays'
+
+	def onchange_status(self, cr, uid, ids, holiday_status_id, context=None):
+		result = {}
+		if holiday_status_id:
+			status = self.pool.get('hr.holidays.status').browse(cr, uid, holiday_status_id, context=context)
+			result['value'] = {
+				'holidays_leave': status.holidays_leave
+			}
+		return result
+
+	_columns = {
+		'contract_id':fields.many2one('hr.contract', 'Contract', required=True), 
+		'holidays_leave': fields.related('holiday_status_id','holidays_leave', type='boolean', relation='hr.holidays.status', string='Holidays Leave'), 
+	}

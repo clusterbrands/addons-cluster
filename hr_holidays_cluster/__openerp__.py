@@ -40,7 +40,8 @@ Notes:
 -----
 """,
     'depends': [
-        'hr_holidays'
+        'hr_payroll',
+        'hr_contract',
     ],
     'data': [
         'hr_contract_view.xml',
