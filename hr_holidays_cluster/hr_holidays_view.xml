@@ -8,6 +8,22 @@
 		    <field name="arch" type="xml">
 		        <xpath expr="//field[@name='limit']" position="after">
 		        	<field name="holidays_leave"/>
+		        	<field name="salary_rule_id" attrs="{'invisible':[('holidays_leave','=',False)],'required': [('holidays_leave', '=', True)]}"/>
+		        </xpath>
+		    </field>
+		</record>
+
+		<record model="ir.ui.view" id="edit_holiday_new_form_cluster">
+		    <field name="name">hr.holidays.request.form.cluster</field>
+		    <field name="model">hr.holidays</field>
+		    <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+		    <field name="arch" type="xml">
+		    	<xpath expr="//field[@name='holiday_status_id']" position="replace">
+		    		<field name="holiday_status_id" context="{'employee_id':employee_id}" on_change="onchange_status(holiday_status_id)"/>
+		    	</xpath>
+		        <xpath expr="//field[@name='employee_id']" position="after">
+		        	<field name="holidays_leave" invisible="1" />
+		        	<field name="contract_id" domain="[('employee_id','=', employee_id)]" attrs="{'invisible':[('holidays_leave','=',False)]}" />
 		        </xpath>
 		    </field>
 		</record>

@@ -24,10 +24,32 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 from openerp.osv import fields, osv
-
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 class hr_employee(osv.osv):
     _inherit = "hr.employee"
+
+    def _get_seniority_fnc(self, cr, uid, ids, field_names, args, context=None):
+		res = dict.fromkeys(ids, False)
+		current_date = datetime.now().date()
+		for emp in self.browse(cr, uid, ids, context=context):
+			if emp.entry_date:
+				entry_date = datetime.strptime(emp.entry_date, "%Y-%m-%d")
+				diff = relativedelta(current_date, entry_date).years
+				res[emp.id] = diff
+		return res	
+
     _columns = {
     	'entry_date': fields.date("Entry Date"),
+    	'seniority': fields.function(_get_seniority_fnc, method=True, type='integer', store=True, string='Seniority'),
     }
+
+    def _check_entry_date(self, cr, uid, ids, context=None):
+    	current_date = datetime.now().date()
+    	for emp in self.browse(cr, uid, ids, context=context):
+    		if current_date < datetime.strptime(emp.entry_date, "%Y-%m-%d").date():
+    			return False
+    	return True
+
+    _constraints = [(_check_entry_date, "The entry date must be less than current date", ['entry_date'])]
