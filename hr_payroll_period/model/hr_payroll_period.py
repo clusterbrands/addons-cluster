@@ -57,14 +57,20 @@ class period_schedule(osv.Model):
             if start_date.day <= 15:
                 start_date = date(start_date.year, start_date.month, 1)
                 end_date = date(start_date.year, start_date.month, 15)
+                periods.append({
+                    'date_start':start_date, 
+                    'date_end': end_date,
+                })
             else:
                 start_date = date(start_date.year, start_date.month, 16)
                 end_day =  calendar.monthrange(start_date.year, start_date.month)[1]
+                fixed_end_day = 30 if (end_day == 31) else end_day
+                fixed_end_date = date(start_date.year, start_date.month, fixed_end_day)
                 end_date = date(start_date.year, start_date.month, end_day)
-            periods.append({
-                'date_start':start_date, 
-                'date_end': end_date,
-            })
+                periods.append({
+                    'date_start':start_date, 
+                    'date_end': fixed_end_date,
+                })
             start_date = end_date + timedelta(days=1)
         return periods
 
@@ -73,9 +79,10 @@ class period_schedule(osv.Model):
         end_of_year = date(start_date.year, 12, 31)
         for month in range(start_date.month, 13):
             end_day =  calendar.monthrange(start_date.year, month)[1]
+            fixed_end_day = 30 if (end_day == 31) else end_day
             periods.append({
                 'date_start': date(start_date.year, month, 1), 
-                'date_end': date(start_date.year, month, end_day),
+                'date_end': date(start_date.year, month, fixed_end_day),
             })
         return periods
 
