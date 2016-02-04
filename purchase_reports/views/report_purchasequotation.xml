@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <template id="report_purchasequotation_document_cluster" inherit_id="purchase.report_purchasequotation_document">
+        <template id="report_purchasequotation_document_cluster" inherit_id="purchase.report_purchasequotation_document"> 
+        <xpath expr="//div[@class='page']" position="attributes">
+           <attribute name="class">page purchase_reports</attribute>
+        </xpath>
         <xpath expr="//div[@class='row mt32 mb32']" position="replace">
             <div class="col-2 flex-end document-headers company-border-color">
                 <h5 class="company-color">Proveedor</h5>
