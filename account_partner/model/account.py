@@ -23,40 +23,13 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-{
-    'name': 'HR Payroll Extension',
-    'category': 'Generic Modules',
-    'version': '1.0',
-    'author': 'Cluster Brands',
-    'website': 'http://www.clusterbrands.com',
-    'description': """
 
-Module Description
-    
-Main features
--------------
-    -Add the utils object variable to the available variables 
-    in the python code for payroll rules. 
-Notes:
------
-""",
-    'depends': [
-        'account_partner',
-        'hr_payroll_account',
-    ],
-    'data': [
-    ],
-    'js': [
-    ],
-    'css': [
-    ],
-    'qweb': [
-    ],
-    'demo': [
-    ],
-    'test': [
-    ],
-    'installable': True,
-    'active': False,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+class account_account(osv.Model):
+	_inherit = "account.account"
+
+	_columns = {
+		'partner_id': fields.many2one('res.partner', 'Partner', required=False), 
+	}
