@@ -41,8 +41,7 @@ Notes:
 -----
 """,
     'depends': [
-        'hr_payroll',
-        'hr_payroll_account'
+        'hr_payroll_account',
     ],
     'data': [
         'hr_payroll_view.xml',
