@@ -24,7 +24,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
-    'name': 'HR Payroll Extension',
+    'name': 'Account Partner',
     'category': 'Generic Modules',
     'version': '1.0',
     'author': 'Cluster Brands',
@@ -35,16 +35,15 @@ Module Description
     
 Main features
 -------------
-    -Add the utils object variable to the available variables 
-    in the python code for payroll rules. 
+
 Notes:
 -----
 """,
     'depends': [
-        'account_partner',
-        'hr_payroll_account',
+        'account'
     ],
     'data': [
+        'account_view.xml',
     ],
     'js': [
     ],
