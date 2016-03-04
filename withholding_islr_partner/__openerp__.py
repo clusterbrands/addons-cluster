@@ -24,7 +24,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 {
-    'name': 'Islr Witholding Doc Partner',
+    'name': 'Withholding islr partner',
     'category': 'Generic Modules',
     'version': '1.0',
     'author': 'Cluster Brands',
