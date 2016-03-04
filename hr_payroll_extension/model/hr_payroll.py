@@ -233,7 +233,7 @@ class hr_payslip(osv.Model):
                 credit_account_id = line.salary_rule_id.account_credit.id
 
                 if debit_account_id:
-					partner_acc_debit = line.salary_rule_id.partner_acc_debit and line.salary_rule_id.partner_acc_debit.id or partner_id
+					partner_acc_debit = line.salary_rule_id.account_debit.partner_id and line.salary_rule_id.account_debit.partner_id.id or partner_id
 					debit_line = (0, 0, {
                     'name': line.name,
                     'date': timenow,
@@ -251,7 +251,7 @@ class hr_payslip(osv.Model):
 					debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
 
                 if credit_account_id:
-					partner_acc_credit = line.salary_rule_id.partner_acc_credit and line.salary_rule_id.partner_acc_credit.id or partner_id
+					partner_acc_credit = line.salary_rule_id.account_credit.partner_id and line.salary_rule_id.account_credit.partner_id.id or partner_id
 					credit_line = (0, 0, {
                     'name': line.name,
                     'date': timenow,
@@ -311,44 +311,6 @@ class hr_payslip(osv.Model):
 
 class hr_salary_rule(osv.Model):
     _inherit = 'hr.salary.rule'
-
-    def onchange_account_debit(self, cr, uid, ids, account_debit_id, context=None):
-        result = {}
-        if account_debit_id:
-            account = self.pool.get('account.account').browse(cr, uid, account_debit_id, context=context)
-            result['value'] = {
-                'account_debit_type': account.type
-            }
-        return result
-
-    def onchange_account_credit(self, cr, uid, ids, account_credit_id, context=None):
-        result = {}
-        if account_credit_id:
-            account = self.pool.get('account.account').browse(cr, uid, account_credit_id, context=context)
-            result['value'] = {
-                'account_credit_type': account.type
-            }
-        return result
-
-    _columns = {
-        'partner_acc_debit': fields.many2one('res.partner', 'Partner for Debit Account', required=False), 
-        'partner_acc_credit': fields.many2one('res.partner', 'Partner for Credit Account', required=False), 
-        'account_debit_type': fields.related('account_debit','type', type='selection', selection=[ ('view', 'View'),
-            ('other', 'Regular'),
-            ('receivable', 'Receivable'),
-            ('payable', 'Payable'),
-            ('liquidity','Liquidity'),
-            ('consolidation', 'Consolidation'),
-            ('closed', 'Closed')], string='Account Debit Type'),
-
-        'account_credit_type': fields.related('account_credit','type', type='selection', selection=[ ('view', 'View'),
-            ('other', 'Regular'),
-            ('receivable', 'Receivable'),
-            ('payable', 'Payable'),
-            ('liquidity','Liquidity'),
-            ('consolidation', 'Consolidation'),
-            ('closed', 'Closed')], string='Account Debit Type'), 
-    }
 
     _defaults = {
         'amount_python_compute': '''
