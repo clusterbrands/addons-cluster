@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <report 
+            id="hr_payroll.action_report_payslip" 
+            model="hr.payslip" 
+            string="Payslip"
+            report_type="qweb-pdf"
+            name="hr_payroll_extension.report_payslip" 
+            file="hr_payroll_extension.report_payslip"
+        />
+
+        <record id="hr_payroll.action_report_payslip" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report.paperformat_us"/>
+        </record>
+    </data>
+</openerp>
