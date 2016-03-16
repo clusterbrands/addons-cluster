@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <template id="hr_payroll_extension.layout" inherit_id="report.layout">
+
+        <!-- Add report style -->
+        <xpath expr="//head" position="inside">
+            <style type="text/css">
+                <t t-call="hr_payroll_extension.style"/>
+            </style>
+        </xpath>
+    </template>
+
+    <template id="hr_payroll_extension.html_container">
+        <t t-set="body_classname" t-value="'container'"/>
+        <t t-call="hr_payroll_extension.layout">
+            <t t-raw="0"/>
+        </t>
+    </template>
+
+    <template id="report.external_layout">
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"></t>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"></t>
+        </t>
+        <t t-call="report_qweb_cluster.external_layout_header_cluster" />
+        <t t-raw="0" />
+    </template>
+
+    <template id="hr_payroll_extension.style">
+        .no-border {
+            border: none !important;
+        }
+
+        .payslip .table-condensed > thead > tr > th {
+            border-top: 1px solid black !important;
+        }
+
+        .payslip .table-condensed > tbody > tr.border-top > td {
+            border-top: 1px solid black !important;
+        }
+    </template>
+</data>
+</openerp>

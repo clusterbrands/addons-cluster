@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_payslip">
+            <t t-call="report.html_container">                 
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout"> 
+                        <div class="page payslip">                                                
+                            <h2 class="text-center"><strong>Recibo de Pago</strong></h2>
+                            <br />
+
+                            <table class="table table-condensed table-bordered">
+                                <tr>
+                                    <td><strong>Nombre</strong></td>
+                                    <td><span t-field="o.employee_id"/></td>
+                                    <td><strong>Período</strong></td>
+                                    <td><span t-field="o.date_from"/> a <span t-field="o.date_to"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cargo</strong></td>
+                                    <td><span t-field="o.employee_id.job_id"/></td>
+                                    <td><strong>Referencia</strong></td>
+                                    <td><span t-field="o.number"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cédula</strong></td>
+                                    <td><span t-field="o.employee_id.identification_id"/></td>
+                                    <td><strong>Fecha de Ingreso</strong></td>
+                                    <td><span t-field="o.contract_id.date_start"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Salario</strong></td>
+                                    <td><span t-esc="formatLang(o.contract_id.wage,currency_obj=o.company_id.currency_id)" /></td>
+                                    <td><strong>Cuenta Bancaria</strong></td>
+                                     <td><span t-field="o.employee_id.bank_account_id"/></td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Nombre</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Tasa</th>
+                                        <th class="text-center">Importe</th>
+                                        <th class="text-center">Asignación</th>
+                                        <th class="text-center">Deducción</th>
+                                        <th class="text-center">Saldo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="get_payslip_lines(o.line_ids)" t-as="p">
+                                        <td><span t-field="p.code"/></td>
+                                        <td><span t-field="p.name"/></td>
+                                        <td class="text-center"><span t-esc="'%.0f'%p.quantity"/></td>
+                                        <td class="text-center"><span t-esc="'%0.0f'%p.rate"></span></td>
+                                        <td class="text-right"><span t-esc="formatLang(p.amount, currency_obj=o.company_id.currency_id)"/></td>
+                                        <td class="text-right"><t t-if="p.total >= 0"><span t-esc="formatLang(p.total, currency_obj=o.company_id.currency_id)"/></t></td>
+                                        <td class="text-right"><t t-if="p.total &lt; 0"><span t-esc="formatLang(p.total, currency_obj=o.company_id.currency_id)"/></t></td>
+                                        <td class="text-right"></td>
+                                    </tr>
+                                    <tr class="border-top">
+                                        <td colspan="6" class="text-right"><strong t-esc="formatLang(get_allocation_total(o.line_ids),currency_obj=o.company_id.currency_id)" /></td>
+                                        <td class="text-right"><strong t-esc="formatLang(get_deduction_total(o.line_ids),currency_obj=o.company_id.currency_id)" /></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="no-border"></td>
+                                        <td colspan="2" class="no-border text-right" style="font-size:18px"><strong>Total a Pagar</strong></td>
+                                        <td colspan="2" class="no-border text-right" style="font-size:18px"><strong t-esc="formatLang(get_total_net(o.line_ids), currency_obj=o.company_id.currency_id)"></strong></td>
+                                    </tr> 
+                                </tbody>
+                            </table>
+
+                            <table width="20%">
+                                <tr><td width="20%" style="border-bottom: 1px solid black;"></td></tr>
+                                <tr><td width="20%" style="line-height:40px;" class="text-center">Firma Autorizada</td></tr>
+                            </table>
+                        </div>
+                    </t>
+                </t> 
+            </t>
+		</template>
+	</data>
+</openerp>

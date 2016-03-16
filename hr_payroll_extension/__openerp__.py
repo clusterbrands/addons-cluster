@@ -45,6 +45,10 @@ Notes:
         'hr_payroll_account',
     ],
     'data': [
+        'data/report_paper_format.xml',
+        'hr_payroll_report.xml',
+        'views/layouts.xml',
+        'views/report_payslip.xml',
     ],
     'js': [
     ],
