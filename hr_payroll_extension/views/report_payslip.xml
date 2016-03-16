@@ -30,7 +30,7 @@
                                 </tr>
                                 <tr>
                                     <td><strong>Salario</strong></td>
-                                    <td><span t-field="o.contract_id.wage"/></td>
+                                    <td><span t-esc="formatLang(o.contract_id.wage,currency_obj=o.company_id.currency_id)" /></td>
                                     <td><strong>Cuenta Bancaria</strong></td>
                                      <td><span t-field="o.employee_id.bank_account_id"/></td>
                                 </tr>
