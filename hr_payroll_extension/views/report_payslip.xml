@@ -74,10 +74,12 @@
                                 </tbody>
                             </table>
 
-                            <table width="20%">
-                                <tr><td width="20%" style="border-bottom: 1px solid black;"></td></tr>
-                                <tr><td width="20%" style="line-height:40px;" class="text-center">Firma Autorizada</td></tr>
-                            </table>
+			<table width="20%">
+                                <tr><td width="20%" class="text-left"><strong>Recibe Conforme</strong></td></tr>
+                                <tr><td width="20%" ></td></tr>
+                                <tr><td width="20%" style="line-height:100px;" class="text-center">Firma:_______________________</td></tr>
+                                <tr><td width="20%" style="line-height:60px;" class="text-center">C.I.: _______________________</td></tr>
+                         </table>
                         </div>
                     </t>
                 </t> 
