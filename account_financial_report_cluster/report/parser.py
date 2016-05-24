@@ -10,16 +10,39 @@ class account_balance_cluster(AccountBalance):
         super(account_balance_cluster, self).__init__(cr, uid, name, context)
         self.context = context
 
-    def lines(self, form, level=0):
+    def lines(self, form, level=0): 
         lines = super(account_balance_cluster, self).lines(form, level)
         lines2 = []
+        credit = 0
+        debit = 0
+        sw = False
+        str_label = form['lab_str']        
         for line in lines:
+            if line['total'] and line['type'] == "view" and not line.get('code'):
+                sw = True
+            if line['total'] and line['type'] == "view":
+                credit+= line.get('credit')
+                debit+= line.get('debit')
             if form['hide_views'] and line['type'] == 'view' and line['label']==True:
                 continue
             if line['total'] and line['label'] == False and form['partial_sumarize'] == False and  line.has_key('level'):
                 continue
             lines2.append(line)
+        if form['tot_check'] and sw == False:
+            lines2.append({
+                'name': 'TOTAL %s' % (str_label), 
+                'label': False, 
+                'credit': credit,
+                'debit': debit, 
+                'total': True, 
+                'type': 'view'
+            })
         return lines2
+
+        #if form['tot_check'] and sw == False:
+
+
+
 
     def get_vat_by_country(self, form):
         """
