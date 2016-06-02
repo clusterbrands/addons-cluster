@@ -18,9 +18,11 @@ class account_balance_cluster(AccountBalance):
         sw = False
         str_label = form['lab_str']        
         for line in lines:
+            #import pdb
+            #pdb.set_trace() 
             if line['total'] and line['type'] == "view" and not line.get('code'):
                 sw = True
-            if line['total'] and line['type'] == "view":
+            if line['type'] != "view":
                 credit+= line.get('credit')
                 debit+= line.get('debit')
             if form['hide_views'] and line['type'] == 'view' and line['label']==True:
