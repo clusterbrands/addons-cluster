@@ -26,6 +26,8 @@
 import time
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+from openerp import api
 
 class hr_loan(osv.Model):
     _name = "hr.loan"
@@ -40,15 +42,20 @@ class hr_loan(osv.Model):
                 res[loan.id] = 0.0
         return res
         
-    def _compute_balance(self, cr, uid, ids, field_name, args, context=None):
-        context = context or {}
-        res = dict.fromkeys(ids, 0.0)
-        for loan in self.browse(cr, uid, ids, context=context):
+    @api.depends('balance_ids')    
+    def _compute_balance(self):   
+        for loan in self:
             amount = 0
             for balance in loan.balance_ids:
-                amount+= balance.debit - balance.credit
-            res[loan.id] = loan.amount - amount
-        return res
+                amount+= balance.credit
+            loan.balance = loan.amount - amount
+        #res = dict.fromkeys(ids, 0.0)
+        #for loan in self.browse(cr, uid, ids, context=context):
+        #    amount = 0
+        #    for balance in loan.balance_ids:
+        #        amount+= balance.debit - balance.credit
+        #    res[loan.id] = loan.amount - amount
+        #return res
 
     def create(self, cr, uid, vals, context=None):
         context = context or {}
@@ -69,13 +76,13 @@ class hr_loan(osv.Model):
             ('health','Health'),
             ('studies','Studies')
             ], 'Reason', select=True, states={'approved': [('readonly', True)]}),
-        'amount': fields.float('Amount', digits=(16, 2), required=False, states={'approved': [('readonly', True)]}), 
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll'), required=False, states={'approved': [('readonly', True)]}), 
         'periods': fields.integer('Periods Numbers', states={'approved': [('readonly', True)]}), 
         'quota': fields.function(_get_loan_quota, method=True, type='float', string='Quota', states={'approved': [('readonly', True)]}),
         'details': fields.text('Details', states={'approved': [('readonly', True)]}),
         'move_id':fields.many2one('account.move', 'Move', required=False, ondelete='cascade'),
         'balance_ids' : fields.one2many('hr.loan.balance','loan_id', 'Loan Balance'),
-        'balance': fields.function(_compute_balance, type='float', string='Balance', store=True),
+        'balance': fields.float(compute='_compute_balance', string='Balance', store=True),
         'state':fields.selection([
             ('to_submit','To Submit'),
             ('to_approve','To Approve'),
@@ -148,7 +155,7 @@ class hr_loan(osv.Model):
             'date': timenow,
             'ref': name,
             'journal_id': loan.type_id.journal_id.id,
-            'period_id': period_id,
+             'period_id': period_id,
         }
         debit_line = (0, 0, {
             'name': 'loan',
@@ -198,8 +205,8 @@ class hr_loan_balance(osv.Model):
         'reference': fields.char('Reference', size=255),
         'date': fields.date('Date', required=True),
         'move_id': fields.many2one('account.move.line', 'Accounting Entry', required=True),
-        'debit': fields.related('move_id', 'debit', type='float', string='Debit'),
-        'credit': fields.related('move_id', 'credit', type='float', string='Debit'),
+        'debit': fields.float(related='move_id.debit'),
+        'credit': fields.float(related='move_id.credit'),
         'account_id': fields.related('move_id', 'account_id', type='many2one',relation="account.account", string='Account'),
     }
 

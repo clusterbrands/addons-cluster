@@ -21,6 +21,7 @@
                     <field name="type_id" />
                     <field name="reason" />
                     <field name="amount" />
+                    <field name="balance" />
                     <field name="state" />
                 </tree>
             </field>       
@@ -113,15 +114,15 @@
                                         <field name="reference" />
                                         <field name="date" />
                                         <field name="account_id" />
-                                        <field name="debit" />
-                                        <field name="credit" /> 
+                                        <field name="debit" string="Debit" />
+                                        <field name="credit" string="Credit" />
                                         <field name="move_id" />
                                     </tree>
                                 </field>
                             </page>
                         </notebook>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="balance" class="oe_subtotal_footer_separator" widget="monetary" />
+                            <field name="balance" class="oe_subtotal_footer_separator" widget="monetary" />                             
                         </group>
                         <field name="details" nolabel="1" />
                     </sheet>

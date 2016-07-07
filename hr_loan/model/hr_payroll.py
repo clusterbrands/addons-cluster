@@ -28,7 +28,7 @@ class hr_payslip(osv.Model):
         for loan in loan_obj.browse(cr, uid, loan_ids, context=context):
             try:
                 rule = next(r for r in res if r['salary_rule_id'] == loan.type_id.rule_id.id)
-                rule['amount'] = loan.quota * -1
+                rule['amount'] = loan.quota * -1               
                 rule['name'] += _(' Quota ') + str(len(loan.balance_ids)+ 1) + '/' + str(loan.periods) 
             except StopIteration as e:           
                 raise osv.except_osv(_('Config Error'),_("The salary structure '"+ struct_id.name + "' has no contains salary rules for payment of Loans"))
